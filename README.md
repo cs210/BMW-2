@@ -1,6 +1,6 @@
 # BMW-2: Maestro
 
-<img src="/images/logo.png" alt="maestro logo" width="200">
+<img src="/images/maestro final logo.png" alt="maestro logo" width="200">
 
 BMW is working to redesign the driving experience for users of autonomous cars.
 <!-- We aim to enable fast, intuitive, and effortless monitoring of car surroundings during Level 4 and Level 5 autonomy. We will use the windshield as a display to render the car and its full surroundings from a third-person view, with the viewpoint responsive to the position and orientation of the driver’s head. The view of the surroundings will be produced by real-time 3-D reconstruction from data from camera and range sensors on the car. By revolutionizing the way drivers interact with their cars, our product will increase their sense of safety on the road and their trust in autonomous driving systems. -->
