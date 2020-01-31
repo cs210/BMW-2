@@ -2,13 +2,14 @@
 
 <img src="images/finalLogo.png" alt="maestro logo" width="200">
 
-BMW is working to redesign the driving experience for users of autonomous cars.
+Maestro is redesigning the driving experience for users of autonomous cars by combining micro-gestures and gaze tracking to transform what you can accomplish on your daily commute.
+ <!-- so you can focus on the task that matters most: driving. -->
 <!-- We aim to enable fast, intuitive, and effortless monitoring of car surroundings during Level 4 and Level 5 autonomy. We will use the windshield as a display to render the car and its full surroundings from a third-person view, with the viewpoint responsive to the position and orientation of the driver’s head. The view of the surroundings will be produced by real-time 3-D reconstruction from data from camera and range sensors on the car. By revolutionizing the way drivers interact with their cars, our product will increase their sense of safety on the road and their trust in autonomous driving systems. -->
 
 # Team Members
 Member | Photograph | Email
 --- | --- | ---
-Alex Wang | <img src="/images/alex.jpg" alt="Alex Wang" width="250">  | jwang98@stanford.edu
+Alex Wang | <img src="/images/alex.jpg" alt="Alex Wang" width="250"> | jwang98@stanford.edu
 Tyler Yep | <img src="/images/tyler.png" alt="Tyler Yep" width="250"> | tyep@stanford.edu
 Ellen Roper| <img src="/images/ellen.jpg" alt="Ellen Roper" width="250"> | eroper@stanford.edu
 Eric Singh | <img src="/images/eric.jpg" alt="Eric Singh" width="250"> | esingh10@stanford.edu
