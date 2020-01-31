@@ -25,7 +25,7 @@ Eric | iOS, basic AI, Python, C++ | Public Speaking, Management, Idea Execution,
 Grant | Computer Vision, NLP, VR/AR Dev, Robotics | Team spirit, Ideation | Cool, radical, contradictory | User Interviews, Business Development | Organization | Green Hat
 
 # Team Communication
-1. Email us at [chariot.ai@hella210.mailclark.ai](chariot.ai@hella210.mailclark.ai).
+1. Email us at [drivemaestrai@gmail.com](drivemaestrai@gmail.com).
 
 2. Find our group chat on FB Messenger!
 
