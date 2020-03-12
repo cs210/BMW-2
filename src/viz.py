@@ -22,8 +22,8 @@ def main():
 def visualize(model, loader, run_name='', metrics=None):
     data, target = next(iter(loader))
     view_input(data, target, CLASS_LABELS, run_name)
-    data, target = next(iter(loader))
-    compute_activations(model, data, target, CLASS_LABELS, run_name)
+    # data, target = next(iter(loader))
+    # compute_activations(model, data, target, CLASS_LABELS, run_name)
 
 
 def visualize_trained(model, loader, run_name='', metrics=None):

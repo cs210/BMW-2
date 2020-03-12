@@ -19,6 +19,7 @@ def rearrange(orig_img):
     if img.requires_grad:
         img = img.detach()
 
+    # Normalize image
     max_val = torch.max(img)
     min_val = torch.min(img)
     if img.dtype == torch.float:
@@ -30,7 +31,10 @@ def rearrange(orig_img):
         img -= img.min()
         img /= img.max()
 
-    if len(img.shape) == 4 and img.shape[0] == 1:
+    # Reshape to correct dimensions
+    if len(img.shape) == 4:  # (t, c, h, w)
+        img = img[0]
+    elif len(img.shape) == 4 and img.shape[0] == 1:
         img = img.squeeze(0)
     elif len(img.shape) == 2:
         img = img.unsqueeze(0)

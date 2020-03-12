@@ -12,6 +12,7 @@ else:
 
 
 INPUT_SHAPE = (6, 1, 32, 32)
+CLASS_LABELS = ['None', 'Thumbs Up', 'Swipe Left', 'Swipe Right']
 
 
 def get_collate_fn(device):
@@ -41,7 +42,7 @@ def load_train_data(args, device, num_examples=None, val_split=0.2):
 def load_test_data(args, device):
     norm = get_transforms()
     collate_fn = get_collate_fn(device)
-    test_set = datasets.FashionMNIST(DATA_PATH, train=False, transform=norm)
+    test_set = RadarDataset('test', transform=norm)
     test_loader = DataLoader(test_set,
                              batch_size=args.test_batch_size,
                              collate_fn=collate_fn)
@@ -51,7 +52,7 @@ def load_test_data(args, device):
 def get_transforms(img_dim=None):
     return transforms.Compose([
         transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
+        # transforms.Normalize((0.1307,), (0.3081,))
     ])
 
 
@@ -60,10 +61,12 @@ class RadarDataset(Dataset):
     def __init__(self, mode, transform=None):
         super().__init__()
         # self.label = pd.read_csv(data_path)
-        self.data = []
+        NUM_EXAMPLES = 10
+        self.data = torch.randn((NUM_EXAMPLES, *INPUT_SHAPE))
+        self.labels = torch.randint(len(CLASS_LABELS), (NUM_EXAMPLES,))
 
     def __len__(self):
-        return len(self.data)
+        return self.data.shape[0]
 
     def __getitem__(self, index):
-        return self.data[index]
+        return self.data[index], self.labels[index]
