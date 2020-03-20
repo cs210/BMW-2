@@ -24,6 +24,7 @@ class CnnLSTM(nn.Module):
     def __init__(self):
         super().__init__()
         MAGIC = 500
+        self.input_shape = torch.Size((6, 1, 32, 32))
         self.cnn = CNN(MAGIC)
         self.rnn = nn.LSTM(
             input_size=MAGIC,

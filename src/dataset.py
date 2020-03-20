@@ -11,7 +11,6 @@ else:
     DATA_PATH = 'data/'
 
 
-INPUT_SHAPE = (6, 1, 32, 32)
 CLASS_LABELS = ['None', 'Thumbs Up', 'Swipe Left', 'Swipe Right']
 
 
@@ -36,7 +35,7 @@ def load_train_data(args, device, num_examples=None, val_split=0.2):
     val_loader = DataLoader(val_set,
                             batch_size=args.batch_size,
                             collate_fn=collate_fn)
-    return train_loader, val_loader, {}
+    return train_loader, val_loader, []
 
 
 def load_test_data(args, device):
@@ -61,6 +60,7 @@ class RadarDataset(Dataset):
     def __init__(self, mode, transform=None):
         super().__init__()
         # self.label = pd.read_csv(data_path)
+        INPUT_SHAPE = (6, 1, 32, 32)
         NUM_EXAMPLES = 10
         self.data = torch.randn((NUM_EXAMPLES, *INPUT_SHAPE))
         self.labels = torch.randint(len(CLASS_LABELS), (NUM_EXAMPLES,))

@@ -6,7 +6,7 @@ import torchsummary
 
 from src import util
 from src.args import init_pipeline
-from src.dataset import load_test_data, INPUT_SHAPE
+from src.dataset import load_test_data
 from src.losses import get_loss_initializer
 from src.models import get_model_initializer
 
@@ -42,6 +42,6 @@ def test(arg_list=None):
     init_params = checkpoint.get('model_init', {})
     model = get_model_initializer(args.model)(*init_params).to(device)
     util.load_state_dict(checkpoint, model)
-    torchsummary.summary(model, INPUT_SHAPE)
+    torchsummary.summary(model, model.input_shape)
 
     test_model(test_loader, model, criterion)

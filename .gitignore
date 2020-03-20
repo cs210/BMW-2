@@ -2,12 +2,15 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pth
+data/*
+!data/.gitkeep
+checkpoints/
 
 .DS_Store
 *.pkl
 *.csv
 .pyre
-data/
 .vscode
 
 # C extensions
