@@ -15,7 +15,9 @@ CLASS_LABELS = ['None', 'Thumbs Up', 'Swipe Left', 'Swipe Right']
 
 
 def get_collate_fn(device):
-    return lambda x: map(lambda b: b.to(device), default_collate(x))
+    def to_device(b):
+        return list(map(to_device, b)) if isinstance(b, (list, tuple)) else b.to(device)
+    return lambda x: map(to_device, default_collate(x))
 
 
 def load_train_data(args, device, num_examples=None, val_split=0.2):
