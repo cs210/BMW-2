@@ -15,6 +15,7 @@ CLASS_LABELS = ['None', 'Thumbs Up', 'Swipe Left', 'Swipe Right']
 
 
 
+
 def get_collate_fn(device):
     def to_device(b):
         return list(map(to_device, b)) if isinstance(b, (list, tuple)) else b.to(device)
