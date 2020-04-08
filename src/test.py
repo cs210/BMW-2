@@ -1,8 +1,6 @@
 import sys
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
 import torchsummary
+import torch
 
 from src import util
 from src.args import init_pipeline
@@ -23,7 +21,8 @@ def test_model(test_loader, model, criterion):
         with tqdm(desc='Test', total=len(test_loader), ncols=120) as pbar:
             for data, target in test_loader:
                 output = model(data)
-                test_loss += criterion(output, target).item()
+                loss = criterion(output, target)
+                test_loss += loss.item() * data.size(0)
                 pred = output.argmax(dim=1, keepdim=True)
                 correct += pred.eq(target.view_as(pred)).sum().item()
                 pbar.update()
@@ -39,7 +38,7 @@ def test(arg_list=None):
     args, device, checkpoint = init_pipeline(arg_list)
     criterion = get_loss_initializer(args.loss)()
     test_loader = load_test_data(args, device)
-    init_params = checkpoint.get('model_init', {})
+    init_params = checkpoint.get('model_init', [])
     model = get_model_initializer(args.model)(*init_params).to(device)
     util.load_state_dict(checkpoint, model)
     torchsummary.summary(model, model.input_shape)

@@ -1,17 +1,15 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+.DS_Store
+*.csv
+*.pkl
 *.pth
 data/*
 !data/.gitkeep
 checkpoints/
 
-.DS_Store
-*.pkl
-*.csv
-.pyre
-.vscode
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
 # C extensions
 *.so

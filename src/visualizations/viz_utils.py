@@ -31,16 +31,15 @@ def rearrange(orig_img):
         img -= img.min()
         img /= img.max()
 
-    # Reshape to correct dimensions
-    if len(img.shape) == 4:  # (t, c, h, w)
-        img = img[0]
-    elif len(img.shape) == 4 and img.shape[0] == 1:
+    # Reshape
+    if len(img.shape) == 4 and img.shape[0] == 1:
         img = img.squeeze(0)
     elif len(img.shape) == 2:
         img = img.unsqueeze(0)
 
     assert len(img.shape) == 3
 
+    # Determine correct number of channels and permute
     if img.shape[0] == 1:
         return torch.cat([img] * 3).permute((1, 2, 0))
     if img.shape[0] == 3:
@@ -50,6 +49,7 @@ def rearrange(orig_img):
     if img.shape[-1] == 1:
         return torch.cat([img] * 3)
     return img
+
 
 def jitter(X, ox, oy):
     """
