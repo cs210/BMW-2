@@ -52,19 +52,19 @@ function (_GameEngine) {
     _this.physicsEngine = new _lanceGg.P2PhysicsEngine({
       gameEngine: _assertThisInitialized(_this)
     });
-    _this.physicsEngine.world.defaultContactMaterial.friction = 0;
+    _this.physicsEngine.world.defaultContactMaterial.friction = 10;
 
     _this.on('postStep', _this.warpAll.bind(_assertThisInitialized(_this))); // game variables
 
 
     Object.assign(_assertThisInitialized(_this), {
-      lives: 3,
+      lives: 0,
       shipSize: 0.3,
       shipTurnSpeed: 0.05,
       shipSpeed: 2,
       bulletRadius: 0.03,
       bulletLifeTime: 60,
-      asteroidRadius: 0.9,
+      asteroidRadius: 1.125,
       numAsteroidLevels: 4,
       numAsteroidVerts: 4,
       maxAsteroidSpeed: 0,
@@ -85,10 +85,28 @@ function (_GameEngine) {
 
       this.world.forEachObject(function (id, obj) {
         var p = obj.position;
-        if (p.x > _this2.spaceWidth / 2) p.x = -_this2.spaceWidth / 2;
-        if (p.y > _this2.spaceHeight / 2) p.y = -_this2.spaceHeight / 2;
-        if (p.x < -_this2.spaceWidth / 2) p.x = _this2.spaceWidth / 2;
-        if (p.y < -_this2.spaceHeight / 2) p.y = _this2.spaceHeight / 2;
+        var v = obj.velocity;
+
+        if (p.x > _this2.spaceWidth / 2) {
+          p.x = _this2.spaceWidth / 2;
+          v.x = 0;
+        }
+
+        if (p.y > _this2.spaceHeight / 2) {
+          p.y = _this2.spaceHeight / 2;
+          v.y = 0;
+        }
+
+        if (p.x < -_this2.spaceWidth / 2) {
+          p.x = -_this2.spaceWidth / 2;
+          v.x = 0;
+        }
+
+        if (p.y < -_this2.spaceHeight / 2) {
+          p.y = -_this2.spaceHeight / 2;
+          v.y = 0;
+        }
+
         obj.refreshToPhysics();
       });
     }
@@ -111,7 +129,28 @@ function (_GameEngine) {
       });
 
       if (playerShip) {
-        if (inputData.input === 'up') playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);else if (inputData.input === 'right') playerShip.physicsObj.angle -= this.shipTurnSpeed;else if (inputData.input === 'left') playerShip.physicsObj.angle += this.shipTurnSpeed;else if (inputData.input === 'space') this.emit('shoot', playerShip);
+        if (inputData.input === 'up') {
+          /*
+          console.log(playerShip.physicsObj.position.y);
+          playerShip.physicsObj.position.y += 0.5;
+          console.log(playerShip.physicsObj.position.y);
+          */
+          playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
+        } else if (inputData.input === 'right') {
+          playerShip.physicsObj.angle -= this.shipTurnSpeed;
+        } else if (inputData.input === 'left') {
+          playerShip.physicsObj.angle += this.shipTurnSpeed;
+        } else if (inputData.input === 'down') {
+          playerShip.physicsObj.applyForceLocal([0, -this.shipSpeed]);
+        }
+        /*
+        else if (inputData.input === 'space')
+        {
+            this.emit('shoot', playerShip);
+        }
+        */
+
+
         playerShip.refreshFromPhysics();
       }
     } // returns a random number between -0.5 and 0.5
@@ -129,7 +168,7 @@ function (_GameEngine) {
         playerId: playerId,
         mass: 10,
         angularVelocity: 0,
-        position: new _lanceGg.TwoVector(6.4, -3.6),
+        position: new _lanceGg.TwoVector(-6.4, -3.6),
         velocity: new _lanceGg.TwoVector(0, 0)
       });
       s.lives = this.lives;
@@ -143,14 +182,12 @@ function (_GameEngine) {
       for (var i = -0.5; i < 0.4; i = i + 0.1) {
         var x = i * this.spaceWidth;
         var y = -2;
-        console.log(x);
-        console.log(y);
         var vx = 0;
         var vy = 0;
         var va = 0; // Create asteroid Body
 
         var a = new _Asteroid["default"](this, {}, {
-          mass: 100,
+          mass: 100000,
           position: new _lanceGg.TwoVector(x, y),
           velocity: new _lanceGg.TwoVector(vx, vy),
           angularVelocity: va
@@ -163,14 +200,12 @@ function (_GameEngine) {
       for (var i = 0.5; i > -0.4; i = i - 0.1) {
         var x = i * this.spaceWidth;
         var y = 2;
-        console.log(x);
-        console.log(y);
         var _vx = 0;
         var _vy = 0;
         var _va = 0; // Create asteroid Body
 
         var a = new _Asteroid["default"](this, {}, {
-          mass: 100,
+          mass: 100000,
           position: new _lanceGg.TwoVector(x, y),
           velocity: new _lanceGg.TwoVector(_vx, _vy),
           angularVelocity: _va
