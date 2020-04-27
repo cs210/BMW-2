@@ -27,7 +27,7 @@ export default class Asteroid extends PhysicalObject2D {
             velocity: [this.velocity.x, this.velocity.y]
         });
         this.physicsObj.addShape(new p2.Circle({
-            radius: 1,
+            radius: 1.125,
             collisionGroup: game.ASTEROID, // Belongs to the ASTEROID group
             collisionMask: game.BULLET | game.SHIP // Can collide with the BULLET or SHIP group
         }));

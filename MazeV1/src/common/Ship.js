@@ -35,7 +35,7 @@ export default class Ship extends PhysicalObject2D {
             mass: 1,
             position: [this.position.x, this.position.y],
             angle: this.angle,
-            damping: 0, angularDamping: 0 });
+            damping: .7, angularDamping: .7 });
         this.physicsObj.addShape(shape);
         gameEngine.physicsEngine.world.addBody(this.physicsObj);
     }
