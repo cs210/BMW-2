@@ -9,6 +9,9 @@ export default class AsteroidsServerEngine extends ServerEngine {
         super(io, gameEngine, inputOptions);
         gameEngine.physicsEngine.world.on('beginContact', this.handleCollision.bind(this));
         gameEngine.on('shoot', this.shoot.bind(this));
+        this.playerReady = {}
+        this.playerGroups = {}
+        this.io = io;
     }
 
     start() {
@@ -75,11 +78,87 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
     onPlayerConnected(socket) {
         super.onPlayerConnected(socket);
-        this.gameEngine.addShip(socket.playerId);
+        let that = this;
+        socket.on('playerDataUpdate', function(data) {
+            that.connectedPlayers[socket.id].playerName = data.playerName;
+            that.connectedPlayers[socket.id].privateCode = data.privateCode;
+            if (data.privateCode in that.playerGroups) {
+                if (that.playerGroups[data.privateCode].full) {
+                    socket.emit('groupFull');
+                } else {
+                    if (that.playerGroups[data.privateCode].v_playerID === null) {
+                        that.playerGroups[data.privateCode].v_playerID = socket.playerId;
+                        that.playerGroups[data.privateCode].v_playerName = data.playerName;
+                        that.playerGroups[data.privateCode].v_socketID = socket.id;
+                        that.playerGroups[data.privateCode].full = true;
+                        socket.emit('waitingForPlayer', {
+                            viewer : true
+                        });
+                    } else {
+                        that.playerGroups[data.privateCode].c_playerID = socket.playerId;
+                        that.playerGroups[data.privateCode].c_playerName = data.playerName;
+                        that.playerGroups[data.privateCode].c_socketID = socket.id;
+                        that.playerGroups[data.privateCode].full = true;
+                        socket.emit('waitingForPlayer', {
+                            viewer : false
+                        });
+                    }
+                }
+            } else {
+                that.playerGroups[data.privateCode] = {
+                    c_playerID : socket.playerId,
+                    c_playerName : data.playerName,
+                    c_socketID : socket.id,
+                    v_playerID : null,
+                    v_playerName : null,
+                    v_socketID : null,
+                    full : false,
+                    c_ready : false,
+                    v_ready : false
+                };
+                socket.emit('waitingForPlayer', {
+                    viewer : false
+                });
+            }
+        });
+        socket.on('requestGroupUpdate', function() {
+            socket.emit('groupUpdate', that.playerGroups[that.connectedPlayers[socket.id].privateCode])
+        });
+        socket.on('playerReady', function(data) {
+            let group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
+            if (data.viewer) {
+                that.playerGroups[that.connectedPlayers[socket.id].privateCode].v_ready = true;
+            } else {
+                that.playerGroups[that.connectedPlayers[socket.id].privateCode].c_ready = true;
+            }
+            if (that.playerGroups[that.connectedPlayers[socket.id].privateCode].v_ready &&
+                that.playerGroups[that.connectedPlayers[socket.id].privateCode].c_ready) {
+                that.gameEngine.addShip(socket.playerId);
+                that.gameEngine.playerReady[socket.playerId] = true;
+                that.io.to(group.c_socketID).to(group.v_socketID).emit('gameBegin', {ship_pid : socket.playerId});
+            }
+        });
     }
 
     onPlayerDisconnected(socketId, playerId) {
+        let group_code = this.connectedPlayers[socketId].privateCode;
         super.onPlayerDisconnected(socketId, playerId);
+        if (playerId === this.playerGroups[group_code].c_playerID) {
+            this.playerGroups[group_code].c_playerID = null;
+            this.playerGroups[group_code].c_socketID = null;
+            this.playerGroups[group_code].c_playerName = null;
+            this.playerGroups[group_code].c_ready = false;
+            this.playerGroups[group_code].full = false;
+        } else {
+            this.playerGroups[group_code].v_playerID = null;
+            this.playerGroups[group_code].v_socketID = null;
+            this.playerGroups[group_code].v_playerName = null;
+            this.playerGroups[group_code].v_ready = false;
+            this.playerGroups[group_code].full = false;
+        }
+        if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
+            delete this.playerGroups[group_code];
+        }
         for (let o of this.gameEngine.world.queryObjects({ playerId }))
             this.gameEngine.removeObjectFromWorld(o.id);
     }

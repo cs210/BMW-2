@@ -2,94 +2,46 @@
     <head>
         <title>Lance//P2 Asteroids</title>
         <meta charset="utf-8">
-        <style>
-          body {
-            background-color: black;
-            margin:0;
-            padding:0;
-            overflow: hidden;
-            color:white;
-            font-family:"Courier New", Courier, monospace;
-            font-size: 24px;
-          }
-          a {
-            color:white;
-            text-decoration: none;
-            font-weight: bold;
-          }
-          canvas {
-            width:100%;
-            height:100%;
-            position:absolute;
-          }
-          .textBox.centered {
-            width:500px;
-            height:100px;
-            margin-left: -250px;
-            margin-top: -50px;
-            position: absolute;
-            top:50%;
-            left:50%;
-            vertical-align: middle;
-            text-align: center;
-          }
-          .textBox.bottomRight {
-            position:absolute;
-            right:0;
-            bottom:0;
-          }
-          .textBox.bottomLeft {
-            position:absolute;
-            left:0;
-            bottom:0;
-          }
-          .hidden {
-            display: none;
-          }
-          .actionButton {
-              opacity: 0;
-              transition: all 0.5s ease-in;
-              background: #fff;
-              width: 5rem;
-              height: 5rem;
-              position: absolute;
-              bottom: 1rem;
-              transform: translateX(-50%);
-              border: 3px solid #ff2f95;
-              border-radius: 5rem;
-              color: #ff2f95;
-          }
-          .fireButton {
-            left: 40%;
-            content: "FIRE";
-          }
-          .fireButton::before {
-              content: "FIRE";
-              position: absolute;
-              color: #ff2f95;
-              left: 50%;
-              top: 50%;
-              transform: translateX(-50%) translateY(-50%);
-          }
-          .boostButton {
-            left: 50%;
-            content: "BOOST";
-          }
-          .boostButton::before {
-              content: "BOOST";
-              position: absolute;
-              color: #ff2f95;
-              left: 50%;
-              top: 50%;
-              transform: translateX(-50%) translateY(-50%);
-          }
-
-        </style>
+        <link rel='stylesheet' type='text/css' href='./main.css' />
 
     </head>
     <body>
         <!-- <div id="logo" class="textBox bottomRight">POWERED BY <a href="https://github.com/schteppe/p2.js">P2.JS</a> PHYSICS + <br><a href="https://lance.gg">LANCE.GG</a> MULTIPLAYER</div>
         <div id="logo" class="textBox bottomLeft">GAME BY <a href="https://twitter.com/schteppe">@SCHTEPPE</a> + <br><a href="https://twitter.com/LanceGG_">@LANCEGG_</a></div> -->
+        <div id='name-prompt-overlay'>
+            <div id='name-prompt-container'>
+                <h3> Join Game </h3>
+                <form id='name-form'>
+                    <input type='text' id='name-input' placeholder='Nickname'
+                           autocomplete='off' />
+                </form>
+                <form id='gamecode-form'>
+                    <input type='text' id='gamecode-input' placeholder='Private Game Code'
+                           autocomplete='off' />
+                    <br />
+                    <button id='name-submit'>
+                        Play
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div id='waiting-room-overlay'>
+            <div id='waiting-room-container'>
+                <h3> Waiting for players </h3>
+                <label id = 'txt_label_l'> Controller </label>
+                <label id = 'txt_label_r'> Viewer </label>
+                <br />
+                <label id = 'controller_label'> </label>
+                <label id = 'viewer_label'> </label>
+                <br />
+                <img id="controller_ready_img" src="./ready.png">
+                <img id="viewer_ready_img" src="./ready.png">
+                <br />
+                <button id='start-submit'>
+                    Ready
+                </button>
+            </div>
+        </div>
         <div id="level" class="textBox"></div>
         <div id="lives" class="textBox"></div>
         <div id="gameover" class="textBox centered hidden">GAME OVER</div>

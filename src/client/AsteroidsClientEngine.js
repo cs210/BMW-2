@@ -1,5 +1,8 @@
 import { ClientEngine, KeyboardControls } from 'lance-gg';
 import AsteroidsRenderer from '../client/AsteroidsRenderer';
+import Utils from "lance-gg/src/lib/Utils";
+import io from 'socket.io-client';
+const $ = require('jquery');
 
 const betaTiltThreshold = 40;
 const gammaTiltThreshold = 40;
@@ -9,7 +12,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
 
     constructor(gameEngine, options) {
         super(gameEngine, options, AsteroidsRenderer);
-
+        this.playerOptions = options.playerOptions;
         //  Game input
         if (isTouchDevice()) {
             document.querySelector('#instructionsMobile').classList.remove('hidden');
@@ -63,6 +66,97 @@ export default class AsteroidsClientEngine extends ClientEngine {
         this.actions = new Set();
     }
 
+    /**
+     * Makes a connection to the game server.  Extend this method if you want to add additional
+     * logic on every connection. Call the super-class connect first, and return a promise which
+     * executes when the super-class promise completes.
+     *
+     * @param {Object} [options] additional socket.io options
+     * @return {Promise} Resolved when the connection is made to the server
+     */
+    connect(options = {}) {
+
+        let connectSocket = matchMakerAnswer => {
+            return new Promise((resolve, reject) => {
+
+                if (matchMakerAnswer.status !== 'ok')
+                    reject('matchMaker failed status: ' + matchMakerAnswer.status);
+
+                if (this.options.verbose)
+                    console.log(`connecting to game server ${matchMakerAnswer.serverURL}`);
+                this.socket = io(matchMakerAnswer.serverURL, options);
+
+                this.networkMonitor.registerClient(this);
+
+                this.socket.once('connect', () => {
+                    if (this.options.verbose)
+                        console.log('connection made');
+                    resolve();
+                });
+
+                this.socket.once('error', (error) => {
+                    reject(error);
+                });
+
+                this.socket.on('playerJoined', (playerData) => {
+                    this.gameEngine.playerId = playerData.playerId;
+                    this.messageIndex = Number(this.gameEngine.playerId) * 10000;
+                    this.socket.emit('playerDataUpdate', this.playerOptions);
+                });
+
+                this.socket.on('waitingForPlayer', (data) => {
+                    document.getElementById('waiting-room-overlay').style.display = 'block';
+                    document.getElementById('waiting-room-container').style.display = 'block';
+                    this.viewer = this.renderer.viewer = data.viewer;
+                    let reqUpdate = setInterval(() => {
+                        this.socket.emit('requestGroupUpdate')
+                    }, 250)
+
+                    this.socket.on('gameBegin', (data) => {
+                        clearInterval(reqUpdate);
+                        $('#waiting-room-overlay').remove();
+                        this.gameEngine.playerReady[this.gameEngine.playerId] = true;
+                        this.renderer.groupShipPID = data.ship_pid;
+                        console.log(this.renderer.groupShipPID);
+                    });
+
+                    $('#start-submit').click(() => {
+                        this.socket.emit('playerReady', {viewer : this.viewer});
+                        document.getElementById('start-submit').style.visibility = 'hidden';
+                    });
+                });
+
+                this.socket.on('groupFull', () => {
+                    window.alert('Group is full, please join/create another group.');
+                    document.getElementById('name-prompt-overlay').style.display = 'block';
+                    document.getElementById('name-prompt-container').style.display = 'block';
+                });
+
+                this.socket.on('groupUpdate', (groupData) => {
+                    document.getElementById('controller_label').innerHTML = groupData.c_playerName;
+                    document.getElementById('viewer_label').innerHTML = groupData.v_playerName;
+                    document.getElementById('controller_ready_img').style.visibility =
+                        (groupData.c_ready ? 'visible' : 'hidden');
+                    document.getElementById('viewer_ready_img').style.visibility =
+                        (groupData.v_ready ? 'visible' : 'hidden');
+                });
+
+                this.socket.on('worldUpdate', (worldData) => {
+                    this.inboundMessages.push(worldData);
+                });
+
+                this.socket.on('roomUpdate', (roomData) => {
+                    this.gameEngine.emit('client__roomUpdate', roomData);
+                });
+            });
+        };
+
+        let matchmaker = Promise.resolve({ serverURL: this.options.serverURL, status: 'ok' });
+        if (this.options.matchmaker)
+            matchmaker = Utils.httpGetPromise(this.options.matchmaker);
+
+        return matchmaker.then(connectSocket);
+    }
 }
 
 function isTouchDevice() {

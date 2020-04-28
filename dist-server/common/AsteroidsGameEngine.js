@@ -15,7 +15,7 @@ var _Ship = _interopRequireDefault(require("./Ship"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -23,31 +23,35 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var AsteroidsGameEngine =
-/*#__PURE__*/
-function (_GameEngine) {
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
   _inherits(AsteroidsGameEngine, _GameEngine);
+
+  var _super = _createSuper(AsteroidsGameEngine);
 
   function AsteroidsGameEngine(options) {
     var _this;
 
     _classCallCheck(this, AsteroidsGameEngine);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(AsteroidsGameEngine).call(this, options)); // create physics with no friction; wrap positions after each step
+    _this = _super.call(this, options); // create physics with no friction; wrap positions after each step
 
     _this.physicsEngine = new _lanceGg.P2PhysicsEngine({
       gameEngine: _assertThisInitialized(_this)
@@ -74,6 +78,7 @@ function (_GameEngine) {
       BULLET: Math.pow(2, 2),
       ASTEROID: Math.pow(2, 3)
     });
+    _this.playerReady = {};
     return _this;
   } // If the body is out of space bounds, warp it to the other side
 
@@ -120,38 +125,40 @@ function (_GameEngine) {
   }, {
     key: "processInput",
     value: function processInput(inputData, playerId) {
-      _get(_getPrototypeOf(AsteroidsGameEngine.prototype), "processInput", this).call(this, inputData, playerId); // handle keyboard presses
+      _get(_getPrototypeOf(AsteroidsGameEngine.prototype), "processInput", this).call(this, inputData, playerId);
 
+      if (playerId in this.playerReady && this.playerReady[playerId]) {
+        // handle keyboard presses
+        var playerShip = this.world.queryObject({
+          playerId: playerId,
+          instanceType: _Ship["default"]
+        });
 
-      var playerShip = this.world.queryObject({
-        playerId: playerId,
-        instanceType: _Ship["default"]
-      });
-
-      if (playerShip) {
-        if (inputData.input === 'up') {
+        if (playerShip) {
+          if (inputData.input === 'up') {
+            /*
+            console.log(playerShip.physicsObj.position.y);
+            playerShip.physicsObj.position.y += 0.5;
+            console.log(playerShip.physicsObj.position.y);
+            */
+            playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
+          } else if (inputData.input === 'right') {
+            playerShip.physicsObj.angle -= this.shipTurnSpeed;
+          } else if (inputData.input === 'left') {
+            playerShip.physicsObj.angle += this.shipTurnSpeed;
+          } else if (inputData.input === 'down') {
+            playerShip.physicsObj.applyForceLocal([0, -this.shipSpeed]);
+          }
           /*
-          console.log(playerShip.physicsObj.position.y);
-          playerShip.physicsObj.position.y += 0.5;
-          console.log(playerShip.physicsObj.position.y);
+          else if (inputData.input === 'space')
+          {
+              this.emit('shoot', playerShip);
+          }
           */
-          playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
-        } else if (inputData.input === 'right') {
-          playerShip.physicsObj.angle -= this.shipTurnSpeed;
-        } else if (inputData.input === 'left') {
-          playerShip.physicsObj.angle += this.shipTurnSpeed;
-        } else if (inputData.input === 'down') {
-          playerShip.physicsObj.applyForceLocal([0, -this.shipSpeed]);
-        }
-        /*
-        else if (inputData.input === 'space')
-        {
-            this.emit('shoot', playerShip);
-        }
-        */
 
 
-        playerShip.refreshFromPhysics();
+          playerShip.refreshFromPhysics();
+        }
       }
     } // returns a random number between -0.5 and 0.5
 

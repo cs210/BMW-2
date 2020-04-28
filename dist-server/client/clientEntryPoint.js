@@ -10,7 +10,9 @@ var _AsteroidsGameEngine = _interopRequireDefault(require("../common/AsteroidsGa
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var qsOptions = _queryString["default"].parse(location.search); // default options, overwritten by query-string options
+var qsOptions = _queryString["default"].parse(location.search);
+
+var $ = require('jquery'); // default options, overwritten by query-string options
 // is sent to both game engine and client engine
 
 
@@ -26,10 +28,39 @@ var defaults = {
   }
 };
 var options = Object.assign(defaults, qsOptions); // create a client engine and a game engine
+// const gameEngine = new AsteroidsGameEngine(options);
+// const clientEngine = new AsteroidsClientEngine(gameEngine, options);
+// document.addEventListener('DOMContentLoaded', function(e) { clientEngine.start(); });
 
-var gameEngine = new _AsteroidsGameEngine["default"](options);
-var clientEngine = new _AsteroidsClientEngine["default"](gameEngine, options);
-document.addEventListener('DOMContentLoaded', function (e) {
-  clientEngine.start();
+$(document).ready(function () {
+  $('#name-input').focus();
+
+  var sendName = function sendName() {
+    var name = $('#name-input').val();
+    var gamecode = $('#gamecode-input').val();
+
+    if (gamecode.length === 0) {
+      gamecode = '/lobby';
+    }
+
+    if (name && name.length < 20) {
+      options.playerOptions = {
+        playerName: name,
+        privateCode: gamecode
+      };
+      var gameEngine = new _AsteroidsGameEngine["default"](options);
+      var clientEngine = new _AsteroidsClientEngine["default"](gameEngine, options);
+      document.getElementById('name-prompt-overlay').style.display = 'none';
+      document.getElementById('name-prompt-container').style.display = 'none';
+      clientEngine.start();
+    } else {
+      window.alert('Your name cannot be blank or over 20 characters.');
+    }
+
+    return false;
+  };
+
+  $('#name-form').submit(sendName);
+  $('#name-submit').click(sendName);
 });
 //# sourceMappingURL=clientEntryPoint.js.map
