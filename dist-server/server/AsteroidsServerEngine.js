@@ -185,17 +185,17 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
         socket.emit('groupUpdate', that.playerGroups[that.connectedPlayers[socket.id].privateCode]);
       });
       socket.on('playerReady', function (data) {
-        var group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
-
         if (data.viewer) {
           that.playerGroups[that.connectedPlayers[socket.id].privateCode].v_ready = true;
         } else {
           that.playerGroups[that.connectedPlayers[socket.id].privateCode].c_ready = true;
         }
 
+        var group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
+
         if (that.playerGroups[that.connectedPlayers[socket.id].privateCode].v_ready && that.playerGroups[that.connectedPlayers[socket.id].privateCode].c_ready) {
-          that.gameEngine.addShip(socket.playerId);
-          that.gameEngine.playerReady[socket.playerId] = true;
+          that.gameEngine.addShip(group.c_playerID);
+          that.gameEngine.playerReady[group.c_playerID] = true;
           that.io.to(group.c_socketID).to(group.v_socketID).emit('gameBegin', {
             ship_pid: socket.playerId
           });
