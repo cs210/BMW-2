@@ -170,6 +170,16 @@ canvas {
     position: absolute;
     bottom: 20%;
 }
+#waiting-room-overlay #waiting-room-container #controller_ready_img {
+    position: absolute;
+    left: 20%;
+    visibility: hidden;
+}
+#waiting-room-overlay #waiting-room-container #viewer_ready_img {
+    position: absolute;
+    right: 32%;
+    visibility: hidden;
+}
 
 #container table {
     margin: auto;

@@ -21,8 +21,6 @@ export default class AsteroidsGameEngine extends GameEngine {
         });
 
         this.playerReady = {};
-        this.controllers = [];
-        this.viewers = [];
     }
 
     // If the body is out of space bounds, warp it to the other side

@@ -45243,19 +45243,27 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
             _this3.socket.emit('playerDataUpdate', _this3.playerOptions);
           });
 
-          _this3.socket.on('waitingForPlayer', function () {
+          _this3.socket.on('waitingForPlayer', function (data) {
             document.getElementById('waiting-room-overlay').style.display = 'block';
             document.getElementById('waiting-room-container').style.display = 'block';
+            _this3.viewer = _this3.renderer.viewer = data.viewer;
             var reqUpdate = setInterval(function () {
               _this3.socket.emit('requestGroupUpdate');
-            }, 500);
-            $('#start-submit').click(function () {
+            }, 250);
+
+            _this3.socket.on('gameBegin', function (data) {
               clearInterval(reqUpdate);
               $('#waiting-room-overlay').remove();
-
-              _this3.socket.emit('playerReady');
-
               _this3.gameEngine.playerReady[_this3.gameEngine.playerId] = true;
+              _this3.renderer.groupShipPID = data.ship_pid;
+            });
+
+            $('#start-submit').click(function () {
+              _this3.socket.emit('playerReady', {
+                viewer: _this3.viewer
+              });
+
+              document.getElementById('start-submit').style.visibility = 'hidden';
             });
           });
 
@@ -45266,8 +45274,10 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
           });
 
           _this3.socket.on('groupUpdate', function (groupData) {
-            document.getElementById('controller_label').innerHTML = groupData.controllerName;
-            document.getElementById('viewer_label').innerHTML = groupData.viewerName;
+            document.getElementById('controller_label').innerHTML = groupData.c_playerName;
+            document.getElementById('viewer_label').innerHTML = groupData.v_playerName;
+            document.getElementById('controller_ready_img').style.visibility = groupData.c_ready ? 'visible' : 'hidden';
+            document.getElementById('viewer_ready_img').style.visibility = groupData.v_ready ? 'visible' : 'hidden';
           });
 
           _this3.socket.on('worldUpdate', function (worldData) {
@@ -45366,7 +45376,9 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     if (game.w / game.spaceWidth < game.zoom) game.zoom = game.w / game.spaceWidth;
     ctx = canvas.getContext('2d');
     ctx.lineWidth = 2 / game.zoom;
-    ctx.strokeStyle = ctx.fillStyle = 'white'; // remove instructions on first input
+    ctx.strokeStyle = ctx.fillStyle = 'white';
+    _this.viewer = false;
+    _this.groupShipPID = null; // remove instructions on first input
 
     setTimeout(_this.removeInstructions.bind(_assertThisInitialized(_this)), 5000);
     return _this;
@@ -45392,7 +45404,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
 
       this.drawBounds();
       game.world.forEachObject(function (id, obj) {
-        if (obj instanceof __WEBPACK_IMPORTED_MODULE_3__common_Ship__["a" /* default */]) _this2.drawShip(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_2__common_Bullet__["a" /* default */]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_1__common_Asteroid__["a" /* default */]) _this2.drawAsteroid(obj.physicsObj);
+        if (obj instanceof __WEBPACK_IMPORTED_MODULE_3__common_Ship__["a" /* default */]) _this2.drawShip(obj.physicsObj, obj.playerId === _this2.groupShipPID);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_2__common_Bullet__["a" /* default */]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_1__common_Asteroid__["a" /* default */] && _this2.viewer) _this2.drawAsteroid(obj.physicsObj);
       }); // update status and restore
 
       this.updateStatus();
@@ -45424,8 +45436,13 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     }
   }, {
     key: "drawShip",
-    value: function drawShip(body) {
+    value: function drawShip(body, special) {
       var radius = body.shapes[0].radius;
+
+      if (special) {
+        ctx.strokeStyle = ctx.fillStyle = 'yellow';
+      }
+
       ctx.save();
       ctx.translate(body.position[0], body.position[1]); // Translate to the ship center
 
@@ -45440,6 +45457,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.closePath();
       ctx.stroke();
       ctx.restore();
+      ctx.strokeStyle = ctx.fillStyle = 'white';
     }
   }, {
     key: "drawAsteroid",
@@ -49808,8 +49826,6 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       ASTEROID: Math.pow(2, 3)
     });
     _this.playerReady = {};
-    _this.controllers = [];
-    _this.viewers = [];
     return _this;
   } // If the body is out of space bounds, warp it to the other side
 

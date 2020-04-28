@@ -25,7 +25,8 @@ export default class AsteroidsRenderer extends Renderer {
         ctx = canvas.getContext('2d');
         ctx.lineWidth = 2 / game.zoom;
         ctx.strokeStyle = ctx.fillStyle = 'white';
-
+        this.viewer = false;
+        this.groupShipPID = null;
         // remove instructions on first input
         setTimeout(this.removeInstructions.bind(this), 5000);
     }
@@ -46,9 +47,9 @@ export default class AsteroidsRenderer extends Renderer {
         // Draw all things
         this.drawBounds();
         game.world.forEachObject((id, obj) => {
-            if (obj instanceof Ship) this.drawShip(obj.physicsObj);
+            if (obj instanceof Ship) this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID);
             else if (obj instanceof Bullet) this.drawBullet(obj.physicsObj);
-            else if (obj instanceof Asteroid) this.drawAsteroid(obj.physicsObj);
+            else if (obj instanceof Asteroid && this.viewer) this.drawAsteroid(obj.physicsObj);
         });
 
         // update status and restore
@@ -78,8 +79,11 @@ export default class AsteroidsRenderer extends Renderer {
         document.getElementById('instructionsMobile').classList.add('hidden');
     }
 
-    drawShip(body) {
+    drawShip(body, special) {
         let radius = body.shapes[0].radius;
+        if (special) {
+            ctx.strokeStyle = ctx.fillStyle = 'yellow';
+        }
         ctx.save();
         ctx.translate(body.position[0], body.position[1]); // Translate to the ship center
         ctx.rotate(body.angle); // Rotate to ship orientation
@@ -92,7 +96,7 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.closePath();
         ctx.stroke();
         ctx.restore();
-
+        ctx.strokeStyle = ctx.fillStyle = 'white';
     }
 
     drawAsteroid(body) {

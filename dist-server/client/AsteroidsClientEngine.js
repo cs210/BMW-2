@@ -175,19 +175,27 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
             _this3.socket.emit('playerDataUpdate', _this3.playerOptions);
           });
 
-          _this3.socket.on('waitingForPlayer', function () {
+          _this3.socket.on('waitingForPlayer', function (data) {
             document.getElementById('waiting-room-overlay').style.display = 'block';
             document.getElementById('waiting-room-container').style.display = 'block';
+            _this3.viewer = _this3.renderer.viewer = data.viewer;
             var reqUpdate = setInterval(function () {
               _this3.socket.emit('requestGroupUpdate');
-            }, 500);
-            $('#start-submit').click(function () {
+            }, 250);
+
+            _this3.socket.on('gameBegin', function (data) {
               clearInterval(reqUpdate);
               $('#waiting-room-overlay').remove();
-
-              _this3.socket.emit('playerReady');
-
               _this3.gameEngine.playerReady[_this3.gameEngine.playerId] = true;
+              _this3.renderer.groupShipPID = data.ship_pid;
+            });
+
+            $('#start-submit').click(function () {
+              _this3.socket.emit('playerReady', {
+                viewer: _this3.viewer
+              });
+
+              document.getElementById('start-submit').style.visibility = 'hidden';
             });
           });
 
@@ -198,8 +206,10 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
           });
 
           _this3.socket.on('groupUpdate', function (groupData) {
-            document.getElementById('controller_label').innerHTML = groupData.controllerName;
-            document.getElementById('viewer_label').innerHTML = groupData.viewerName;
+            document.getElementById('controller_label').innerHTML = groupData.c_playerName;
+            document.getElementById('viewer_label').innerHTML = groupData.v_playerName;
+            document.getElementById('controller_ready_img').style.visibility = groupData.c_ready ? 'visible' : 'hidden';
+            document.getElementById('viewer_ready_img').style.visibility = groupData.v_ready ? 'visible' : 'hidden';
           });
 
           _this3.socket.on('worldUpdate', function (worldData) {

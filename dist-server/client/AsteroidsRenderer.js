@@ -68,7 +68,9 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     if (game.w / game.spaceWidth < game.zoom) game.zoom = game.w / game.spaceWidth;
     ctx = canvas.getContext('2d');
     ctx.lineWidth = 2 / game.zoom;
-    ctx.strokeStyle = ctx.fillStyle = 'white'; // remove instructions on first input
+    ctx.strokeStyle = ctx.fillStyle = 'white';
+    _this.viewer = false;
+    _this.groupShipPID = null; // remove instructions on first input
 
     setTimeout(_this.removeInstructions.bind(_assertThisInitialized(_this)), 5000);
     return _this;
@@ -94,7 +96,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
 
       this.drawBounds();
       game.world.forEachObject(function (id, obj) {
-        if (obj instanceof _Ship["default"]) _this2.drawShip(obj.physicsObj);else if (obj instanceof _Bullet["default"]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof _Asteroid["default"]) _this2.drawAsteroid(obj.physicsObj);
+        if (obj instanceof _Ship["default"]) _this2.drawShip(obj.physicsObj, obj.playerId === _this2.groupShipPID);else if (obj instanceof _Bullet["default"]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof _Asteroid["default"] && _this2.viewer) _this2.drawAsteroid(obj.physicsObj);
       }); // update status and restore
 
       this.updateStatus();
@@ -126,8 +128,13 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     }
   }, {
     key: "drawShip",
-    value: function drawShip(body) {
+    value: function drawShip(body, special) {
       var radius = body.shapes[0].radius;
+
+      if (special) {
+        ctx.strokeStyle = ctx.fillStyle = 'yellow';
+      }
+
       ctx.save();
       ctx.translate(body.position[0], body.position[1]); // Translate to the ship center
 
@@ -142,6 +149,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.closePath();
       ctx.stroke();
       ctx.restore();
+      ctx.strokeStyle = ctx.fillStyle = 'white';
     }
   }, {
     key: "drawAsteroid",

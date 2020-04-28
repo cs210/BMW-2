@@ -104,17 +104,24 @@ export default class AsteroidsClientEngine extends ClientEngine {
                     this.socket.emit('playerDataUpdate', this.playerOptions);
                 });
 
-                this.socket.on('waitingForPlayer', () => {
+                this.socket.on('waitingForPlayer', (data) => {
                     document.getElementById('waiting-room-overlay').style.display = 'block';
                     document.getElementById('waiting-room-container').style.display = 'block';
+                    this.viewer = this.renderer.viewer = data.viewer;
                     let reqUpdate = setInterval(() => {
                         this.socket.emit('requestGroupUpdate')
-                    }, 500)
-                    $('#start-submit').click(() => {
+                    }, 250)
+
+                    this.socket.on('gameBegin', (data) => {
                         clearInterval(reqUpdate);
                         $('#waiting-room-overlay').remove();
-                        this.socket.emit('playerReady');
                         this.gameEngine.playerReady[this.gameEngine.playerId] = true;
+                        this.renderer.groupShipPID = data.ship_pid;
+                    });
+
+                    $('#start-submit').click(() => {
+                        this.socket.emit('playerReady', {viewer : this.viewer});
+                        document.getElementById('start-submit').style.visibility = 'hidden';
                     });
                 });
 
@@ -125,8 +132,12 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 });
 
                 this.socket.on('groupUpdate', (groupData) => {
-                    document.getElementById('controller_label').innerHTML = groupData.controllerName;
-                    document.getElementById('viewer_label').innerHTML = groupData.viewerName;
+                    document.getElementById('controller_label').innerHTML = groupData.c_playerName;
+                    document.getElementById('viewer_label').innerHTML = groupData.v_playerName;
+                    document.getElementById('controller_ready_img').style.visibility =
+                        (groupData.c_ready ? 'visible' : 'hidden');
+                    document.getElementById('viewer_ready_img').style.visibility =
+                        (groupData.v_ready ? 'visible' : 'hidden');
                 });
 
                 this.socket.on('worldUpdate', (worldData) => {

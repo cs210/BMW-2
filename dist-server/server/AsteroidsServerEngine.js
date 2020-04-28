@@ -62,6 +62,7 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
     gameEngine.on('shoot', _this.shoot.bind(_assertThisInitialized(_this)));
     _this.playerReady = {};
     _this.playerGroups = {};
+    _this.io = io;
     return _this;
   }
 
@@ -142,40 +143,53 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
         that.connectedPlayers[socket.id].privateCode = data.privateCode;
 
         if (data.privateCode in that.playerGroups) {
-          if (that.playerGroups[data.privateCode].length >= 2) {
+          if (that.playerGroups[data.privateCode].full) {
             socket.emit('groupFull');
           } else {
-            that.playerGroups[data.privateCode].push({
-              playerID: socket.playerId,
-              playerName: data.playerName
+            that.playerGroups[data.privateCode].v_playerID = socket.playerId;
+            that.playerGroups[data.privateCode].v_playerName = data.playerName;
+            that.playerGroups[data.privateCode].v_socketID = socket.id;
+            that.playerGroups[data.privateCode].full = true;
+            socket.emit('waitingForPlayer', {
+              viewer: true
             });
-            socket.emit('waitingForPlayer');
           }
         } else {
-          that.playerGroups[data.privateCode] = [{
-            playerID: socket.playerId,
-            playerName: data.playerName
-          }];
-          socket.emit('waitingForPlayer');
+          that.playerGroups[data.privateCode] = {
+            c_playerID: socket.playerId,
+            c_playerName: data.playerName,
+            c_socketID: socket.id,
+            v_playerID: null,
+            v_playerName: null,
+            v_socketID: null,
+            full: false,
+            c_ready: false,
+            v_ready: false
+          };
+          socket.emit('waitingForPlayer', {
+            viewer: false
+          });
         }
       });
       socket.on('requestGroupUpdate', function () {
-        var group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
-        var controllerName = group[0].playerName;
-        var viewerName = null;
-
-        if (group.length == 2) {
-          viewerName = group[1].playerName;
-        }
-
-        socket.emit('groupUpdate', {
-          controllerName: controllerName,
-          viewerName: viewerName
-        });
+        socket.emit('groupUpdate', that.playerGroups[that.connectedPlayers[socket.id].privateCode]);
       });
       socket.on('playerReady', function (data) {
-        that.gameEngine.addShip(socket.playerId);
-        that.gameEngine.playerReady[socket.playerId] = true;
+        var group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
+
+        if (data.viewer) {
+          that.playerGroups[that.connectedPlayers[socket.id].privateCode].v_ready = true;
+        } else {
+          that.playerGroups[that.connectedPlayers[socket.id].privateCode].c_ready = true;
+        }
+
+        if (that.playerGroups[that.connectedPlayers[socket.id].privateCode].v_ready && that.playerGroups[that.connectedPlayers[socket.id].privateCode].c_ready) {
+          that.gameEngine.addShip(socket.playerId);
+          that.gameEngine.playerReady[socket.playerId] = true;
+          that.io.to(group.c_socketID).to(group.v_socketID).emit('gameBegin', {
+            ship_pid: socket.playerId
+          });
+        }
       });
     }
   }, {
