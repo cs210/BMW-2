@@ -117,6 +117,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
                         $('#waiting-room-overlay').remove();
                         this.gameEngine.playerReady[this.gameEngine.playerId] = true;
                         this.renderer.groupShipPID = data.ship_pid;
+                        console.log(this.renderer.groupShipPID);
                     });
 
                     $('#start-submit').click(() => {

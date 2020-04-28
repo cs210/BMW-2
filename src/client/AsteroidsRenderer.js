@@ -59,7 +59,7 @@ export default class AsteroidsRenderer extends Renderer {
 
     updateStatus() {
 
-        let playerShip = this.gameEngine.world.queryObject({ playerId: this.gameEngine.playerId });
+        let playerShip = this.gameEngine.world.queryObject({ playerId: this.groupShipPID });
 
         if (!playerShip) {
             if (this.lives !== undefined)
@@ -68,7 +68,7 @@ export default class AsteroidsRenderer extends Renderer {
         }
 
         // update lives if necessary
-        if (playerShip.playerId === this.gameEngine.playerId && this.lives !== playerShip.lives) {
+        if (playerShip.playerId === this.groupShipPID && this.lives !== playerShip.lives) {
             document.getElementById('lives').innerHTML = 'Lives ' + playerShip.lives;
             this.lives = playerShip.lives;
         }

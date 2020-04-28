@@ -106,7 +106,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     key: "updateStatus",
     value: function updateStatus() {
       var playerShip = this.gameEngine.world.queryObject({
-        playerId: this.gameEngine.playerId
+        playerId: this.groupShipPID
       });
 
       if (!playerShip) {
@@ -115,7 +115,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       } // update lives if necessary
 
 
-      if (playerShip.playerId === this.gameEngine.playerId && this.lives !== playerShip.lives) {
+      if (playerShip.playerId === this.groupShipPID && this.lives !== playerShip.lives) {
         document.getElementById('lives').innerHTML = 'Lives ' + playerShip.lives;
         this.lives = playerShip.lives;
       }

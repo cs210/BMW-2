@@ -86,13 +86,23 @@ export default class AsteroidsServerEngine extends ServerEngine {
                 if (that.playerGroups[data.privateCode].full) {
                     socket.emit('groupFull');
                 } else {
-                    that.playerGroups[data.privateCode].v_playerID = socket.playerId;
-                    that.playerGroups[data.privateCode].v_playerName = data.playerName;
-                    that.playerGroups[data.privateCode].v_socketID = socket.id;
-                    that.playerGroups[data.privateCode].full = true;
-                    socket.emit('waitingForPlayer', {
-                        viewer : true
-                    });
+                    if (that.playerGroups[data.privateCode].v_playerID === null) {
+                        that.playerGroups[data.privateCode].v_playerID = socket.playerId;
+                        that.playerGroups[data.privateCode].v_playerName = data.playerName;
+                        that.playerGroups[data.privateCode].v_socketID = socket.id;
+                        that.playerGroups[data.privateCode].full = true;
+                        socket.emit('waitingForPlayer', {
+                            viewer : true
+                        });
+                    } else {
+                        that.playerGroups[data.privateCode].c_playerID = socket.playerId;
+                        that.playerGroups[data.privateCode].c_playerName = data.playerName;
+                        that.playerGroups[data.privateCode].c_socketID = socket.id;
+                        that.playerGroups[data.privateCode].full = true;
+                        socket.emit('waitingForPlayer', {
+                            viewer : false
+                        });
+                    }
                 }
             } else {
                 that.playerGroups[data.privateCode] = {
@@ -131,7 +141,24 @@ export default class AsteroidsServerEngine extends ServerEngine {
     }
 
     onPlayerDisconnected(socketId, playerId) {
+        let group_code = this.connectedPlayers[socketId].privateCode;
         super.onPlayerDisconnected(socketId, playerId);
+        if (playerId === this.playerGroups[group_code].c_playerID) {
+            this.playerGroups[group_code].c_playerID = null;
+            this.playerGroups[group_code].c_socketID = null;
+            this.playerGroups[group_code].c_playerName = null;
+            this.playerGroups[group_code].c_ready = false;
+            this.playerGroups[group_code].full = false;
+        } else {
+            this.playerGroups[group_code].v_playerID = null;
+            this.playerGroups[group_code].v_socketID = null;
+            this.playerGroups[group_code].v_playerName = null;
+            this.playerGroups[group_code].v_ready = false;
+            this.playerGroups[group_code].full = false;
+        }
+        if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
+            delete this.playerGroups[group_code];
+        }
         for (let o of this.gameEngine.world.queryObjects({ playerId }))
             this.gameEngine.removeObjectFromWorld(o.id);
     }

@@ -188,6 +188,7 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
               $('#waiting-room-overlay').remove();
               _this3.gameEngine.playerReady[_this3.gameEngine.playerId] = true;
               _this3.renderer.groupShipPID = data.ship_pid;
+              console.log(_this3.renderer.groupShipPID);
             });
 
             $('#start-submit').click(function () {
