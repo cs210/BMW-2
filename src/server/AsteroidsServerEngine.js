@@ -9,6 +9,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
         super(io, gameEngine, inputOptions);
         gameEngine.physicsEngine.world.on('beginContact', this.handleCollision.bind(this));
         gameEngine.on('shoot', this.shoot.bind(this));
+        this.playerReady = {}
     }
 
     start() {
@@ -79,8 +80,12 @@ export default class AsteroidsServerEngine extends ServerEngine {
         socket.on('playerDataUpdate', function(data) {
             that.connectedPlayers[socket.id].playerName = data.playerName;
             that.connectedPlayers[socket.id].privateCode = data.privateCode;
+            socket.emit('waitingForPlayer');
         });
-        this.gameEngine.addShip(socket.playerId);
+        socket.on('playerReady', function(data) {
+            that.gameEngine.addShip(socket.playerId);
+            that.gameEngine.playerReady[socket.playerId] = true;
+        });
     }
 
     onPlayerDisconnected(socketId, playerId) {

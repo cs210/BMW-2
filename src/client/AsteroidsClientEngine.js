@@ -2,6 +2,7 @@ import { ClientEngine, KeyboardControls } from 'lance-gg';
 import AsteroidsRenderer from '../client/AsteroidsRenderer';
 import Utils from "lance-gg/src/lib/Utils";
 import io from 'socket.io-client';
+const $ = require('jquery');
 
 const betaTiltThreshold = 40;
 const gammaTiltThreshold = 40;
@@ -101,6 +102,16 @@ export default class AsteroidsClientEngine extends ClientEngine {
                     this.gameEngine.playerId = playerData.playerId;
                     this.messageIndex = Number(this.gameEngine.playerId) * 10000;
                     this.socket.emit('playerDataUpdate', this.playerOptions);
+                });
+
+                this.socket.on('waitingForPlayer', () => {
+                    document.getElementById('waiting-room-overlay').style.display = 'block';
+                    document.getElementById('waiting-room-container').style.display = 'block';
+                    $('#start-submit').click(() => {
+                        $('#waiting-room-overlay').remove();
+                        this.socket.emit('playerReady');
+                        this.gameEngine.playerReady[this.gameEngine.playerId] = true;
+                    });
                 });
 
                 this.socket.on('worldUpdate', (worldData) => {

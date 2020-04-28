@@ -19,6 +19,8 @@ export default class AsteroidsGameEngine extends GameEngine {
             asteroidRadius: 1.125, numAsteroidLevels: 4, numAsteroidVerts: 4, maxAsteroidSpeed: 0,
             spaceWidth: 16, spaceHeight: 9, SHIP: Math.pow(2, 1), BULLET: Math.pow(2, 2), ASTEROID: Math.pow(2, 3)
         });
+
+        this.playerReady = {};
     }
 
     // If the body is out of space bounds, warp it to the other side
@@ -62,37 +64,39 @@ export default class AsteroidsGameEngine extends GameEngine {
 
         super.processInput(inputData, playerId);
 
-        // handle keyboard presses
-        let playerShip = this.world.queryObject({ playerId: playerId, instanceType: Ship });
-        if (playerShip) {
-            if (inputData.input === 'up')
-            {
+        if (playerId in this.playerReady && this.playerReady[playerId]) {
+            // handle keyboard presses
+            let playerShip = this.world.queryObject({ playerId: playerId, instanceType: Ship });
+            if (playerShip) {
+                if (inputData.input === 'up')
+                {
+                    /*
+                    console.log(playerShip.physicsObj.position.y);
+                    playerShip.physicsObj.position.y += 0.5;
+                    console.log(playerShip.physicsObj.position.y);
+                    */
+                    playerShip.physicsObj.applyForceLocal([0,this.shipSpeed]);
+                }
+                else if (inputData.input === 'right')
+                {
+                    playerShip.physicsObj.angle -= this.shipTurnSpeed;
+                }
+                else if (inputData.input === 'left')
+                {
+                    playerShip.physicsObj.angle += this.shipTurnSpeed;
+                }
+                else if (inputData.input === 'down')
+                {
+                    playerShip.physicsObj.applyForceLocal([0,-this.shipSpeed]);
+                }
                 /*
-                console.log(playerShip.physicsObj.position.y);
-                playerShip.physicsObj.position.y += 0.5;
-                console.log(playerShip.physicsObj.position.y);
+                else if (inputData.input === 'space')
+                {
+                    this.emit('shoot', playerShip);
+                }
                 */
-                playerShip.physicsObj.applyForceLocal([0,this.shipSpeed]);
-            } 
-            else if (inputData.input === 'right')
-            {
-                playerShip.physicsObj.angle -= this.shipTurnSpeed;
-            } 
-            else if (inputData.input === 'left') 
-            {
-                playerShip.physicsObj.angle += this.shipTurnSpeed;
-            } 
-            else if (inputData.input === 'down')
-            {
-                playerShip.physicsObj.applyForceLocal([0,-this.shipSpeed]);
-            } 
-            /*
-            else if (inputData.input === 'space')
-            {
-                this.emit('shoot', playerShip);
+                playerShip.refreshFromPhysics();
             }
-            */
-            playerShip.refreshFromPhysics();
         }
     }
 

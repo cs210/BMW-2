@@ -37,6 +37,8 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+var $ = require('jquery');
+
 var betaTiltThreshold = 40;
 var gammaTiltThreshold = 40;
 var steerThreshold = 0.4;
@@ -171,6 +173,18 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
             _this3.messageIndex = Number(_this3.gameEngine.playerId) * 10000;
 
             _this3.socket.emit('playerDataUpdate', _this3.playerOptions);
+          });
+
+          _this3.socket.on('waitingForPlayer', function () {
+            document.getElementById('waiting-room-overlay').style.display = 'block';
+            document.getElementById('waiting-room-container').style.display = 'block';
+            $('#start-submit').click(function () {
+              $('#waiting-room-overlay').remove();
+
+              _this3.socket.emit('playerReady');
+
+              _this3.gameEngine.playerReady[_this3.gameEngine.playerId] = true;
+            });
           });
 
           _this3.socket.on('worldUpdate', function (worldData) {

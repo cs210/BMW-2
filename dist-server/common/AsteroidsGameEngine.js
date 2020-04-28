@@ -78,6 +78,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       BULLET: Math.pow(2, 2),
       ASTEROID: Math.pow(2, 3)
     });
+    _this.playerReady = {};
     return _this;
   } // If the body is out of space bounds, warp it to the other side
 
@@ -124,38 +125,40 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
   }, {
     key: "processInput",
     value: function processInput(inputData, playerId) {
-      _get(_getPrototypeOf(AsteroidsGameEngine.prototype), "processInput", this).call(this, inputData, playerId); // handle keyboard presses
+      _get(_getPrototypeOf(AsteroidsGameEngine.prototype), "processInput", this).call(this, inputData, playerId);
 
+      if (playerId in this.playerReady && this.playerReady[playerId]) {
+        // handle keyboard presses
+        var playerShip = this.world.queryObject({
+          playerId: playerId,
+          instanceType: _Ship["default"]
+        });
 
-      var playerShip = this.world.queryObject({
-        playerId: playerId,
-        instanceType: _Ship["default"]
-      });
-
-      if (playerShip) {
-        if (inputData.input === 'up') {
+        if (playerShip) {
+          if (inputData.input === 'up') {
+            /*
+            console.log(playerShip.physicsObj.position.y);
+            playerShip.physicsObj.position.y += 0.5;
+            console.log(playerShip.physicsObj.position.y);
+            */
+            playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
+          } else if (inputData.input === 'right') {
+            playerShip.physicsObj.angle -= this.shipTurnSpeed;
+          } else if (inputData.input === 'left') {
+            playerShip.physicsObj.angle += this.shipTurnSpeed;
+          } else if (inputData.input === 'down') {
+            playerShip.physicsObj.applyForceLocal([0, -this.shipSpeed]);
+          }
           /*
-          console.log(playerShip.physicsObj.position.y);
-          playerShip.physicsObj.position.y += 0.5;
-          console.log(playerShip.physicsObj.position.y);
+          else if (inputData.input === 'space')
+          {
+              this.emit('shoot', playerShip);
+          }
           */
-          playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
-        } else if (inputData.input === 'right') {
-          playerShip.physicsObj.angle -= this.shipTurnSpeed;
-        } else if (inputData.input === 'left') {
-          playerShip.physicsObj.angle += this.shipTurnSpeed;
-        } else if (inputData.input === 'down') {
-          playerShip.physicsObj.applyForceLocal([0, -this.shipSpeed]);
-        }
-        /*
-        else if (inputData.input === 'space')
-        {
-            this.emit('shoot', playerShip);
-        }
-        */
 
 
-        playerShip.refreshFromPhysics();
+          playerShip.refreshFromPhysics();
+        }
       }
     } // returns a random number between -0.5 and 0.5
 

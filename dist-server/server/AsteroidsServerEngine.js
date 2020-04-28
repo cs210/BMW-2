@@ -60,6 +60,7 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
     _this = _super.call(this, io, gameEngine, inputOptions);
     gameEngine.physicsEngine.world.on('beginContact', _this.handleCollision.bind(_assertThisInitialized(_this)));
     gameEngine.on('shoot', _this.shoot.bind(_assertThisInitialized(_this)));
+    _this.playerReady = {};
     return _this;
   }
 
@@ -138,8 +139,12 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
       socket.on('playerDataUpdate', function (data) {
         that.connectedPlayers[socket.id].playerName = data.playerName;
         that.connectedPlayers[socket.id].privateCode = data.privateCode;
+        socket.emit('waitingForPlayer');
       });
-      this.gameEngine.addShip(socket.playerId);
+      socket.on('playerReady', function (data) {
+        that.gameEngine.addShip(socket.playerId);
+        that.gameEngine.playerReady[socket.playerId] = true;
+      });
     }
   }, {
     key: "onPlayerDisconnected",
