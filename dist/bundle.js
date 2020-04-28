@@ -45378,6 +45378,8 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     ctx = canvas.getContext('2d');
     ctx.lineWidth = 2 / game.zoom;
     ctx.strokeStyle = ctx.fillStyle = 'white';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = "white";
     _this.viewer = false;
     _this.groupShipPID = null; // remove instructions on first input
 
@@ -45441,7 +45443,8 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       var radius = body.shapes[0].radius;
 
       if (special) {
-        ctx.strokeStyle = ctx.fillStyle = 'yellow';
+        ctx.strokeStyle = ctx.fillStyle = "#18CAE6";
+        ctx.shadowColor = "#18CAE6";
       }
 
       ctx.save();
@@ -45459,6 +45462,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.stroke();
       ctx.restore();
       ctx.strokeStyle = ctx.fillStyle = 'white';
+      ctx.shadowColor = "white";
     }
   }, {
     key: "drawAsteroid",

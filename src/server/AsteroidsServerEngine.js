@@ -135,7 +135,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
             if (group.v_ready && group.c_ready) {
                 that.gameEngine.addShip(group.c_playerID);
                 that.gameEngine.playerReady[group.c_playerID] = true;
-                that.io.to(group.c_socketID).to(group.v_socketID).emit('gameBegin', {ship_pid : socket.playerId});
+                that.io.to(group.c_socketID).to(group.v_socketID).emit('gameBegin', {ship_pid : group.c_playerID});
                 that.playerGroups[that.connectedPlayers[socket.id].privateCode].gameStarted = true;
             }
         });

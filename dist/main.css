@@ -1,11 +1,21 @@
+@font-face {
+    font-family: 'TRON';
+    font-style: normal;
+    font-weight: normal;
+    src: local('TRON'), url('TRON.woff') format('woff');
+}
+
 body {
     background-color: black;
     margin:0;
     padding:0;
     overflow: hidden;
     color:white;
-    font-family:"Courier New", Courier, monospace;
+    font-family: 'TRON';
     font-size: 24px;
+    text-shadow: 0 0 10px #fff,
+        0 0 20px #18CAE6,
+        0 0 30px #18CAE6;
 }
 a {
     color:white;
@@ -27,7 +37,7 @@ canvas {
     margin-left: -250px;
     margin-top: -50px;
     position: absolute;
-    top:50%;
+    top:20%;
     left:50%;
     vertical-align: middle;
     text-align: center;
@@ -94,7 +104,7 @@ canvas {
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: rgba(49, 49, 49, 0.5);
+    <!-- background-color: rgba(49, 49, 49, 0.5); -->
     z-index: 1;
 }
 #name-prompt-overlay #name-prompt-container {
@@ -107,9 +117,11 @@ canvas {
     left: 0;
     margin: -50px auto;
     padding: 30px;
-    background: #bbb;
     z-index: 2;
     border-radius: 10px;
+    border-color: #18CAE6;
+    border-width: 30px;
+    border-style: ridge;
 }
 #name-prompt-overlay #name-prompt-container input,
 #name-prompt-overlay #name-prompt-container input:focus {
@@ -130,31 +142,36 @@ canvas {
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: rgba(49, 49, 49, 0.5);
+    <!-- background-color: rgba(49, 49, 49, 0.5); -->
     z-index: 1;
 }
 #waiting-room-overlay #waiting-room-container {
     display: none;
     position: absolute;
-    width: 490px;
-    height: 220px;
+    width: 600px;
+    height: 300px;
     top: 40%;
     right: 0;
     left: 0;
     margin: -50px auto;
     padding: 30px;
-    background: #bbb;
     z-index: 2;
     border-radius: 10px;
+    border-color: #18CAE6;
+    border-width: 30px;
+    border-style: ridge;
+}
+#waiting-room-overlay #waiting-room-container #waiting-room-header {
+    text-align: center;
 }
 #waiting-room-overlay #waiting-room-container #txt_label_l {
     position: absolute;
-    left: 20%;
+    left: 10%;
     margin-bottom: 20px;
 }
 #waiting-room-overlay #waiting-room-container #txt_label_r {
     position: absolute;
-    right: 20%;
+    right: 15%;
 }
 #waiting-room-overlay #waiting-room-container #controller_label {
     position: absolute;
@@ -168,7 +185,8 @@ canvas {
 }
 #waiting-room-overlay #waiting-room-container #start-submit {
     position: absolute;
-    bottom: 20%;
+    bottom: 15%;
+    left: 45%;
 }
 #waiting-room-overlay #waiting-room-container #controller_ready_img {
     position: absolute;
