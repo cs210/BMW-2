@@ -76,6 +76,17 @@ export default class AsteroidsServerEngine extends ServerEngine {
         if(ship.lives-- === 0) this.gameEngine.removeObjectFromWorld(ship.id);
     }
 
+    sendGroupUpdate(groupCode) {
+        if (groupCode) {
+            if (this.playerGroups[groupCode].c_socketID) {
+                this.io.to(this.playerGroups[groupCode].c_socketID).emit('groupUpdate', this.playerGroups[groupCode]);
+            }
+            if (this.playerGroups[groupCode].v_socketID) {
+                this.io.to(this.playerGroups[groupCode].v_socketID).emit('groupUpdate', this.playerGroups[groupCode]);
+            }
+        }
+    }
+
     onPlayerConnected(socket) {
         super.onPlayerConnected(socket);
         let that = this;
@@ -94,6 +105,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
                         socket.emit('waitingForPlayer', {
                             viewer : true
                         });
+                        that.sendGroupUpdate(data.privateCode);
                     } else {
                         that.playerGroups[data.privateCode].c_playerID = socket.playerId;
                         that.playerGroups[data.privateCode].c_playerName = data.playerName;
@@ -102,6 +114,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
                         socket.emit('waitingForPlayer', {
                             viewer : false
                         });
+                        that.sendGroupUpdate(data.privateCode);
                     }
                 }
             } else {
@@ -120,17 +133,18 @@ export default class AsteroidsServerEngine extends ServerEngine {
                 socket.emit('waitingForPlayer', {
                     viewer : false
                 });
+                that.sendGroupUpdate(data.privateCode);
             }
         });
-        socket.on('requestGroupUpdate', function() {
-            socket.emit('groupUpdate', that.playerGroups[that.connectedPlayers[socket.id].privateCode])
-        });
+
         socket.on('playerReady', function(data) {
+            let groupCode = that.connectedPlayers[socket.id].privateCode;
             if (data.viewer) {
-                that.playerGroups[that.connectedPlayers[socket.id].privateCode].v_ready = true;
+                that.playerGroups[groupCode].v_ready = true;
             } else {
-                that.playerGroups[that.connectedPlayers[socket.id].privateCode].c_ready = true;
+                that.playerGroups[groupCode].c_ready = true;
             }
+            that.sendGroupUpdate(groupCode);
             let group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
             if (group.v_ready && group.c_ready) {
                 that.gameEngine.addShip(group.c_playerID);
@@ -150,12 +164,18 @@ export default class AsteroidsServerEngine extends ServerEngine {
             this.playerGroups[group_code].c_playerName = null;
             this.playerGroups[group_code].c_ready = false;
             this.playerGroups[group_code].full = false;
+            if (this.playerGroups[group_code].v_socketID) {
+                this.io.to(this.playerGroups[group_code].v_socketID).emit('groupUpdate', this.playerGroups[group_code]);
+            }
         } else {
             this.playerGroups[group_code].v_playerID = null;
             this.playerGroups[group_code].v_socketID = null;
             this.playerGroups[group_code].v_playerName = null;
             this.playerGroups[group_code].v_ready = false;
             this.playerGroups[group_code].full = false;
+            if (this.playerGroups[group_code].c_socketID) {
+                this.io.to(this.playerGroups[group_code].c_socketID).emit('groupUpdate', this.playerGroups[group_code]);
+            }
         }
         if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
             delete this.playerGroups[group_code];
