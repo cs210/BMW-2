@@ -10,6 +10,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
         gameEngine.physicsEngine.world.on('beginContact', this.handleCollision.bind(this));
         gameEngine.on('shoot', this.shoot.bind(this));
         this.playerReady = {}
+        this.playerGroups = {}
     }
 
     start() {
@@ -80,7 +81,35 @@ export default class AsteroidsServerEngine extends ServerEngine {
         socket.on('playerDataUpdate', function(data) {
             that.connectedPlayers[socket.id].playerName = data.playerName;
             that.connectedPlayers[socket.id].privateCode = data.privateCode;
-            socket.emit('waitingForPlayer');
+            if (data.privateCode in that.playerGroups) {
+                if (that.playerGroups[data.privateCode].length >= 2) {
+                    socket.emit('groupFull');
+                } else {
+                    that.playerGroups[data.privateCode].push({
+                        playerID : socket.playerId,
+                        playerName : data.playerName
+                    });
+                    socket.emit('waitingForPlayer');
+                }
+            } else {
+                that.playerGroups[data.privateCode] = [{
+                    playerID : socket.playerId,
+                    playerName : data.playerName
+                }];
+                socket.emit('waitingForPlayer');
+            }
+        });
+        socket.on('requestGroupUpdate', function() {
+            let group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
+            let controllerName = group[0].playerName;
+            let viewerName = null;
+            if (group.length == 2) {
+                viewerName = group[1].playerName;
+            }
+            socket.emit('groupUpdate', {
+                controllerName : controllerName,
+                viewerName : viewerName
+            })
         });
         socket.on('playerReady', function(data) {
             that.gameEngine.addShip(socket.playerId);

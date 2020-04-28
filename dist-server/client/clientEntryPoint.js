@@ -50,7 +50,8 @@ $(document).ready(function () {
       };
       var gameEngine = new _AsteroidsGameEngine["default"](options);
       var clientEngine = new _AsteroidsClientEngine["default"](gameEngine, options);
-      $('#name-prompt-overlay').remove();
+      document.getElementById('name-prompt-overlay').style.display = 'none';
+      document.getElementById('name-prompt-container').style.display = 'none';
       clientEngine.start();
     } else {
       window.alert('Your name cannot be blank or over 20 characters.');

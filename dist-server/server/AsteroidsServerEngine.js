@@ -61,6 +61,7 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
     gameEngine.physicsEngine.world.on('beginContact', _this.handleCollision.bind(_assertThisInitialized(_this)));
     gameEngine.on('shoot', _this.shoot.bind(_assertThisInitialized(_this)));
     _this.playerReady = {};
+    _this.playerGroups = {};
     return _this;
   }
 
@@ -139,7 +140,38 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
       socket.on('playerDataUpdate', function (data) {
         that.connectedPlayers[socket.id].playerName = data.playerName;
         that.connectedPlayers[socket.id].privateCode = data.privateCode;
-        socket.emit('waitingForPlayer');
+
+        if (data.privateCode in that.playerGroups) {
+          if (that.playerGroups[data.privateCode].length >= 2) {
+            socket.emit('groupFull');
+          } else {
+            that.playerGroups[data.privateCode].push({
+              playerID: socket.playerId,
+              playerName: data.playerName
+            });
+            socket.emit('waitingForPlayer');
+          }
+        } else {
+          that.playerGroups[data.privateCode] = [{
+            playerID: socket.playerId,
+            playerName: data.playerName
+          }];
+          socket.emit('waitingForPlayer');
+        }
+      });
+      socket.on('requestGroupUpdate', function () {
+        var group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
+        var controllerName = group[0].playerName;
+        var viewerName = null;
+
+        if (group.length == 2) {
+          viewerName = group[1].playerName;
+        }
+
+        socket.emit('groupUpdate', {
+          controllerName: controllerName,
+          viewerName: viewerName
+        });
       });
       socket.on('playerReady', function (data) {
         that.gameEngine.addShip(socket.playerId);

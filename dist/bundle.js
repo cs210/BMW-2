@@ -28318,7 +28318,8 @@ $(document).ready(function () {
       };
       var gameEngine = new __WEBPACK_IMPORTED_MODULE_3__common_AsteroidsGameEngine__["a" /* default */](options);
       var clientEngine = new __WEBPACK_IMPORTED_MODULE_2__client_AsteroidsClientEngine__["a" /* default */](gameEngine, options);
-      $('#name-prompt-overlay').remove();
+      document.getElementById('name-prompt-overlay').style.display = 'none';
+      document.getElementById('name-prompt-container').style.display = 'none';
       clientEngine.start();
     } else {
       window.alert('Your name cannot be blank or over 20 characters.');
@@ -45245,13 +45246,28 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
           _this3.socket.on('waitingForPlayer', function () {
             document.getElementById('waiting-room-overlay').style.display = 'block';
             document.getElementById('waiting-room-container').style.display = 'block';
+            var reqUpdate = setInterval(function () {
+              _this3.socket.emit('requestGroupUpdate');
+            }, 500);
             $('#start-submit').click(function () {
+              clearInterval(reqUpdate);
               $('#waiting-room-overlay').remove();
 
               _this3.socket.emit('playerReady');
 
               _this3.gameEngine.playerReady[_this3.gameEngine.playerId] = true;
             });
+          });
+
+          _this3.socket.on('groupFull', function () {
+            window.alert('Group is full, please join/create another group.');
+            document.getElementById('name-prompt-overlay').style.display = 'block';
+            document.getElementById('name-prompt-container').style.display = 'block';
+          });
+
+          _this3.socket.on('groupUpdate', function (groupData) {
+            document.getElementById('controller_label').innerHTML = groupData.controllerName;
+            document.getElementById('viewer_label').innerHTML = groupData.viewerName;
           });
 
           _this3.socket.on('worldUpdate', function (worldData) {
@@ -49792,6 +49808,8 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       ASTEROID: Math.pow(2, 3)
     });
     _this.playerReady = {};
+    _this.controllers = [];
+    _this.viewers = [];
     return _this;
   } // If the body is out of space bounds, warp it to the other side
 

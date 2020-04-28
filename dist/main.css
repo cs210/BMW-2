@@ -149,12 +149,28 @@ canvas {
 }
 #waiting-room-overlay #waiting-room-container #txt_label_l {
     position: absolute;
-    left: 25%;
+    left: 20%;
+    margin-bottom: 20px;
 }
 #waiting-room-overlay #waiting-room-container #txt_label_r {
     position: absolute;
-    right: 25%;
+    right: 20%;
 }
+#waiting-room-overlay #waiting-room-container #controller_label {
+    position: absolute;
+    left: 20%;
+    margin-bottom: 20px;
+}
+#waiting-room-overlay #waiting-room-container #viewer_label {
+    position: absolute;
+    right: 20%;
+    margin-bottom: 20px;
+}
+#waiting-room-overlay #waiting-room-container #start-submit {
+    position: absolute;
+    bottom: 20%;
+}
+
 #container table {
     margin: auto;
     border-collapse: separate;

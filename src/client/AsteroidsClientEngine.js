@@ -107,11 +107,26 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 this.socket.on('waitingForPlayer', () => {
                     document.getElementById('waiting-room-overlay').style.display = 'block';
                     document.getElementById('waiting-room-container').style.display = 'block';
+                    let reqUpdate = setInterval(() => {
+                        this.socket.emit('requestGroupUpdate')
+                    }, 500)
                     $('#start-submit').click(() => {
+                        clearInterval(reqUpdate);
                         $('#waiting-room-overlay').remove();
                         this.socket.emit('playerReady');
                         this.gameEngine.playerReady[this.gameEngine.playerId] = true;
                     });
+                });
+
+                this.socket.on('groupFull', () => {
+                    window.alert('Group is full, please join/create another group.');
+                    document.getElementById('name-prompt-overlay').style.display = 'block';
+                    document.getElementById('name-prompt-container').style.display = 'block';
+                });
+
+                this.socket.on('groupUpdate', (groupData) => {
+                    document.getElementById('controller_label').innerHTML = groupData.controllerName;
+                    document.getElementById('viewer_label').innerHTML = groupData.viewerName;
                 });
 
                 this.socket.on('worldUpdate', (worldData) => {

@@ -79,6 +79,8 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       ASTEROID: Math.pow(2, 3)
     });
     _this.playerReady = {};
+    _this.controllers = [];
+    _this.viewers = [];
     return _this;
   } // If the body is out of space bounds, warp it to the other side
 
