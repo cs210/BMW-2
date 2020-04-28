@@ -44,7 +44,7 @@ export default class Asteroid extends PhysicalObject2D {
     addAsteroidVerts() {
         this.physicsObj.verts = [];
         let radius = this.physicsObj.shapes[0].radius;
-        for (let j=0; j < game.numAsteroidVerts; j++) {
+        for (let j = 0; j < game.numAsteroidVerts; j++) {
             let angle = j*2*Math.PI / game.numAsteroidVerts;
             let xv = radius * Math.cos(angle);
             let yv = radius * Math.sin(angle);

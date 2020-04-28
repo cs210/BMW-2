@@ -4,8 +4,6 @@
 
 Maestro is redesigning the driving experience for users of autonomous cars by combining micro-gestures and gaze tracking to transform what you can accomplish on your daily commute.
 
-This repository contains the ML experiments we are using for our project. Forked from tyleryep/ml-toolkit.
-
 # Team Members
 Member | Photograph | Email
 --- | --- | ---
@@ -32,10 +30,4 @@ Grant | Computer Vision, NLP, VR/AR Dev, Robotics | Team spirit, Ideation | Cool
 
 3. [Google Drive](https://drive.google.com/drive/folders/1cV6B6hpXUVpouP2769PhZ1-WBeDPmWPm?usp=sharing) for documents.
 
-<!-- 3. Slack: [hella210.slack.com](https://hella210.slack.com) (sign up [here](http://hella210.slack.com/signup)). -->
-
-<!-- 4. [Google Calendar](https://calendar.google.com/calendar/embed?src=2g53vl4sf7n5rd4ete19r4vivo%40group.calendar.google.com&ctz=America/Los_Angeles) for schedule coordination. -->
-
-<!-- 5. [Asana](https://app.asana.com/0/287787368549392/calendar) for task management. -->
-
-<!-- 6. [Instagram](https://www.instagram.com/drivebychariot/) for fun. -->
+4. [Trello](https://trello.com/b/2UA5CBuz/maestro) for some of our development progress.

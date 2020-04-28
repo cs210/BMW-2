@@ -20,11 +20,6 @@ const defaults = {
 };
 let options = Object.assign(defaults, qsOptions);
 
-// create a client engine and a game engine
-// const gameEngine = new AsteroidsGameEngine(options);
-// const clientEngine = new AsteroidsClientEngine(gameEngine, options);
-// document.addEventListener('DOMContentLoaded', function(e) { clientEngine.start(); });
-
 $(document).ready(() => {
     $('#name-input').focus();
     const sendName = () => {
@@ -39,6 +34,7 @@ $(document).ready(() => {
                 playerName: name,
                 privateCode: gamecode
             };
+            // create a client engine and a game engine
             const gameEngine = new AsteroidsGameEngine(options);
             const clientEngine = new AsteroidsClientEngine(gameEngine, options);
             document.getElementById('name-prompt-overlay').style.display = 'none';
