@@ -1,0 +1,233 @@
+body {
+    background-color: black;
+    margin:0;
+    padding:0;
+    overflow: hidden;
+    color:white;
+    font-family:"Courier New", Courier, monospace;
+    font-size: 24px;
+}
+a {
+    color:white;
+    text-decoration: none;
+    font-weight: bold;
+}
+canvas {
+    width:100%;
+    height:100%;
+    position:absolute;
+}
+.textBox {
+    margin:10px;
+    display: inline-block;
+}
+.textBox.centered {
+    width:500px;
+    height:100px;
+    margin-left: -250px;
+    margin-top: -50px;
+    position: absolute;
+    top:50%;
+    left:50%;
+    vertical-align: middle;
+    text-align: center;
+}
+.textBox.bottomRight {
+    position:absolute;
+    right:0;
+    bottom:0;
+}
+.textBox.bottomLeft {
+    position:absolute;
+    left:0;
+    bottom:0;
+}
+.hidden {
+    display: none;
+}
+.actionButton {
+    opacity: 0;
+    transition: all 0.5s ease-in;
+    background: #fff;
+    width: 5rem;
+    height: 5rem;
+    position: absolute;
+    bottom: 1rem;
+    transform: translateX(-50%);
+    border: 3px solid #ff2f95;
+    border-radius: 5rem;
+    color: #ff2f95;
+}
+.fireButton {
+    left: 40%;
+    content: "FIRE";
+}
+.fireButton::before {
+    content: "FIRE";
+    position: absolute;
+    color: #ff2f95;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+.boostButton {
+    left: 50%;
+    content: "BOOST";
+}
+.boostButton::before {
+    content: "BOOST";
+    position: absolute;
+    color: #ff2f95;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+
+
+#name-prompt-overlay {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(49, 49, 49, 0.5);
+    z-index: 1;
+}
+#name-prompt-overlay #name-prompt-container {
+    display: block;
+    position: absolute;
+    width: 490px;
+    height: 220px;
+    top: 40%;
+    right: 0;
+    left: 0;
+    margin: -50px auto;
+    padding: 30px;
+    background: #bbb;
+    z-index: 2;
+    border-radius: 10px;
+}
+#name-prompt-overlay #name-prompt-container input,
+#name-prompt-overlay #name-prompt-container input:focus {
+    outline: none;
+}
+#name-prompt-overlay #name-prompt-container button {
+    margin-top: 30px;
+}
+#name-prompt-overlay #name-prompt-container #name-submit:hover {
+    cursor: pointer;
+}
+#waiting-room-overlay {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(49, 49, 49, 0.5);
+    z-index: 1;
+}
+#waiting-room-overlay #waiting-room-container {
+    display: none;
+    position: absolute;
+    width: 490px;
+    height: 220px;
+    top: 40%;
+    right: 0;
+    left: 0;
+    margin: -50px auto;
+    padding: 30px;
+    background: #bbb;
+    z-index: 2;
+    border-radius: 10px;
+}
+#waiting-room-overlay #waiting-room-container #txt_label_l {
+    position: absolute;
+    left: 25%;
+}
+#waiting-room-overlay #waiting-room-container #txt_label_r {
+    position: absolute;
+    right: 25%;
+}
+#container table {
+    margin: auto;
+    border-collapse: separate;
+}
+#leaderboard-container {
+    width: 200px;
+    height: 600px;
+    border: 1px solid black;
+}
+#leaderboard-container h3 {
+    height: 50px;
+    padding: 5px;
+}
+#leaderboard-container #leaderboard {
+    height: 400px;
+    margin: 0;
+    padding: 5px;
+}
+#leaderboard-container #leaderboard li {
+    list-style-type: none;
+    background-color: #b9b9b9;
+    margin-right: 5px;
+    padding: 3px;
+    border-radius: 2px;
+}
+#canvas-container {
+    border: 1px solid black;
+    padding: 0;
+}
+#canvas-container #canvas {
+    width: 600px;
+    height: 600px;
+    margin: 0;
+    outline: none;
+    background-color: #fff;
+    cursor: crosshair;
+}
+#chat-container {
+    width: 200px;
+    height: 596px;
+    padding: 0;
+    border: 1px solid black;
+}
+#chat-container #chat-display {
+    height: 570px;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    overflow-y: scroll;
+}
+#chat-container #chat-display li {
+    list-style-type: none;
+    padding: 5px;
+}
+#chat-container #chat-display li:nth-child(even) {
+    background: #ccc;
+}
+#chat-container #chat-display li:nth-child(odd) {
+    background: #aaa;
+}
+#chat-container #chat-display .notification {
+    font-weight: bold;
+    color: #b30000;
+    padding: 6px;
+}
+#chat-container #chat-input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 30px;
+    padding: 5px;
+    border-top: 1px solid black;
+}
+#icons-container > div {
+    display: inline-block;
+}
+
