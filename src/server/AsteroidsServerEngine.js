@@ -75,6 +75,11 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
     onPlayerConnected(socket) {
         super.onPlayerConnected(socket);
+        let that = this;
+        socket.on('playerDataUpdate', function(data) {
+            that.connectedPlayers[socket.id].playerName = data.playerName;
+            that.connectedPlayers[socket.id].privateCode = data.privateCode;
+        });
         this.gameEngine.addShip(socket.playerId);
     }
 

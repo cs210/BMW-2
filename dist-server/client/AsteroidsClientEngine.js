@@ -9,6 +9,10 @@ var _lanceGg = require("lance-gg");
 
 var _AsteroidsRenderer = _interopRequireDefault(require("../client/AsteroidsRenderer"));
 
+var _Utils = _interopRequireDefault(require("lance-gg/src/lib/Utils"));
+
+var _socket = _interopRequireDefault(require("socket.io-client"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -47,7 +51,8 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
 
     _classCallCheck(this, AsteroidsClientEngine);
 
-    _this = _super.call(this, gameEngine, options, _AsteroidsRenderer["default"]); //  Game input
+    _this = _super.call(this, gameEngine, options, _AsteroidsRenderer["default"]);
+    _this.playerOptions = options.playerOptions; //  Game input
 
     if (isTouchDevice()) {
       document.querySelector('#instructionsMobile').classList.remove('hidden');
@@ -127,6 +132,63 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
         });
       });
       this.actions = new Set();
+    }
+    /**
+     * Makes a connection to the game server.  Extend this method if you want to add additional
+     * logic on every connection. Call the super-class connect first, and return a promise which
+     * executes when the super-class promise completes.
+     *
+     * @param {Object} [options] additional socket.io options
+     * @return {Promise} Resolved when the connection is made to the server
+     */
+
+  }, {
+    key: "connect",
+    value: function connect() {
+      var _this3 = this;
+
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      var connectSocket = function connectSocket(matchMakerAnswer) {
+        return new Promise(function (resolve, reject) {
+          if (matchMakerAnswer.status !== 'ok') reject('matchMaker failed status: ' + matchMakerAnswer.status);
+          if (_this3.options.verbose) console.log("connecting to game server ".concat(matchMakerAnswer.serverURL));
+          _this3.socket = (0, _socket["default"])(matchMakerAnswer.serverURL, options);
+
+          _this3.networkMonitor.registerClient(_this3);
+
+          _this3.socket.once('connect', function () {
+            if (_this3.options.verbose) console.log('connection made');
+            resolve();
+          });
+
+          _this3.socket.once('error', function (error) {
+            reject(error);
+          });
+
+          _this3.socket.on('playerJoined', function (playerData) {
+            _this3.gameEngine.playerId = playerData.playerId;
+            _this3.messageIndex = Number(_this3.gameEngine.playerId) * 10000;
+
+            _this3.socket.emit('playerDataUpdate', _this3.playerOptions);
+          });
+
+          _this3.socket.on('worldUpdate', function (worldData) {
+            _this3.inboundMessages.push(worldData);
+          });
+
+          _this3.socket.on('roomUpdate', function (roomData) {
+            _this3.gameEngine.emit('client__roomUpdate', roomData);
+          });
+        });
+      };
+
+      var matchmaker = Promise.resolve({
+        serverURL: this.options.serverURL,
+        status: 'ok'
+      });
+      if (this.options.matchmaker) matchmaker = _Utils["default"].httpGetPromise(this.options.matchmaker);
+      return matchmaker.then(connectSocket);
     }
   }]);
 

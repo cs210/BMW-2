@@ -21,7 +21,8 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "eslint": "^3.16.1",
-    "eslint-config-google": "^0.7.1"
+    "eslint-config-google": "^0.7.1",
+    "socket.io-client": "^2.3.0"
   },
   "scripts": {
     "start": "node dist-server/main.js",

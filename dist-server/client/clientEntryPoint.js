@@ -46,7 +46,7 @@ $(document).ready(function () {
     if (name && name.length < 20) {
       options.playerOptions = {
         playerName: name,
-        roomName: gamecode
+        privateCode: gamecode
       };
       var gameEngine = new _AsteroidsGameEngine["default"](options);
       var clientEngine = new _AsteroidsClientEngine["default"](gameEngine, options);
