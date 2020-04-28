@@ -174,7 +174,8 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
             v_socketID: null,
             full: false,
             c_ready: false,
-            v_ready: false
+            v_ready: false,
+            gameStarted: false
           };
           socket.emit('waitingForPlayer', {
             viewer: false
@@ -193,12 +194,13 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
 
         var group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
 
-        if (that.playerGroups[that.connectedPlayers[socket.id].privateCode].v_ready && that.playerGroups[that.connectedPlayers[socket.id].privateCode].c_ready) {
+        if (group.v_ready && group.c_ready) {
           that.gameEngine.addShip(group.c_playerID);
           that.gameEngine.playerReady[group.c_playerID] = true;
           that.io.to(group.c_socketID).to(group.v_socketID).emit('gameBegin', {
             ship_pid: socket.playerId
           });
+          that.playerGroups[that.connectedPlayers[socket.id].privateCode].gameStarted = true;
         }
       });
     }
@@ -234,13 +236,31 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
 
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var o = _step.value;
-          this.gameEngine.removeObjectFromWorld(o.id);
+          var _o = _step.value;
+          this.gameEngine.removeObjectFromWorld(_o.id);
         }
       } catch (err) {
         _iterator.e(err);
       } finally {
         _iterator.f();
+      }
+
+      if (this.playerGroups[group_code] && this.playerGroups[group_code].c_playerID && playerId !== this.playerGroups[group_code].c_playerID) {
+        var _iterator2 = _createForOfIteratorHelper(this.gameEngine.world.queryObjects({
+          playerId: this.playerGroups[group_code].c_playerID
+        })),
+            _step2;
+
+        try {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+            var o = _step2.value;
+            this.gameEngine.removeObjectFromWorld(o.id);
+          }
+        } catch (err) {
+          _iterator2.e(err);
+        } finally {
+          _iterator2.f();
+        }
       }
     }
   }]);
