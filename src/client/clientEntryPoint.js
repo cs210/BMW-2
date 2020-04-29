@@ -47,4 +47,13 @@ $(document).ready(() => {
     };
     $('#name-form').submit(sendName);
     $('#name-submit').click(sendName);
+
+    const restart = () => {
+        const gameEngine = new AsteroidsGameEngine(options);
+        const clientEngine = new AsteroidsClientEngine(gameEngine, options);
+        console.log("yo wassup");
+        clientEngine.start();
+    }
+
+    $('#play-again').click(restart);
 });

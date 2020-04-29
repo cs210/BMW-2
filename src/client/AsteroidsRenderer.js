@@ -66,6 +66,8 @@ export default class AsteroidsRenderer extends Renderer {
         if (!playerShip) {
             if (this.lives !== undefined)
                 document.getElementById('gameover').classList.remove('hidden');
+            console.log("about to focus this guy");
+            document.getElementById('play-again').focus();
             return;
         }
 
