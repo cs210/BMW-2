@@ -227,64 +227,66 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
 
       _get(_getPrototypeOf(AsteroidsServerEngine.prototype), "onPlayerDisconnected", this).call(this, socketId, playerId);
 
-      if (playerId === this.playerGroups[group_code].c_playerID) {
-        this.playerGroups[group_code].c_playerID = null;
-        this.playerGroups[group_code].c_socketID = null;
-        this.playerGroups[group_code].c_playerName = null;
-        this.playerGroups[group_code].c_ready = false;
-        this.playerGroups[group_code].full = false;
+      if (group_code && this.playerGroups[group_code]) {
+        if (playerId === this.playerGroups[group_code].c_playerID) {
+          this.playerGroups[group_code].c_playerID = null;
+          this.playerGroups[group_code].c_socketID = null;
+          this.playerGroups[group_code].c_playerName = null;
+          this.playerGroups[group_code].c_ready = false;
+          this.playerGroups[group_code].full = false;
 
-        if (this.playerGroups[group_code].v_socketID) {
-          this.io.to(this.playerGroups[group_code].v_socketID).emit('groupUpdate', this.playerGroups[group_code]);
+          if (this.playerGroups[group_code].v_socketID) {
+            this.io.to(this.playerGroups[group_code].v_socketID).emit('groupUpdate', this.playerGroups[group_code]);
+          }
+        } else {
+          this.playerGroups[group_code].v_playerID = null;
+          this.playerGroups[group_code].v_socketID = null;
+          this.playerGroups[group_code].v_playerName = null;
+          this.playerGroups[group_code].v_ready = false;
+          this.playerGroups[group_code].full = false;
+
+          if (this.playerGroups[group_code].c_socketID) {
+            this.io.to(this.playerGroups[group_code].c_socketID).emit('groupUpdate', this.playerGroups[group_code]);
+          }
         }
-      } else {
-        this.playerGroups[group_code].v_playerID = null;
-        this.playerGroups[group_code].v_socketID = null;
-        this.playerGroups[group_code].v_playerName = null;
-        this.playerGroups[group_code].v_ready = false;
-        this.playerGroups[group_code].full = false;
 
-        if (this.playerGroups[group_code].c_socketID) {
-          this.io.to(this.playerGroups[group_code].c_socketID).emit('groupUpdate', this.playerGroups[group_code]);
+        if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
+          delete this.playerGroups[group_code];
+        }
+
+        if (this.playerGroups[group_code] && this.playerGroups[group_code].c_playerID && playerId !== this.playerGroups[group_code].c_playerID) {
+          var _iterator = _createForOfIteratorHelper(this.gameEngine.world.queryObjects({
+            playerId: this.playerGroups[group_code].c_playerID
+          })),
+              _step;
+
+          try {
+            for (_iterator.s(); !(_step = _iterator.n()).done;) {
+              var o = _step.value;
+              this.gameEngine.removeObjectFromWorld(o.id);
+            }
+          } catch (err) {
+            _iterator.e(err);
+          } finally {
+            _iterator.f();
+          }
         }
       }
 
-      if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
-        delete this.playerGroups[group_code];
-      }
-
-      var _iterator = _createForOfIteratorHelper(this.gameEngine.world.queryObjects({
+      var _iterator2 = _createForOfIteratorHelper(this.gameEngine.world.queryObjects({
         playerId: playerId
       })),
-          _step;
+          _step2;
 
       try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var _o = _step.value;
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var _o = _step2.value;
           this.gameEngine.removeObjectFromWorld(_o.id);
         }
       } catch (err) {
-        _iterator.e(err);
+        _iterator2.e(err);
       } finally {
-        _iterator.f();
-      }
-
-      if (this.playerGroups[group_code] && this.playerGroups[group_code].c_playerID && playerId !== this.playerGroups[group_code].c_playerID) {
-        var _iterator2 = _createForOfIteratorHelper(this.gameEngine.world.queryObjects({
-          playerId: this.playerGroups[group_code].c_playerID
-        })),
-            _step2;
-
-        try {
-          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-            var o = _step2.value;
-            this.gameEngine.removeObjectFromWorld(o.id);
-          }
-        } catch (err) {
-          _iterator2.e(err);
-        } finally {
-          _iterator2.f();
-        }
+        _iterator2.f();
       }
     }
   }]);
