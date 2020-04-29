@@ -15445,16 +15445,22 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
 
   var _super = _createSuper(Asteroid);
 
-  function Asteroid() {
+  function Asteroid(gameEngine, options, props, dim) {
+    var _this;
+
     _classCallCheck(this, Asteroid);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, gameEngine, options, props);
+    _this.dim = dim;
+    return _this;
   }
 
   _createClass(Asteroid, [{
     key: "onAddToWorld",
     // on add-to-world, create a physics body
     value: function onAddToWorld() {
+      console.log("Variable dim that is passed thru: ");
+      console.log(this.dim);
       game = this.gameEngine;
       p2 = game.physicsEngine.p2;
       this.physicsObj = new p2.Body({
@@ -15498,6 +15504,8 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
     key: "syncTo",
     value: function syncTo(other) {
       _get(_getPrototypeOf(Asteroid.prototype), "syncTo", this).call(this, other);
+
+      this.dim = other.dim;
     }
   }, {
     key: "toString",
@@ -15521,6 +15529,9 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
       return Object.assign({
         level: {
           type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.INT16
+        },
+        dim: {
+          type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.CLASSINSTANCE
         }
       }, _get(_getPrototypeOf(Asteroid), "netScheme", this));
     }
@@ -15794,10 +15805,14 @@ var FinishLine = /*#__PURE__*/function (_PhysicalObject2D) {
 
   var _super = _createSuper(FinishLine);
 
-  function FinishLine() {
+  function FinishLine(gameEngine, options, props, dim) {
+    var _this;
+
     _classCallCheck(this, FinishLine);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, gameEngine, options, props);
+    _this.dim = dim;
+    return _this;
   }
 
   _createClass(FinishLine, [{
@@ -15814,8 +15829,8 @@ var FinishLine = /*#__PURE__*/function (_PhysicalObject2D) {
         velocity: [this.velocity.x, this.velocity.y]
       });
       this.physicsObj.addShape(new p2.Box({
-        width: 1,
-        height: 1,
+        width: this.dim[0],
+        height: this.dim[1],
         collisionGroup: game.FINISHLINE,
         // Belongs to the ASTEROID group
         collisionMask: game.SHIP // Can collide with SHIP group
@@ -15845,6 +15860,8 @@ var FinishLine = /*#__PURE__*/function (_PhysicalObject2D) {
     key: "syncTo",
     value: function syncTo(other) {
       _get(_getPrototypeOf(FinishLine.prototype), "syncTo", this).call(this, other);
+
+      this.dim = other.dim;
     }
   }, {
     key: "toString",
@@ -15868,6 +15885,9 @@ var FinishLine = /*#__PURE__*/function (_PhysicalObject2D) {
       return Object.assign({
         level: {
           type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.INT16
+        },
+        dim: {
+          type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.CLASSINSTANCE
         }
       }, _get(_getPrototypeOf(FinishLine), "netScheme", this));
     }
@@ -50117,7 +50137,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
           position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](x, y),
           velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](vx, vy),
           angularVelocity: va
-        });
+        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 1));
         a.level = 0;
         this.addObjectToWorld(a);
       } // add asteroids to the top half of the screen
@@ -50135,7 +50155,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
           position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](x, y),
           velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](_vx, _vy),
           angularVelocity: _va
-        });
+        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 1));
         a.level = 0;
         this.addObjectToWorld(a);
       }
@@ -50149,7 +50169,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
         position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](6.5, 3.75),
         velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
         angularVelocity: 0
-      });
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 1));
       a.level = 0;
       this.addObjectToWorld(a);
     } // asteroid explosion

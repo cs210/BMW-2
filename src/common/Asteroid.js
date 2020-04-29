@@ -5,9 +5,15 @@ let p2 = null;
 
 export default class Asteroid extends PhysicalObject2D {
 
+    constructor(gameEngine, options, props, dim) {
+        super(gameEngine, options, props);
+        this.dim = dim;
+    }
+
     static get netScheme() {
         return Object.assign({
-            level: { type: BaseTypes.TYPES.INT16 }
+            level: { type: BaseTypes.TYPES.INT16 },
+            dim: { type: BaseTypes.TYPES.CLASSINSTANCE }
         }, super.netScheme);
     }
 
@@ -19,6 +25,8 @@ export default class Asteroid extends PhysicalObject2D {
 
     // on add-to-world, create a physics body
     onAddToWorld() {
+        console.log("Variable dim that is passed thru: ");
+        console.log(this.dim);
         game = this.gameEngine;
         p2 = game.physicsEngine.p2;
         this.physicsObj = new p2.Body({
@@ -54,6 +62,7 @@ export default class Asteroid extends PhysicalObject2D {
 
     syncTo(other) {
         super.syncTo(other);
+        this.dim = other.dim;
     }
 
     toString() {

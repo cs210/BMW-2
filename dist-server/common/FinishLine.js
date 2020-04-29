@@ -41,10 +41,14 @@ var FinishLine = /*#__PURE__*/function (_PhysicalObject2D) {
 
   var _super = _createSuper(FinishLine);
 
-  function FinishLine() {
+  function FinishLine(gameEngine, options, props, dim) {
+    var _this;
+
     _classCallCheck(this, FinishLine);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, gameEngine, options, props);
+    _this.dim = dim;
+    return _this;
   }
 
   _createClass(FinishLine, [{
@@ -61,8 +65,8 @@ var FinishLine = /*#__PURE__*/function (_PhysicalObject2D) {
         velocity: [this.velocity.x, this.velocity.y]
       });
       this.physicsObj.addShape(new p2.Box({
-        width: 1,
-        height: 1,
+        width: this.dim[0],
+        height: this.dim[1],
         collisionGroup: game.FINISHLINE,
         // Belongs to the ASTEROID group
         collisionMask: game.SHIP // Can collide with SHIP group
@@ -92,6 +96,8 @@ var FinishLine = /*#__PURE__*/function (_PhysicalObject2D) {
     key: "syncTo",
     value: function syncTo(other) {
       _get(_getPrototypeOf(FinishLine.prototype), "syncTo", this).call(this, other);
+
+      this.dim = other.dim;
     }
   }, {
     key: "toString",
@@ -115,6 +121,9 @@ var FinishLine = /*#__PURE__*/function (_PhysicalObject2D) {
       return Object.assign({
         level: {
           type: _lanceGg.BaseTypes.TYPES.INT16
+        },
+        dim: {
+          type: _lanceGg.BaseTypes.TYPES.CLASSINSTANCE
         }
       }, _get(_getPrototypeOf(FinishLine), "netScheme", this));
     }

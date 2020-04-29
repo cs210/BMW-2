@@ -137,7 +137,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                 position: new TwoVector(x, y),
                 velocity: new TwoVector(vx, vy),
                 angularVelocity: va
-            });
+            }, new TwoVector(1, 1));
             a.level = 0;
             this.addObjectToWorld(a);
         }
@@ -156,7 +156,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                 position: new TwoVector(x, y),
                 velocity: new TwoVector(vx, vy),
                 angularVelocity: va
-            });
+            }, new TwoVector(1, 1));
             a.level = 0;
             this.addObjectToWorld(a);
         }
@@ -171,7 +171,9 @@ export default class AsteroidsGameEngine extends GameEngine {
             position: new TwoVector(6.5, 3.75),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
-        });
+        },
+            new TwoVector(1, 1)
+        );
         a.level = 0;
         this.addObjectToWorld(a);
     }

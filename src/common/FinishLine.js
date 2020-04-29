@@ -5,9 +5,15 @@ let p2 = null;
 
 export default class FinishLine extends PhysicalObject2D {
 
+    constructor(gameEngine, options, props, dim) {
+        super(gameEngine, options, props);
+        this.dim = dim;
+    }
+
     static get netScheme() {
         return Object.assign({
-            level: { type: BaseTypes.TYPES.INT16 }
+            level: { type: BaseTypes.TYPES.INT16 },
+            dim: { type: BaseTypes.TYPES.CLASSINSTANCE }
         }, super.netScheme);
     }
 
@@ -27,8 +33,8 @@ export default class FinishLine extends PhysicalObject2D {
             velocity: [this.velocity.x, this.velocity.y]
         });
         this.physicsObj.addShape(new p2.Box({
-            width: 1,
-            height: 1,
+            width: this.dim[0],
+            height: this.dim[1],
             collisionGroup: game.FINISHLINE, // Belongs to the ASTEROID group
             collisionMask: game.SHIP // Can collide with SHIP group
         }));
@@ -53,6 +59,7 @@ export default class FinishLine extends PhysicalObject2D {
 
     syncTo(other) {
         super.syncTo(other);
+        this.dim = other.dim;
     }
 
     toString() {

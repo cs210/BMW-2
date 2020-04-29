@@ -203,7 +203,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
           position: new _lanceGg.TwoVector(x, y),
           velocity: new _lanceGg.TwoVector(vx, vy),
           angularVelocity: va
-        });
+        }, new _lanceGg.TwoVector(1, 1));
         a.level = 0;
         this.addObjectToWorld(a);
       } // add asteroids to the top half of the screen
@@ -221,7 +221,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
           position: new _lanceGg.TwoVector(x, y),
           velocity: new _lanceGg.TwoVector(_vx, _vy),
           angularVelocity: _va
-        });
+        }, new _lanceGg.TwoVector(1, 1));
         a.level = 0;
         this.addObjectToWorld(a);
       }
@@ -235,7 +235,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
         position: new _lanceGg.TwoVector(6.5, 3.75),
         velocity: new _lanceGg.TwoVector(0, 0),
         angularVelocity: 0
-      });
+      }, new _lanceGg.TwoVector(1, 1));
       a.level = 0;
       this.addObjectToWorld(a);
     } // asteroid explosion
