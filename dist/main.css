@@ -29,7 +29,7 @@ canvas {
 }
 .textBox {
     margin:10px;
-    display: inline-block;
+    position:absolute;
 }
 .textBox.centered {
     width:500px;

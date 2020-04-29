@@ -2,6 +2,7 @@ import { ServerEngine, TwoVector } from 'lance-gg';
 import Asteroid from '../common/Asteroid';
 import Bullet from '../common/Bullet';
 import Ship from '../common/Ship';
+import FinishLine from "../common/FinishLine";
 
 export default class AsteroidsServerEngine extends ServerEngine {
 
@@ -17,6 +18,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
     start() {
         super.start();
         this.gameEngine.addAsteroids();
+        this.gameEngine.addFinishLine();
     }
 
     // handle a collision on server only
@@ -38,6 +40,8 @@ export default class AsteroidsServerEngine extends ServerEngine {
         if (B instanceof Bullet && A instanceof Asteroid) this.gameEngine.explode(A, B);
         if (A instanceof Ship && B instanceof Asteroid) this.kill(A);
         if (B instanceof Ship && A instanceof Asteroid) this.kill(B);
+        if (A instanceof Ship && B instanceof FinishLine) this.gameWon(A);
+        if (B instanceof Ship && A instanceof FinishLine) this.gameWon(B);
 
         // restart game
         if (this.gameEngine.world.queryObjects({ instanceType: Asteroid }).length === 0) this.gameEngine.addAsteroids();
@@ -74,6 +78,10 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
     kill(ship) {
         if(ship.lives-- === 0) this.gameEngine.removeObjectFromWorld(ship.id);
+    }
+
+    gameWon(ship) {
+        ship.won = true;
     }
 
     sendGroupUpdate(groupCode) {
@@ -158,6 +166,8 @@ export default class AsteroidsServerEngine extends ServerEngine {
     onPlayerDisconnected(socketId, playerId) {
         let group_code = this.connectedPlayers[socketId].privateCode;
         super.onPlayerDisconnected(socketId, playerId);
+        console.log('Player from ' + group_code + ' is being deleted');
+        console.log(this.playerGroups[group_code]);
         if (group_code && this.playerGroups[group_code]) {
             if (playerId === this.playerGroups[group_code].c_playerID) {
                 this.playerGroups[group_code].c_playerID = null;
@@ -178,7 +188,10 @@ export default class AsteroidsServerEngine extends ServerEngine {
                     this.io.to(this.playerGroups[group_code].c_socketID).emit('groupUpdate', this.playerGroups[group_code]);
                 }
             }
+
+            console.log(this.playerGroups[group_code]);
             if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
+                console.log(group_code + ' has been deleted.');
                 delete this.playerGroups[group_code];
             }
 

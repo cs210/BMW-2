@@ -88,13 +88,13 @@ export default class AsteroidsClientEngine extends ClientEngine {
 
                 this.networkMonitor.registerClient(this);
 
-                this.socket.once('connect', () => {
+                this.socket.on('connect', () => {
                     if (this.options.verbose)
                         console.log('connection made');
                     resolve();
                 });
 
-                this.socket.once('error', (error) => {
+                this.socket.on('error', (error) => {
                     reject(error);
                 });
 
@@ -143,6 +143,13 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 this.socket.on('roomUpdate', (roomData) => {
                     this.gameEngine.emit('client__roomUpdate', roomData);
                 });
+
+                this.socket.on('disconnect', (reason) => {
+                    console.log(reason);
+                    window.alert('Server disconnected. Please refresh when server is available.');
+                    this.socket.disconnect();
+                });
+
             });
         };
 

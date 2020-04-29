@@ -2,6 +2,7 @@ import { GameEngine, P2PhysicsEngine, TwoVector } from 'lance-gg';
 import Asteroid from './Asteroid';
 import Bullet from './Bullet';
 import Ship from './Ship';
+import FinishLine from "./FinishLine";
 
 export default class AsteroidsGameEngine extends GameEngine {
 
@@ -17,7 +18,8 @@ export default class AsteroidsGameEngine extends GameEngine {
         Object.assign(this, {
             lives: 0, shipSize: 0.3, shipTurnSpeed: 0.05, shipSpeed: 2, bulletRadius: 0.03, bulletLifeTime: 60,
             asteroidRadius: 1.125, numAsteroidLevels: 4, numAsteroidVerts: 4, maxAsteroidSpeed: 0,
-            spaceWidth: 16, spaceHeight: 9, SHIP: Math.pow(2, 1), BULLET: Math.pow(2, 2), ASTEROID: Math.pow(2, 3)
+            spaceWidth: 16, spaceHeight: 9, SHIP: Math.pow(2, 1), BULLET: Math.pow(2, 2),
+            ASTEROID: Math.pow(2, 3), FINISHLINE: Math.pow(2, 4)
         });
 
         this.playerReady = {};
@@ -58,6 +60,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         serializer.registerClass(Ship);
         serializer.registerClass(Asteroid);
         serializer.registerClass(Bullet);
+        serializer.registerClass(FinishLine);
     }
 
     processInput(inputData, playerId) {
@@ -113,6 +116,7 @@ export default class AsteroidsGameEngine extends GameEngine {
             position: new TwoVector(-6.4, -3.6), velocity: new TwoVector(0, 0)
         });
         s.lives = this.lives;
+        s.won = false;
         this.addObjectToWorld(s);
     }
 
@@ -158,6 +162,18 @@ export default class AsteroidsGameEngine extends GameEngine {
         }
 
         
+    }
+
+    // Add finishline
+    addFinishLine() {
+        var a = new FinishLine(this, {}, {
+            mass: 100000,
+            position: new TwoVector(6.5, 3.75),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        });
+        a.level = 0;
+        this.addObjectToWorld(a);
     }
 
     // asteroid explosion

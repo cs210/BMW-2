@@ -13,6 +13,8 @@ var _Bullet = _interopRequireDefault(require("../common/Bullet"));
 
 var _Ship = _interopRequireDefault(require("../common/Ship"));
 
+var _FinishLine = _interopRequireDefault(require("../common/FinishLine"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -72,6 +74,7 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
       _get(_getPrototypeOf(AsteroidsServerEngine.prototype), "start", this).call(this);
 
       this.gameEngine.addAsteroids();
+      this.gameEngine.addFinishLine();
     } // handle a collision on server only
 
   }, {
@@ -95,7 +98,9 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
       if (A instanceof _Bullet["default"] && B instanceof _Asteroid["default"]) this.gameEngine.explode(B, A);
       if (B instanceof _Bullet["default"] && A instanceof _Asteroid["default"]) this.gameEngine.explode(A, B);
       if (A instanceof _Ship["default"] && B instanceof _Asteroid["default"]) this.kill(A);
-      if (B instanceof _Ship["default"] && A instanceof _Asteroid["default"]) this.kill(B); // restart game
+      if (B instanceof _Ship["default"] && A instanceof _Asteroid["default"]) this.kill(B);
+      if (A instanceof _Ship["default"] && B instanceof _FinishLine["default"]) this.gameWon(A);
+      if (B instanceof _Ship["default"] && A instanceof _FinishLine["default"]) this.gameWon(B); // restart game
 
       if (this.gameEngine.world.queryObjects({
         instanceType: _Asteroid["default"]
@@ -131,6 +136,11 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
     key: "kill",
     value: function kill(ship) {
       if (ship.lives-- === 0) this.gameEngine.removeObjectFromWorld(ship.id);
+    }
+  }, {
+    key: "gameWon",
+    value: function gameWon(ship) {
+      ship.won = true;
     }
   }, {
     key: "sendGroupUpdate",
@@ -227,6 +237,9 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
 
       _get(_getPrototypeOf(AsteroidsServerEngine.prototype), "onPlayerDisconnected", this).call(this, socketId, playerId);
 
+      console.log('Player from ' + group_code + ' is being deleted');
+      console.log(this.playerGroups[group_code]);
+
       if (group_code && this.playerGroups[group_code]) {
         if (playerId === this.playerGroups[group_code].c_playerID) {
           this.playerGroups[group_code].c_playerID = null;
@@ -250,7 +263,10 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
           }
         }
 
+        console.log(this.playerGroups[group_code]);
+
         if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
+          console.log(group_code + ' has been deleted.');
           delete this.playerGroups[group_code];
         }
 
