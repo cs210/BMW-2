@@ -144,19 +144,6 @@ export default class AsteroidsServerEngine extends ServerEngine {
     onPlayerDisconnected(socketId, playerId) {
         let group_code = this.connectedPlayers[socketId].privateCode;
         super.onPlayerDisconnected(socketId, playerId);
-        if (playerId === this.playerGroups[group_code].c_playerID) {
-            this.playerGroups[group_code].c_playerID = null;
-            this.playerGroups[group_code].c_socketID = null;
-            this.playerGroups[group_code].c_playerName = null;
-            this.playerGroups[group_code].c_ready = false;
-            this.playerGroups[group_code].full = false;
-        } else {
-            this.playerGroups[group_code].v_playerID = null;
-            this.playerGroups[group_code].v_socketID = null;
-            this.playerGroups[group_code].v_playerName = null;
-            this.playerGroups[group_code].v_ready = false;
-            this.playerGroups[group_code].full = false;
-        }
         if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
             delete this.playerGroups[group_code];
         }
@@ -166,6 +153,21 @@ export default class AsteroidsServerEngine extends ServerEngine {
         if (this.playerGroups[group_code] && this.playerGroups[group_code].c_playerID && playerId !== this.playerGroups[group_code].c_playerID) {
             for (let o of this.gameEngine.world.queryObjects({ playerId : this.playerGroups[group_code].c_playerID }))
                 this.gameEngine.removeObjectFromWorld(o.id);
+        }
+        if (this.playerGroups[group_code]) {
+            if (playerId === this.playerGroups[group_code].c_playerID) {
+                this.playerGroups[group_code].c_playerID = null;
+                this.playerGroups[group_code].c_socketID = null;
+                this.playerGroups[group_code].c_playerName = null;
+                this.playerGroups[group_code].c_ready = false;
+                this.playerGroups[group_code].full = false;
+            } else {
+                this.playerGroups[group_code].v_playerID = null;
+                this.playerGroups[group_code].v_socketID = null;
+                this.playerGroups[group_code].v_playerName = null;
+                this.playerGroups[group_code].v_ready = false;
+                this.playerGroups[group_code].full = false;
+            }
         }
     }
 }
