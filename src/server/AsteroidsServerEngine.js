@@ -2,6 +2,7 @@ import { ServerEngine, TwoVector } from 'lance-gg';
 import Asteroid from '../common/Asteroid';
 import Bullet from '../common/Bullet';
 import Ship from '../common/Ship';
+import FinishLine from "../common/FinishLine";
 
 export default class AsteroidsServerEngine extends ServerEngine {
 
@@ -17,6 +18,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
     start() {
         super.start();
         this.gameEngine.addAsteroids();
+        this.gameEngine.addFinishLine();
     }
 
     // handle a collision on server only
@@ -38,6 +40,8 @@ export default class AsteroidsServerEngine extends ServerEngine {
         if (B instanceof Bullet && A instanceof Asteroid) this.gameEngine.explode(A, B);
         if (A instanceof Ship && B instanceof Asteroid) this.kill(A);
         if (B instanceof Ship && A instanceof Asteroid) this.kill(B);
+        if (A instanceof Ship && B instanceof FinishLine) this.gameWon(A);
+        if (B instanceof Ship && A instanceof FinishLine) this.gameWon(B);
 
         // restart game
         if (this.gameEngine.world.queryObjects({ instanceType: Asteroid }).length === 0) this.gameEngine.addAsteroids();
@@ -76,6 +80,21 @@ export default class AsteroidsServerEngine extends ServerEngine {
         if(ship.lives-- === 0) this.gameEngine.removeObjectFromWorld(ship.id);
     }
 
+    gameWon(ship) {
+        ship.won = true;
+    }
+
+    sendGroupUpdate(groupCode) {
+        if (groupCode) {
+            if (this.playerGroups[groupCode].c_socketID) {
+                this.io.to(this.playerGroups[groupCode].c_socketID).emit('groupUpdate', this.playerGroups[groupCode]);
+            }
+            if (this.playerGroups[groupCode].v_socketID) {
+                this.io.to(this.playerGroups[groupCode].v_socketID).emit('groupUpdate', this.playerGroups[groupCode]);
+            }
+        }
+    }
+
     onPlayerConnected(socket) {
         super.onPlayerConnected(socket);
         let that = this;
@@ -94,6 +113,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
                         socket.emit('waitingForPlayer', {
                             viewer : true
                         });
+                        that.sendGroupUpdate(data.privateCode);
                     } else {
                         that.playerGroups[data.privateCode].c_playerID = socket.playerId;
                         that.playerGroups[data.privateCode].c_playerName = data.playerName;
@@ -102,6 +122,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
                         socket.emit('waitingForPlayer', {
                             viewer : false
                         });
+                        that.sendGroupUpdate(data.privateCode);
                     }
                 }
             } else {
@@ -120,17 +141,18 @@ export default class AsteroidsServerEngine extends ServerEngine {
                 socket.emit('waitingForPlayer', {
                     viewer : false
                 });
+                that.sendGroupUpdate(data.privateCode);
             }
         });
-        socket.on('requestGroupUpdate', function() {
-            socket.emit('groupUpdate', that.playerGroups[that.connectedPlayers[socket.id].privateCode])
-        });
+
         socket.on('playerReady', function(data) {
+            let groupCode = that.connectedPlayers[socket.id].privateCode;
             if (data.viewer) {
-                that.playerGroups[that.connectedPlayers[socket.id].privateCode].v_ready = true;
+                that.playerGroups[groupCode].v_ready = true;
             } else {
-                that.playerGroups[that.connectedPlayers[socket.id].privateCode].c_ready = true;
+                that.playerGroups[groupCode].c_ready = true;
             }
+            that.sendGroupUpdate(groupCode);
             let group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
             if (group.v_ready && group.c_ready) {
                 that.gameEngine.addShip(group.c_playerID);
@@ -144,28 +166,42 @@ export default class AsteroidsServerEngine extends ServerEngine {
     onPlayerDisconnected(socketId, playerId) {
         let group_code = this.connectedPlayers[socketId].privateCode;
         super.onPlayerDisconnected(socketId, playerId);
-        if (playerId === this.playerGroups[group_code].c_playerID) {
-            this.playerGroups[group_code].c_playerID = null;
-            this.playerGroups[group_code].c_socketID = null;
-            this.playerGroups[group_code].c_playerName = null;
-            this.playerGroups[group_code].c_ready = false;
-            this.playerGroups[group_code].full = false;
-        } else {
-            this.playerGroups[group_code].v_playerID = null;
-            this.playerGroups[group_code].v_socketID = null;
-            this.playerGroups[group_code].v_playerName = null;
-            this.playerGroups[group_code].v_ready = false;
-            this.playerGroups[group_code].full = false;
-        }
-        if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
-            delete this.playerGroups[group_code];
+        console.log('Player from ' + group_code + ' is being deleted');
+        console.log(this.playerGroups[group_code]);
+        if (group_code && this.playerGroups[group_code]) {
+            if (playerId === this.playerGroups[group_code].c_playerID) {
+                this.playerGroups[group_code].c_playerID = null;
+                this.playerGroups[group_code].c_socketID = null;
+                this.playerGroups[group_code].c_playerName = null;
+                this.playerGroups[group_code].c_ready = false;
+                this.playerGroups[group_code].full = false;
+                if (this.playerGroups[group_code].v_socketID) {
+                    this.io.to(this.playerGroups[group_code].v_socketID).emit('groupUpdate', this.playerGroups[group_code]);
+                }
+            } else {
+                this.playerGroups[group_code].v_playerID = null;
+                this.playerGroups[group_code].v_socketID = null;
+                this.playerGroups[group_code].v_playerName = null;
+                this.playerGroups[group_code].v_ready = false;
+                this.playerGroups[group_code].full = false;
+                if (this.playerGroups[group_code].c_socketID) {
+                    this.io.to(this.playerGroups[group_code].c_socketID).emit('groupUpdate', this.playerGroups[group_code]);
+                }
+            }
+
+            console.log(this.playerGroups[group_code]);
+            if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
+                console.log(group_code + ' has been deleted.');
+                delete this.playerGroups[group_code];
+            }
+
+            if (this.playerGroups[group_code] && this.playerGroups[group_code].c_playerID && playerId !== this.playerGroups[group_code].c_playerID) {
+                for (let o of this.gameEngine.world.queryObjects({ playerId : this.playerGroups[group_code].c_playerID }))
+                    this.gameEngine.removeObjectFromWorld(o.id);
+            }
         }
         for (let o of this.gameEngine.world.queryObjects({ playerId }))
             this.gameEngine.removeObjectFromWorld(o.id);
 
-        if (this.playerGroups[group_code] && this.playerGroups[group_code].c_playerID && playerId !== this.playerGroups[group_code].c_playerID) {
-            for (let o of this.gameEngine.world.queryObjects({ playerId : this.playerGroups[group_code].c_playerID }))
-                this.gameEngine.removeObjectFromWorld(o.id);
-        }
     }
 }

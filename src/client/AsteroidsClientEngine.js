@@ -88,13 +88,13 @@ export default class AsteroidsClientEngine extends ClientEngine {
 
                 this.networkMonitor.registerClient(this);
 
-                this.socket.once('connect', () => {
+                this.socket.on('connect', () => {
                     if (this.options.verbose)
                         console.log('connection made');
                     resolve();
                 });
 
-                this.socket.once('error', (error) => {
+                this.socket.on('error', (error) => {
                     reject(error);
                 });
 
@@ -108,22 +108,17 @@ export default class AsteroidsClientEngine extends ClientEngine {
                     document.getElementById('waiting-room-overlay').style.display = 'block';
                     document.getElementById('waiting-room-container').style.display = 'block';
                     this.viewer = this.renderer.viewer = data.viewer;
-                    let reqUpdate = setInterval(() => {
-                        this.socket.emit('requestGroupUpdate')
-                    }, 250)
-
-                    this.socket.on('gameBegin', (data) => {
-                        clearInterval(reqUpdate);
-                        $('#waiting-room-overlay').remove();
-                        this.gameEngine.playerReady[this.gameEngine.playerId] = true;
-                        this.renderer.groupShipPID = data.ship_pid;
-                        console.log(this.renderer.groupShipPID);
-                    });
 
                     $('#start-submit').click(() => {
                         this.socket.emit('playerReady', {viewer : this.viewer});
                         document.getElementById('start-submit').style.visibility = 'hidden';
                     });
+                });
+
+                this.socket.on('gameBegin', (data) => {
+                    $('#waiting-room-overlay').remove();
+                    this.gameEngine.playerReady[this.gameEngine.playerId] = true;
+                    this.renderer.groupShipPID = data.ship_pid;
                 });
 
                 this.socket.on('groupFull', () => {
@@ -148,6 +143,13 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 this.socket.on('roomUpdate', (roomData) => {
                     this.gameEngine.emit('client__roomUpdate', roomData);
                 });
+
+                this.socket.on('disconnect', (reason) => {
+                    console.log(reason);
+                    window.alert('Server disconnected. Please refresh when server is available.');
+                    this.socket.disconnect();
+                });
+
             });
         };
 

@@ -2,6 +2,7 @@ import { Renderer } from 'lance-gg';
 import Asteroid from './../common/Asteroid';
 import Bullet from './../common/Bullet';
 import Ship from './../common/Ship';
+import FinishLine from "../common/FinishLine";
 
 let ctx = null;
 let game = null;
@@ -51,6 +52,7 @@ export default class AsteroidsRenderer extends Renderer {
         game.world.forEachObject((id, obj) => {
             if (obj instanceof Ship) this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID);
             else if (obj instanceof Bullet) this.drawBullet(obj.physicsObj);
+            else if (obj instanceof FinishLine) this.drawFinishLine(obj.physicsObj);
             else if (obj instanceof Asteroid && this.viewer) this.drawAsteroid(obj.physicsObj);
         });
 
@@ -74,6 +76,11 @@ export default class AsteroidsRenderer extends Renderer {
             document.getElementById('lives').innerHTML = 'Lives ' + playerShip.lives;
             this.lives = playerShip.lives;
         }
+
+        // update winning if necessary
+        if (playerShip.playerId === this.groupShipPID && playerShip.won) {
+            document.getElementById('gamewin').classList.remove('hidden');
+        }
     }
 
     removeInstructions() {
@@ -96,6 +103,28 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.lineTo( radius*0.6, -radius);
         ctx.moveTo(-radius*0.5, -radius*0.5);
         ctx.lineTo( radius*0.5, -radius*0.5);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+        ctx.strokeStyle = ctx.fillStyle = 'white';
+        ctx.shadowColor = "white";
+    }
+
+
+
+    drawFinishLine(body) {
+        ctx.strokeStyle = ctx.fillStyle = "#FAF602";
+        ctx.shadowColor = "#FAF602";
+        ctx.save();
+        ctx.translate(body.position[0], body.position[1]);  // Translate to the center
+        //ctx.rotate(.785);
+        ctx.beginPath();
+        for(let j=0; j < game.numAsteroidVerts; j++) {
+            let xv = body.verts[j][0];
+            let yv = body.verts[j][1];
+            if (j==0) ctx.moveTo(xv, yv);
+            else ctx.lineTo(xv, yv);
+        }
         ctx.closePath();
         ctx.stroke();
         ctx.restore();

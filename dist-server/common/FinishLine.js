@@ -36,72 +36,82 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 var game = null;
 var p2 = null;
 
-var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
-  _inherits(Ship, _PhysicalObject2D);
+var FinishLine = /*#__PURE__*/function (_PhysicalObject2D) {
+  _inherits(FinishLine, _PhysicalObject2D);
 
-  var _super = _createSuper(Ship);
+  var _super = _createSuper(FinishLine);
 
-  function Ship() {
-    _classCallCheck(this, Ship);
+  function FinishLine(gameEngine, options, props, dim) {
+    var _this;
 
-    return _super.apply(this, arguments);
+    _classCallCheck(this, FinishLine);
+
+    _this = _super.call(this, gameEngine, options, props);
+    _this.dim = dim;
+    return _this;
   }
 
-  _createClass(Ship, [{
+  _createClass(FinishLine, [{
     key: "onAddToWorld",
-    value: function onAddToWorld(gameEngine) {
-      game = gameEngine;
-      p2 = gameEngine.physicsEngine.p2; // Add ship physics
-
-      var shape = this.shape = new p2.Circle({
-        radius: game.shipSize,
-        collisionGroup: game.SHIP,
-        // Belongs to the SHIP group
-        collisionMask: game.ASTEROID | game.FINISHLINE // Only collide with the ASTEROID group
-
-      });
+    // on add-to-world, create a physics body
+    value: function onAddToWorld() {
+      game = this.gameEngine;
+      p2 = game.physicsEngine.p2;
       this.physicsObj = new p2.Body({
-        mass: 1,
+        mass: this.mass,
+        damping: 0,
+        angularDamping: 0,
         position: [this.position.x, this.position.y],
-        angle: this.angle,
-        damping: .7,
-        angularDamping: .7
+        velocity: [this.velocity.x, this.velocity.y]
       });
-      this.physicsObj.addShape(shape);
-      gameEngine.physicsEngine.world.addBody(this.physicsObj);
+      this.physicsObj.addShape(new p2.Box({
+        width: this.dim[0],
+        height: this.dim[1],
+        collisionGroup: game.FINISHLINE,
+        // Belongs to the ASTEROID group
+        collisionMask: game.SHIP // Can collide with SHIP group
+
+      }));
+      this.addFinishLineVerts();
+      game.physicsEngine.world.addBody(this.physicsObj);
     }
+  }, {
+    key: "addFinishLineVerts",
+    value: function addFinishLineVerts() {
+      this.physicsObj.verts = [];
+      var width = this.physicsObj.shapes[0].width;
+      var height = this.physicsObj.shapes[0].height;
+      this.physicsObj.verts.push([-width / 2, -height / 2]);
+      this.physicsObj.verts.push([-width / 2, height / 2]);
+      this.physicsObj.verts.push([width / 2, height / 2]);
+      this.physicsObj.verts.push([width / 2, -height / 2]);
+    } // on remove-from-world, remove the physics body
+
   }, {
     key: "onRemoveFromWorld",
-    value: function onRemoveFromWorld(gameEngine) {
+    value: function onRemoveFromWorld() {
       game.physicsEngine.world.removeBody(this.physicsObj);
-    }
-  }, {
-    key: "toString",
-    value: function toString() {
-      return "Ship::".concat(_get(_getPrototypeOf(Ship.prototype), "toString", this).call(this), " lives=").concat(this.lives);
     }
   }, {
     key: "syncTo",
     value: function syncTo(other) {
-      _get(_getPrototypeOf(Ship.prototype), "syncTo", this).call(this, other);
+      _get(_getPrototypeOf(FinishLine.prototype), "syncTo", this).call(this, other);
 
-      this.lives = other.lives;
-      this.won = other.won;
+      this.dim = other.dim;
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return "FinishLine::".concat(_get(_getPrototypeOf(FinishLine.prototype), "toString", this).call(this), " Level").concat(this.level);
     }
   }, {
     key: "bending",
-    // no position bending if difference is larger than 4.0 (i.e. wrap beyond bounds),
-    // no angular velocity bending, no local angle bending
+    // position bending: bend fully to server position in each sync [percent=1.0],
+    // unless the position difference is larger than 4.0 (i.e. wrap beyond bounds)
     get: function get() {
       return {
         position: {
           max: 4.0
-        },
-        angularVelocity: {
-          percent: 0.0
-        },
-        angleLocal: {
-          percent: 0.0
         }
       };
     }
@@ -109,18 +119,18 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
     key: "netScheme",
     get: function get() {
       return Object.assign({
-        lives: {
-          type: _lanceGg.BaseTypes.TYPES.INT8
+        level: {
+          type: _lanceGg.BaseTypes.TYPES.INT16
         },
-        won: {
-          type: _lanceGg.BaseTypes.TYPES.INT8
+        dim: {
+          type: _lanceGg.BaseTypes.TYPES.CLASSINSTANCE
         }
-      }, _get(_getPrototypeOf(Ship), "netScheme", this));
+      }, _get(_getPrototypeOf(FinishLine), "netScheme", this));
     }
   }]);
 
-  return Ship;
+  return FinishLine;
 }(_lanceGg.PhysicalObject2D);
 
-exports["default"] = Ship;
-//# sourceMappingURL=Ship.js.map
+exports["default"] = FinishLine;
+//# sourceMappingURL=FinishLine.js.map

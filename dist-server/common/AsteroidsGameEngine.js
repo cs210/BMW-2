@@ -13,6 +13,8 @@ var _Bullet = _interopRequireDefault(require("./Bullet"));
 
 var _Ship = _interopRequireDefault(require("./Ship"));
 
+var _FinishLine = _interopRequireDefault(require("./FinishLine"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -76,7 +78,8 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       spaceHeight: 9,
       SHIP: Math.pow(2, 1),
       BULLET: Math.pow(2, 2),
-      ASTEROID: Math.pow(2, 3)
+      ASTEROID: Math.pow(2, 3),
+      FINISHLINE: Math.pow(2, 4)
     });
     _this.playerReady = {};
     return _this;
@@ -121,6 +124,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       serializer.registerClass(_Ship["default"]);
       serializer.registerClass(_Asteroid["default"]);
       serializer.registerClass(_Bullet["default"]);
+      serializer.registerClass(_FinishLine["default"]);
     }
   }, {
     key: "processInput",
@@ -179,6 +183,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
         velocity: new _lanceGg.TwoVector(0, 0)
       });
       s.lives = this.lives;
+      s.won = false;
       this.addObjectToWorld(s);
     } // create asteroids
 
@@ -198,7 +203,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
           position: new _lanceGg.TwoVector(x, y),
           velocity: new _lanceGg.TwoVector(vx, vy),
           angularVelocity: va
-        });
+        }, new _lanceGg.TwoVector(1, 1));
         a.level = 0;
         this.addObjectToWorld(a);
       } // add asteroids to the top half of the screen
@@ -216,10 +221,23 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
           position: new _lanceGg.TwoVector(x, y),
           velocity: new _lanceGg.TwoVector(_vx, _vy),
           angularVelocity: _va
-        });
+        }, new _lanceGg.TwoVector(1, 1));
         a.level = 0;
         this.addObjectToWorld(a);
       }
+    } // Add finishline
+
+  }, {
+    key: "addFinishLine",
+    value: function addFinishLine() {
+      var a = new _FinishLine["default"](this, {}, {
+        mass: 100000,
+        position: new _lanceGg.TwoVector(6.5, 3.75),
+        velocity: new _lanceGg.TwoVector(0, 0),
+        angularVelocity: 0
+      }, new _lanceGg.TwoVector(1, 1));
+      a.level = 0;
+      this.addObjectToWorld(a);
     } // asteroid explosion
 
   }, {

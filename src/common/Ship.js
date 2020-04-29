@@ -7,7 +7,8 @@ export default class Ship extends PhysicalObject2D {
 
     static get netScheme() {
         return Object.assign({
-            lives: { type: BaseTypes.TYPES.INT8 }
+            lives: { type: BaseTypes.TYPES.INT8 },
+            won: { type: BaseTypes.TYPES.INT8 }
         }, super.netScheme);
     }
 
@@ -29,7 +30,7 @@ export default class Ship extends PhysicalObject2D {
         let shape = this.shape = new p2.Circle({
             radius: game.shipSize,
             collisionGroup: game.SHIP, // Belongs to the SHIP group
-            collisionMask: game.ASTEROID // Only collide with the ASTEROID group
+            collisionMask: game.ASTEROID | game.FINISHLINE // Only collide with the ASTEROID group
         });
         this.physicsObj = new p2.Body({
             mass: 1,
@@ -51,5 +52,6 @@ export default class Ship extends PhysicalObject2D {
     syncTo(other) {
         super.syncTo(other);
         this.lives = other.lives;
+        this.won = other.won;
     }
 }

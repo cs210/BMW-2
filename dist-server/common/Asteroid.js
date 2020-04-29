@@ -41,16 +41,22 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
 
   var _super = _createSuper(Asteroid);
 
-  function Asteroid() {
+  function Asteroid(gameEngine, options, props, dim) {
+    var _this;
+
     _classCallCheck(this, Asteroid);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, gameEngine, options, props);
+    _this.dim = dim;
+    return _this;
   }
 
   _createClass(Asteroid, [{
     key: "onAddToWorld",
     // on add-to-world, create a physics body
     value: function onAddToWorld() {
+      console.log("Variable dim that is passed thru: ");
+      console.log(this.dim);
       game = this.gameEngine;
       p2 = game.physicsEngine.p2;
       this.physicsObj = new p2.Body({
@@ -94,6 +100,8 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
     key: "syncTo",
     value: function syncTo(other) {
       _get(_getPrototypeOf(Asteroid.prototype), "syncTo", this).call(this, other);
+
+      this.dim = other.dim;
     }
   }, {
     key: "toString",
@@ -117,6 +125,9 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
       return Object.assign({
         level: {
           type: _lanceGg.BaseTypes.TYPES.INT16
+        },
+        dim: {
+          type: _lanceGg.BaseTypes.TYPES.CLASSINSTANCE
         }
       }, _get(_getPrototypeOf(Asteroid), "netScheme", this));
     }

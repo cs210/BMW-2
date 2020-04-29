@@ -13,6 +13,8 @@ var _Bullet = _interopRequireDefault(require("./../common/Bullet"));
 
 var _Ship = _interopRequireDefault(require("./../common/Ship"));
 
+var _FinishLine = _interopRequireDefault(require("../common/FinishLine"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -98,7 +100,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
 
       this.drawBounds();
       game.world.forEachObject(function (id, obj) {
-        if (obj instanceof _Ship["default"]) _this2.drawShip(obj.physicsObj, obj.playerId === _this2.groupShipPID);else if (obj instanceof _Bullet["default"]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof _Asteroid["default"] && _this2.viewer) _this2.drawAsteroid(obj.physicsObj);
+        if (obj instanceof _Ship["default"]) _this2.drawShip(obj.physicsObj, obj.playerId === _this2.groupShipPID);else if (obj instanceof _Bullet["default"]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof _FinishLine["default"]) _this2.drawFinishLine(obj.physicsObj);else if (obj instanceof _Asteroid["default"] && _this2.viewer) _this2.drawAsteroid(obj.physicsObj);
       }); // update status and restore
 
       this.updateStatus();
@@ -120,6 +122,11 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       if (playerShip.playerId === this.groupShipPID && this.lives !== playerShip.lives) {
         document.getElementById('lives').innerHTML = 'Lives ' + playerShip.lives;
         this.lives = playerShip.lives;
+      } // update winning if necessary
+
+
+      if (playerShip.playerId === this.groupShipPID && playerShip.won) {
+        document.getElementById('gamewin').classList.remove('hidden');
       }
     }
   }, {
@@ -149,6 +156,29 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.lineTo(radius * 0.6, -radius);
       ctx.moveTo(-radius * 0.5, -radius * 0.5);
       ctx.lineTo(radius * 0.5, -radius * 0.5);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.restore();
+      ctx.strokeStyle = ctx.fillStyle = 'white';
+      ctx.shadowColor = "white";
+    }
+  }, {
+    key: "drawFinishLine",
+    value: function drawFinishLine(body) {
+      ctx.strokeStyle = ctx.fillStyle = "#FAF602";
+      ctx.shadowColor = "#FAF602";
+      ctx.save();
+      ctx.translate(body.position[0], body.position[1]); // Translate to the center
+      //ctx.rotate(.785);
+
+      ctx.beginPath();
+
+      for (var j = 0; j < game.numAsteroidVerts; j++) {
+        var xv = body.verts[j][0];
+        var yv = body.verts[j][1];
+        if (j == 0) ctx.moveTo(xv, yv);else ctx.lineTo(xv, yv);
+      }
+
       ctx.closePath();
       ctx.stroke();
       ctx.restore();

@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 47);
+/******/ 	return __webpack_require__(__webpack_require__.s = 48);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -295,8 +295,8 @@ process.umask = function() { return 0; };
 
 
 
-var base64 = __webpack_require__(51)
-var ieee754 = __webpack_require__(52)
+var base64 = __webpack_require__(52)
+var ieee754 = __webpack_require__(53)
 var isArray = __webpack_require__(19)
 
 exports.Buffer = Buffer
@@ -7280,7 +7280,7 @@ if(worldSettings.worldWrap){if(o.position.x>=worldSettings.width){o.position.x-=
 var objects=this.gameEngine.world.objects;var _arr=Object.keys(objects);for(var _i=0;_i<_arr.length;_i++){var objId=_arr[_i];// shadow objects are not re-enacted
 var ob=objects[objId];if(!objectFilter(ob))continue;// run the object step
 this.objectStep(ob,dt);}// emit event on collision
-this.collisionDetection.detect(this.gameEngine);}}]);return SimplePhysicsEngine;}(PhysicsEngine);var CANNON=__webpack_require__(71);/**
+this.collisionDetection.detect(this.gameEngine);}}]);return SimplePhysicsEngine;}(PhysicsEngine);var CANNON=__webpack_require__(72);/**
    * CannonPhysicsEngine is a three-dimensional lightweight physics engine
    */var CannonPhysicsEngine=/*#__PURE__*/function(_PhysicsEngine){_inherits(CannonPhysicsEngine,_PhysicsEngine);function CannonPhysicsEngine(options){var _this;_classCallCheck(this,CannonPhysicsEngine);_this=_possibleConstructorReturn(this,_getPrototypeOf(CannonPhysicsEngine).call(this,options));_this.options.dt=_this.options.dt||1/60;var world=_this.world=new CANNON.World();world.quatNormalizeSkip=0;world.quatNormalizeFast=false;world.gravity.set(0,-10,0);world.broadphase=new CANNON.NaiveBroadphase();_this.CANNON=CANNON;return _this;}// entry point for a single step of the Simple Physics
 _createClass(CannonPhysicsEngine,[{key:"step",value:function step(dt,objectFilter){this.world.step(dt||this.options.dt);}},{key:"addSphere",value:function addSphere(radius,mass){var shape=new CANNON.Sphere(radius);var body=new CANNON.Body({mass:mass,shape:shape});body.position.set(0,0,0);this.world.addBody(body);return body;}},{key:"addBox",value:function addBox(x,y,z,mass,friction){var shape=new CANNON.Box(new CANNON.Vec3(x,y,z));var options={mass:mass,shape:shape};if(friction!==undefined)options.material=new CANNON.Material({friction:friction});var body=new CANNON.Body(options);body.position.set(0,0,0);this.world.addBody(body);return body;}},{key:"addCylinder",value:function addCylinder(radiusTop,radiusBottom,height,numSegments,mass){var shape=new CANNON.Cylinder(radiusTop,radiusBottom,height,numSegments);var body=new CANNON.Body({mass:mass,shape:shape});this.world.addBody(body);return body;}},{key:"removeObject",value:function removeObject(obj){this.world.removeBody(obj);}}]);return CannonPhysicsEngine;}(PhysicsEngine);/**
@@ -10258,15 +10258,15 @@ Emitter.prototype.hasListeners = function(event){
  * Module dependencies.
  */
 
-var keys = __webpack_require__(87);
-var hasBinary = __webpack_require__(40);
-var sliceBuffer = __webpack_require__(89);
-var after = __webpack_require__(90);
-var utf8 = __webpack_require__(91);
+var keys = __webpack_require__(88);
+var hasBinary = __webpack_require__(41);
+var sliceBuffer = __webpack_require__(90);
+var after = __webpack_require__(91);
+var utf8 = __webpack_require__(92);
 
 var base64encoder;
 if (typeof ArrayBuffer !== 'undefined') {
-  base64encoder = __webpack_require__(92);
+  base64encoder = __webpack_require__(93);
 }
 
 /**
@@ -10324,7 +10324,7 @@ var err = { type: 'error', data: 'parser error' };
  * Create a blob api even for blob builder when vendor prefixes exist
  */
 
-var Blob = __webpack_require__(93);
+var Blob = __webpack_require__(94);
 
 /**
  * Encodes a packet.
@@ -11348,7 +11348,7 @@ function localstorage() {
 	}
 }
 
-module.exports = __webpack_require__(77)(exports);
+module.exports = __webpack_require__(78)(exports);
 
 const {formatters} = module.exports;
 
@@ -11674,7 +11674,7 @@ function localstorage() {
 	}
 }
 
-module.exports = __webpack_require__(94)(exports);
+module.exports = __webpack_require__(95)(exports);
 
 const {formatters} = module.exports;
 
@@ -11701,11 +11701,11 @@ formatters.j = function (v) {
  * Module dependencies.
  */
 
-var debug = __webpack_require__(79)('socket.io-parser');
+var debug = __webpack_require__(80)('socket.io-parser');
 var Emitter = __webpack_require__(6);
-var binary = __webpack_require__(82);
-var isArray = __webpack_require__(35);
-var isBuf = __webpack_require__(36);
+var binary = __webpack_require__(83);
+var isArray = __webpack_require__(36);
+var isBuf = __webpack_require__(37);
 
 /**
  * Protocol version.
@@ -12119,7 +12119,7 @@ function error(msg) {
 
 // browser shim for xmlhttprequest module
 
-var hasCORS = __webpack_require__(85);
+var hasCORS = __webpack_require__(86);
 var globalThis = __webpack_require__(17);
 
 module.exports = function (opts) {
@@ -12354,11 +12354,11 @@ module.exports = Array.isArray || function (arr) {
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {var ClientRequest = __webpack_require__(53)
+/* WEBPACK VAR INJECTION */(function(global) {var ClientRequest = __webpack_require__(54)
 var response = __webpack_require__(22)
-var extend = __webpack_require__(62)
-var statusCodes = __webpack_require__(63)
-var url = __webpack_require__(64)
+var extend = __webpack_require__(63)
+var statusCodes = __webpack_require__(64)
+var url = __webpack_require__(65)
 
 var http = exports
 
@@ -12762,7 +12762,7 @@ exports.Readable = exports;
 exports.Writable = __webpack_require__(28);
 exports.Duplex = __webpack_require__(5);
 exports.Transform = __webpack_require__(30);
-exports.PassThrough = __webpack_require__(60);
+exports.PassThrough = __webpack_require__(61);
 
 
 /***/ }),
@@ -12841,7 +12841,7 @@ util.inherits = __webpack_require__(4);
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(54);
+var debugUtil = __webpack_require__(55);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -12850,7 +12850,7 @@ if (debugUtil && debugUtil.debuglog) {
 }
 /*</replacement>*/
 
-var BufferList = __webpack_require__(55);
+var BufferList = __webpack_require__(56);
 var destroyImpl = __webpack_require__(27);
 var StringDecoder;
 
@@ -14263,7 +14263,7 @@ util.inherits = __webpack_require__(4);
 
 /*<replacement>*/
 var internalUtil = {
-  deprecate: __webpack_require__(59)
+  deprecate: __webpack_require__(60)
 };
 /*</replacement>*/
 
@@ -14878,7 +14878,7 @@ Writable.prototype._destroy = function (err, cb) {
   this.end();
   cb(err);
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(57).setImmediate, __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(58).setImmediate, __webpack_require__(0)))
 
 /***/ }),
 /* 29 */
@@ -15445,16 +15445,22 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
 
   var _super = _createSuper(Asteroid);
 
-  function Asteroid() {
+  function Asteroid(gameEngine, options, props, dim) {
+    var _this;
+
     _classCallCheck(this, Asteroid);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, gameEngine, options, props);
+    _this.dim = dim;
+    return _this;
   }
 
   _createClass(Asteroid, [{
     key: "onAddToWorld",
     // on add-to-world, create a physics body
     value: function onAddToWorld() {
+      console.log("Variable dim that is passed thru: ");
+      console.log(this.dim);
       game = this.gameEngine;
       p2 = game.physicsEngine.p2;
       this.physicsObj = new p2.Body({
@@ -15498,6 +15504,8 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
     key: "syncTo",
     value: function syncTo(other) {
       _get(_getPrototypeOf(Asteroid.prototype), "syncTo", this).call(this, other);
+
+      this.dim = other.dim;
     }
   }, {
     key: "toString",
@@ -15521,6 +15529,9 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
       return Object.assign({
         level: {
           type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.INT16
+        },
+        dim: {
+          type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.CLASSINSTANCE
         }
       }, _get(_getPrototypeOf(Asteroid), "netScheme", this));
     }
@@ -15684,7 +15695,7 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
         radius: game.shipSize,
         collisionGroup: game.SHIP,
         // Belongs to the SHIP group
-        collisionMask: game.ASTEROID // Only collide with the ASTEROID group
+        collisionMask: game.ASTEROID | game.FINISHLINE // Only collide with the ASTEROID group
 
       });
       this.physicsObj = new p2.Body({
@@ -15713,6 +15724,7 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
       _get(_getPrototypeOf(Ship.prototype), "syncTo", this).call(this, other);
 
       this.lives = other.lives;
+      this.won = other.won;
     }
   }, {
     key: "bending",
@@ -15737,6 +15749,9 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
       return Object.assign({
         lives: {
           type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.INT8
+        },
+        won: {
+          type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.INT8
         }
       }, _get(_getPrototypeOf(Ship), "netScheme", this));
     }
@@ -15749,6 +15764,142 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
 
 /***/ }),
 /* 34 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FinishLine; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lance_gg__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lance_gg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lance_gg__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+var game = null;
+var p2 = null;
+
+var FinishLine = /*#__PURE__*/function (_PhysicalObject2D) {
+  _inherits(FinishLine, _PhysicalObject2D);
+
+  var _super = _createSuper(FinishLine);
+
+  function FinishLine(gameEngine, options, props, dim) {
+    var _this;
+
+    _classCallCheck(this, FinishLine);
+
+    _this = _super.call(this, gameEngine, options, props);
+    _this.dim = dim;
+    return _this;
+  }
+
+  _createClass(FinishLine, [{
+    key: "onAddToWorld",
+    // on add-to-world, create a physics body
+    value: function onAddToWorld() {
+      game = this.gameEngine;
+      p2 = game.physicsEngine.p2;
+      this.physicsObj = new p2.Body({
+        mass: this.mass,
+        damping: 0,
+        angularDamping: 0,
+        position: [this.position.x, this.position.y],
+        velocity: [this.velocity.x, this.velocity.y]
+      });
+      this.physicsObj.addShape(new p2.Box({
+        width: this.dim[0],
+        height: this.dim[1],
+        collisionGroup: game.FINISHLINE,
+        // Belongs to the ASTEROID group
+        collisionMask: game.SHIP // Can collide with SHIP group
+
+      }));
+      this.addFinishLineVerts();
+      game.physicsEngine.world.addBody(this.physicsObj);
+    }
+  }, {
+    key: "addFinishLineVerts",
+    value: function addFinishLineVerts() {
+      this.physicsObj.verts = [];
+      var width = this.physicsObj.shapes[0].width;
+      var height = this.physicsObj.shapes[0].height;
+      this.physicsObj.verts.push([-width / 2, -height / 2]);
+      this.physicsObj.verts.push([-width / 2, height / 2]);
+      this.physicsObj.verts.push([width / 2, height / 2]);
+      this.physicsObj.verts.push([width / 2, -height / 2]);
+    } // on remove-from-world, remove the physics body
+
+  }, {
+    key: "onRemoveFromWorld",
+    value: function onRemoveFromWorld() {
+      game.physicsEngine.world.removeBody(this.physicsObj);
+    }
+  }, {
+    key: "syncTo",
+    value: function syncTo(other) {
+      _get(_getPrototypeOf(FinishLine.prototype), "syncTo", this).call(this, other);
+
+      this.dim = other.dim;
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      return "FinishLine::".concat(_get(_getPrototypeOf(FinishLine.prototype), "toString", this).call(this), " Level").concat(this.level);
+    }
+  }, {
+    key: "bending",
+    // position bending: bend fully to server position in each sync [percent=1.0],
+    // unless the position difference is larger than 4.0 (i.e. wrap beyond bounds)
+    get: function get() {
+      return {
+        position: {
+          max: 4.0
+        }
+      };
+    }
+  }], [{
+    key: "netScheme",
+    get: function get() {
+      return Object.assign({
+        level: {
+          type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.INT16
+        },
+        dim: {
+          type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.CLASSINSTANCE
+        }
+      }, _get(_getPrototypeOf(FinishLine), "netScheme", this));
+    }
+  }]);
+
+  return FinishLine;
+}(__WEBPACK_IMPORTED_MODULE_0_lance_gg__["PhysicalObject2D"]);
+
+
+
+/***/ }),
+/* 35 */
 /***/ (function(module, exports) {
 
 /**
@@ -15793,7 +15944,7 @@ module.exports = function parseuri(str) {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -15804,7 +15955,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {
@@ -15831,7 +15982,7 @@ function isBuf(obj) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2).Buffer))
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -15839,15 +15990,15 @@ function isBuf(obj) {
  * Module dependencies.
  */
 
-var eio = __webpack_require__(83);
-var Socket = __webpack_require__(43);
+var eio = __webpack_require__(84);
+var Socket = __webpack_require__(44);
 var Emitter = __webpack_require__(6);
 var parser = __webpack_require__(15);
-var on = __webpack_require__(44);
-var bind = __webpack_require__(45);
+var on = __webpack_require__(45);
+var bind = __webpack_require__(46);
 var debug = __webpack_require__(11)('socket.io-client:manager');
-var indexOf = __webpack_require__(42);
-var Backoff = __webpack_require__(100);
+var indexOf = __webpack_require__(43);
+var Backoff = __webpack_require__(101);
 
 /**
  * IE6+ hasOwnProperty
@@ -16410,7 +16561,7 @@ Manager.prototype.onreconnect = function () {
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -16418,9 +16569,9 @@ Manager.prototype.onreconnect = function () {
  */
 
 var XMLHttpRequest = __webpack_require__(16);
-var XHR = __webpack_require__(86);
-var JSONP = __webpack_require__(96);
-var websocket = __webpack_require__(97);
+var XHR = __webpack_require__(87);
+var JSONP = __webpack_require__(97);
+var websocket = __webpack_require__(98);
 
 /**
  * Export transports.
@@ -16469,7 +16620,7 @@ function polling (opts) {
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -16480,7 +16631,7 @@ var Transport = __webpack_require__(18);
 var parseqs = __webpack_require__(12);
 var parser = __webpack_require__(7);
 var inherit = __webpack_require__(13);
-var yeast = __webpack_require__(41);
+var yeast = __webpack_require__(42);
 var debug = __webpack_require__(14)('engine.io-client:polling');
 
 /**
@@ -16720,7 +16871,7 @@ Polling.prototype.uri = function () {
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/* global Blob File */
@@ -16729,7 +16880,7 @@ Polling.prototype.uri = function () {
  * Module requirements.
  */
 
-var isArray = __webpack_require__(88);
+var isArray = __webpack_require__(89);
 
 var toString = Object.prototype.toString;
 var withNativeBlob = typeof Blob === 'function' ||
@@ -16791,7 +16942,7 @@ function hasBinary (obj) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2).Buffer))
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16866,7 +17017,7 @@ module.exports = yeast;
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports) {
 
 
@@ -16881,7 +17032,7 @@ module.exports = function(arr, obj){
 };
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -16891,12 +17042,12 @@ module.exports = function(arr, obj){
 
 var parser = __webpack_require__(15);
 var Emitter = __webpack_require__(6);
-var toArray = __webpack_require__(99);
-var on = __webpack_require__(44);
-var bind = __webpack_require__(45);
+var toArray = __webpack_require__(100);
+var on = __webpack_require__(45);
+var bind = __webpack_require__(46);
 var debug = __webpack_require__(11)('socket.io-client:socket');
 var parseqs = __webpack_require__(12);
-var hasBin = __webpack_require__(40);
+var hasBin = __webpack_require__(41);
 
 /**
  * Module exports.
@@ -17325,7 +17476,7 @@ Socket.prototype.binary = function (binary) {
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports) {
 
 
@@ -17355,7 +17506,7 @@ function on (obj, ev, fn) {
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports) {
 
 /**
@@ -17384,7 +17535,7 @@ module.exports = function(obj, fn){
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -28263,24 +28414,24 @@ return jQuery;
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_query_string__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_query_string__ = __webpack_require__(49);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_query_string__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lance_gg__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lance_gg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_lance_gg__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__client_AsteroidsClientEngine__ = __webpack_require__(72);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__common_AsteroidsGameEngine__ = __webpack_require__(101);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__client_AsteroidsClientEngine__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__common_AsteroidsGameEngine__ = __webpack_require__(102);
 
 
 
 
 var qsOptions = __WEBPACK_IMPORTED_MODULE_0_query_string___default.a.parse(location.search);
 
-var $ = __webpack_require__(46); // default options, overwritten by query-string options
+var $ = __webpack_require__(47); // default options, overwritten by query-string options
 // is sent to both game engine and client engine
 
 
@@ -28333,13 +28484,13 @@ $(document).ready(function () {
 });
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var strictUriEncode = __webpack_require__(49);
-var objectAssign = __webpack_require__(50);
+var strictUriEncode = __webpack_require__(50);
+var objectAssign = __webpack_require__(51);
 
 function encoderForArrayFormat(opts) {
 	switch (opts.arrayFormat) {
@@ -28545,7 +28696,7 @@ exports.stringify = function (obj, opts) {
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28558,7 +28709,7 @@ module.exports = function (str) {
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28655,7 +28806,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28813,7 +28964,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -28903,14 +29054,14 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer, global, process) {var capability = __webpack_require__(21)
 var inherits = __webpack_require__(4)
 var response = __webpack_require__(22)
 var stream = __webpack_require__(23)
-var toArrayBuffer = __webpack_require__(61)
+var toArrayBuffer = __webpack_require__(62)
 
 var IncomingMessage = response.IncomingMessage
 var rStates = response.readyStates
@@ -29237,13 +29388,13 @@ var unsafeHeaders = [
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2).Buffer, __webpack_require__(0), __webpack_require__(1)))
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29252,7 +29403,7 @@ var unsafeHeaders = [
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Buffer = __webpack_require__(10).Buffer;
-var util = __webpack_require__(56);
+var util = __webpack_require__(57);
 
 function copyBuffer(src, target, offset) {
   src.copy(target, offset);
@@ -29328,13 +29479,13 @@ if (util && util.inspect && util.inspect.custom) {
 }
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -29390,7 +29541,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(58);
+__webpack_require__(59);
 // On some exotic environments, it's not clear which object `setimmediate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -29404,7 +29555,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -29597,7 +29748,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(1)))
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -29671,7 +29822,7 @@ function config (name) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29724,7 +29875,7 @@ PassThrough.prototype._transform = function (chunk, encoding, cb) {
 };
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(2).Buffer
@@ -29757,7 +29908,7 @@ module.exports = function (buf) {
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports) {
 
 module.exports = extend
@@ -29782,7 +29933,7 @@ function extend() {
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -29852,7 +30003,7 @@ module.exports = {
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29879,8 +30030,8 @@ module.exports = {
 
 
 
-var punycode = __webpack_require__(65);
-var util = __webpack_require__(67);
+var punycode = __webpack_require__(66);
+var util = __webpack_require__(68);
 
 exports.parse = urlParse;
 exports.resolve = urlResolve;
@@ -29955,7 +30106,7 @@ var protocolPattern = /^([a-z0-9.+-]+:)/i,
       'gopher:': true,
       'file:': true
     },
-    querystring = __webpack_require__(68);
+    querystring = __webpack_require__(69);
 
 function urlParse(url, parseQueryString, slashesDenoteHost) {
   if (url && util.isObject(url) && url instanceof Url) return url;
@@ -30591,7 +30742,7 @@ Url.prototype.parseHost = function() {
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, global) {var __WEBPACK_AMD_DEFINE_RESULT__;/*! https://mths.be/punycode v1.4.1 by @mathias */
@@ -31127,10 +31278,10 @@ Url.prototype.parseHost = function() {
 
 }(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(66)(module), __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(67)(module), __webpack_require__(0)))
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -31158,7 +31309,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31181,18 +31332,18 @@ module.exports = {
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-exports.decode = exports.parse = __webpack_require__(69);
-exports.encode = exports.stringify = __webpack_require__(70);
+exports.decode = exports.parse = __webpack_require__(70);
+exports.encode = exports.stringify = __webpack_require__(71);
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31283,7 +31434,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -31375,7 +31526,7 @@ var objectKeys = Object.keys || function (obj) {
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var require;var require;/*
@@ -45067,16 +45218,16 @@ World.prototype.clearForces = function(){
 });
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AsteroidsClientEngine; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lance_gg__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lance_gg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lance_gg__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__client_AsteroidsRenderer__ = __webpack_require__(73);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_lance_gg_src_lib_Utils__ = __webpack_require__(74);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_socket_io_client__ = __webpack_require__(75);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__client_AsteroidsRenderer__ = __webpack_require__(74);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_lance_gg_src_lib_Utils__ = __webpack_require__(75);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_socket_io_client__ = __webpack_require__(76);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_socket_io_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_socket_io_client__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -45105,7 +45256,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-var $ = __webpack_require__(46);
+var $ = __webpack_require__(47);
 
 var betaTiltThreshold = 40;
 var gammaTiltThreshold = 40;
@@ -45227,12 +45378,12 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
 
           _this3.networkMonitor.registerClient(_this3);
 
-          _this3.socket.once('connect', function () {
+          _this3.socket.on('connect', function () {
             if (_this3.options.verbose) console.log('connection made');
             resolve();
           });
 
-          _this3.socket.once('error', function (error) {
+          _this3.socket.on('error', function (error) {
             reject(error);
           });
 
@@ -45247,18 +45398,6 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
             document.getElementById('waiting-room-overlay').style.display = 'block';
             document.getElementById('waiting-room-container').style.display = 'block';
             _this3.viewer = _this3.renderer.viewer = data.viewer;
-            var reqUpdate = setInterval(function () {
-              _this3.socket.emit('requestGroupUpdate');
-            }, 250);
-
-            _this3.socket.on('gameBegin', function (data) {
-              clearInterval(reqUpdate);
-              $('#waiting-room-overlay').remove();
-              _this3.gameEngine.playerReady[_this3.gameEngine.playerId] = true;
-              _this3.renderer.groupShipPID = data.ship_pid;
-              console.log(_this3.renderer.groupShipPID);
-            });
-
             $('#start-submit').click(function () {
               _this3.socket.emit('playerReady', {
                 viewer: _this3.viewer
@@ -45266,6 +45405,12 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
 
               document.getElementById('start-submit').style.visibility = 'hidden';
             });
+          });
+
+          _this3.socket.on('gameBegin', function (data) {
+            $('#waiting-room-overlay').remove();
+            _this3.gameEngine.playerReady[_this3.gameEngine.playerId] = true;
+            _this3.renderer.groupShipPID = data.ship_pid;
           });
 
           _this3.socket.on('groupFull', function () {
@@ -45287,6 +45432,13 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
 
           _this3.socket.on('roomUpdate', function (roomData) {
             _this3.gameEngine.emit('client__roomUpdate', roomData);
+          });
+
+          _this3.socket.on('disconnect', function (reason) {
+            console.log(reason);
+            window.alert('Server disconnected. Please refresh when server is available.');
+
+            _this3.socket.disconnect();
           });
         });
       };
@@ -45310,7 +45462,7 @@ function isTouchDevice() {
 }
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -45320,6 +45472,7 @@ function isTouchDevice() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Asteroid__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__common_Bullet__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__common_Ship__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__common_FinishLine__ = __webpack_require__(34);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45345,6 +45498,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -45407,7 +45561,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
 
       this.drawBounds();
       game.world.forEachObject(function (id, obj) {
-        if (obj instanceof __WEBPACK_IMPORTED_MODULE_3__common_Ship__["a" /* default */]) _this2.drawShip(obj.physicsObj, obj.playerId === _this2.groupShipPID);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_2__common_Bullet__["a" /* default */]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_1__common_Asteroid__["a" /* default */] && _this2.viewer) _this2.drawAsteroid(obj.physicsObj);
+        if (obj instanceof __WEBPACK_IMPORTED_MODULE_3__common_Ship__["a" /* default */]) _this2.drawShip(obj.physicsObj, obj.playerId === _this2.groupShipPID);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_2__common_Bullet__["a" /* default */]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_4__common_FinishLine__["a" /* default */]) _this2.drawFinishLine(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_1__common_Asteroid__["a" /* default */] && _this2.viewer) _this2.drawAsteroid(obj.physicsObj);
       }); // update status and restore
 
       this.updateStatus();
@@ -45429,6 +45583,11 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       if (playerShip.playerId === this.groupShipPID && this.lives !== playerShip.lives) {
         document.getElementById('lives').innerHTML = 'Lives ' + playerShip.lives;
         this.lives = playerShip.lives;
+      } // update winning if necessary
+
+
+      if (playerShip.playerId === this.groupShipPID && playerShip.won) {
+        document.getElementById('gamewin').classList.remove('hidden');
       }
     }
   }, {
@@ -45458,6 +45617,29 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.lineTo(radius * 0.6, -radius);
       ctx.moveTo(-radius * 0.5, -radius * 0.5);
       ctx.lineTo(radius * 0.5, -radius * 0.5);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.restore();
+      ctx.strokeStyle = ctx.fillStyle = 'white';
+      ctx.shadowColor = "white";
+    }
+  }, {
+    key: "drawFinishLine",
+    value: function drawFinishLine(body) {
+      ctx.strokeStyle = ctx.fillStyle = "#FAF602";
+      ctx.shadowColor = "#FAF602";
+      ctx.save();
+      ctx.translate(body.position[0], body.position[1]); // Translate to the center
+      //ctx.rotate(.785);
+
+      ctx.beginPath();
+
+      for (var j = 0; j < game.numAsteroidVerts; j++) {
+        var xv = body.verts[j][0];
+        var yv = body.verts[j][1];
+        if (j == 0) ctx.moveTo(xv, yv);else ctx.lineTo(xv, yv);
+      }
+
       ctx.closePath();
       ctx.stroke();
       ctx.restore();
@@ -45511,7 +45693,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -45582,7 +45764,7 @@ var Utils = /*#__PURE__*/function () {
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -45590,9 +45772,9 @@ var Utils = /*#__PURE__*/function () {
  * Module dependencies.
  */
 
-var url = __webpack_require__(76);
+var url = __webpack_require__(77);
 var parser = __webpack_require__(15);
-var Manager = __webpack_require__(37);
+var Manager = __webpack_require__(38);
 var debug = __webpack_require__(11)('socket.io-client');
 
 /**
@@ -45677,12 +45859,12 @@ exports.connect = lookup;
  * @api public
  */
 
-exports.Manager = __webpack_require__(37);
-exports.Socket = __webpack_require__(43);
+exports.Manager = __webpack_require__(38);
+exports.Socket = __webpack_require__(44);
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -45690,7 +45872,7 @@ exports.Socket = __webpack_require__(43);
  * Module dependencies.
  */
 
-var parseuri = __webpack_require__(34);
+var parseuri = __webpack_require__(35);
 var debug = __webpack_require__(11)('socket.io-client:url');
 
 /**
@@ -45763,7 +45945,7 @@ function url (uri, loc) {
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -45779,7 +45961,7 @@ function setup(env) {
 	createDebug.disable = disable;
 	createDebug.enable = enable;
 	createDebug.enabled = enabled;
-	createDebug.humanize = __webpack_require__(78);
+	createDebug.humanize = __webpack_require__(79);
 
 	Object.keys(env).forEach(key => {
 		createDebug[key] = env[key];
@@ -46035,7 +46217,7 @@ module.exports = setup;
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports) {
 
 /**
@@ -46203,7 +46385,7 @@ function plural(ms, msAbs, n, name) {
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {/**
@@ -46212,7 +46394,7 @@ function plural(ms, msAbs, n, name) {
  * Expose `debug()` as the module.
  */
 
-exports = module.exports = __webpack_require__(80);
+exports = module.exports = __webpack_require__(81);
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -46405,7 +46587,7 @@ function localstorage() {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -46421,7 +46603,7 @@ exports.coerce = coerce;
 exports.disable = disable;
 exports.enable = enable;
 exports.enabled = enabled;
-exports.humanize = __webpack_require__(81);
+exports.humanize = __webpack_require__(82);
 
 /**
  * Active `debug` instances.
@@ -46636,7 +46818,7 @@ function coerce(val) {
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports) {
 
 /**
@@ -46794,7 +46976,7 @@ function plural(ms, n, name) {
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*global Blob,File*/
@@ -46803,8 +46985,8 @@ function plural(ms, n, name) {
  * Module requirements
  */
 
-var isArray = __webpack_require__(35);
-var isBuf = __webpack_require__(36);
+var isArray = __webpack_require__(36);
+var isBuf = __webpack_require__(37);
 var toString = Object.prototype.toString;
 var withNativeBlob = typeof Blob === 'function' || (typeof Blob !== 'undefined' && toString.call(Blob) === '[object BlobConstructor]');
 var withNativeFile = typeof File === 'function' || (typeof File !== 'undefined' && toString.call(File) === '[object FileConstructor]');
@@ -46941,11 +47123,11 @@ exports.removeBlobs = function(data, callback) {
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-module.exports = __webpack_require__(84);
+module.exports = __webpack_require__(85);
 
 /**
  * Exports parser
@@ -46957,19 +47139,19 @@ module.exports.parser = __webpack_require__(7);
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * Module dependencies.
  */
 
-var transports = __webpack_require__(38);
+var transports = __webpack_require__(39);
 var Emitter = __webpack_require__(6);
 var debug = __webpack_require__(14)('engine.io-client:socket');
-var index = __webpack_require__(42);
+var index = __webpack_require__(43);
 var parser = __webpack_require__(7);
-var parseuri = __webpack_require__(34);
+var parseuri = __webpack_require__(35);
 var parseqs = __webpack_require__(12);
 
 /**
@@ -47107,7 +47289,7 @@ Socket.protocol = parser.protocol; // this is an int
 
 Socket.Socket = Socket;
 Socket.Transport = __webpack_require__(18);
-Socket.transports = __webpack_require__(38);
+Socket.transports = __webpack_require__(39);
 Socket.parser = __webpack_require__(7);
 
 /**
@@ -47711,7 +47893,7 @@ Socket.prototype.filterUpgrades = function (upgrades) {
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports) {
 
 
@@ -47734,7 +47916,7 @@ try {
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* global attachEvent */
@@ -47744,7 +47926,7 @@ try {
  */
 
 var XMLHttpRequest = __webpack_require__(16);
-var Polling = __webpack_require__(39);
+var Polling = __webpack_require__(40);
 var Emitter = __webpack_require__(6);
 var inherit = __webpack_require__(13);
 var debug = __webpack_require__(14)('engine.io-client:polling-xhr');
@@ -48158,7 +48340,7 @@ function unloadHandler () {
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports) {
 
 
@@ -48183,7 +48365,7 @@ module.exports = Object.keys || function keys (obj){
 
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -48194,7 +48376,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports) {
 
 /**
@@ -48229,7 +48411,7 @@ module.exports = function(arraybuffer, start, end) {
 
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports) {
 
 module.exports = after
@@ -48263,7 +48445,7 @@ function noop() {}
 
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports) {
 
 /*! https://mths.be/utf8js v2.1.2 by @mathias */
@@ -48479,7 +48661,7 @@ module.exports = {
 
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports) {
 
 /*
@@ -48552,7 +48734,7 @@ module.exports = {
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports) {
 
 /**
@@ -48658,7 +48840,7 @@ module.exports = (function() {
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -48674,7 +48856,7 @@ function setup(env) {
 	createDebug.disable = disable;
 	createDebug.enable = enable;
 	createDebug.enabled = enabled;
-	createDebug.humanize = __webpack_require__(95);
+	createDebug.humanize = __webpack_require__(96);
 
 	Object.keys(env).forEach(key => {
 		createDebug[key] = env[key];
@@ -48930,7 +49112,7 @@ module.exports = setup;
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports) {
 
 /**
@@ -49098,14 +49280,14 @@ function plural(ms, msAbs, n, name) {
 
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * Module requirements.
  */
 
-var Polling = __webpack_require__(39);
+var Polling = __webpack_require__(40);
 var inherit = __webpack_require__(13);
 var globalThis = __webpack_require__(17);
 
@@ -49334,7 +49516,7 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/**
@@ -49345,7 +49527,7 @@ var Transport = __webpack_require__(18);
 var parser = __webpack_require__(7);
 var parseqs = __webpack_require__(12);
 var inherit = __webpack_require__(13);
-var yeast = __webpack_require__(41);
+var yeast = __webpack_require__(42);
 var debug = __webpack_require__(14)('engine.io-client:websocket');
 
 var BrowserWebSocket, NodeWebSocket;
@@ -49358,7 +49540,7 @@ if (typeof WebSocket !== 'undefined') {
 
 if (typeof window === 'undefined') {
   try {
-    NodeWebSocket = __webpack_require__(98);
+    NodeWebSocket = __webpack_require__(99);
   } catch (e) { }
 }
 
@@ -49636,13 +49818,13 @@ WS.prototype.check = function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2).Buffer))
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports) {
 
 module.exports = toArray
@@ -49661,7 +49843,7 @@ function toArray(list, index) {
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports) {
 
 
@@ -49752,7 +49934,7 @@ Backoff.prototype.setJitter = function(jitter){
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -49762,6 +49944,7 @@ Backoff.prototype.setJitter = function(jitter){
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Asteroid__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Bullet__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Ship__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FinishLine__ = __webpack_require__(34);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -49787,6 +49970,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -49828,7 +50012,8 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       spaceHeight: 9,
       SHIP: Math.pow(2, 1),
       BULLET: Math.pow(2, 2),
-      ASTEROID: Math.pow(2, 3)
+      ASTEROID: Math.pow(2, 3),
+      FINISHLINE: Math.pow(2, 4)
     });
     _this.playerReady = {};
     return _this;
@@ -49873,6 +50058,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       serializer.registerClass(__WEBPACK_IMPORTED_MODULE_3__Ship__["a" /* default */]);
       serializer.registerClass(__WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */]);
       serializer.registerClass(__WEBPACK_IMPORTED_MODULE_2__Bullet__["a" /* default */]);
+      serializer.registerClass(__WEBPACK_IMPORTED_MODULE_4__FinishLine__["a" /* default */]);
     }
   }, {
     key: "processInput",
@@ -49931,6 +50117,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
         velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0)
       });
       s.lives = this.lives;
+      s.won = false;
       this.addObjectToWorld(s);
     } // create asteroids
 
@@ -49950,7 +50137,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
           position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](x, y),
           velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](vx, vy),
           angularVelocity: va
-        });
+        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 1));
         a.level = 0;
         this.addObjectToWorld(a);
       } // add asteroids to the top half of the screen
@@ -49968,10 +50155,23 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
           position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](x, y),
           velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](_vx, _vy),
           angularVelocity: _va
-        });
+        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 1));
         a.level = 0;
         this.addObjectToWorld(a);
       }
+    } // Add finishline
+
+  }, {
+    key: "addFinishLine",
+    value: function addFinishLine() {
+      var a = new __WEBPACK_IMPORTED_MODULE_4__FinishLine__["a" /* default */](this, {}, {
+        mass: 100000,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](6.5, 3.75),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+        angularVelocity: 0
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 1));
+      a.level = 0;
+      this.addObjectToWorld(a);
     } // asteroid explosion
 
   }, {

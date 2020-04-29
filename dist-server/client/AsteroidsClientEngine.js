@@ -159,12 +159,12 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
 
           _this3.networkMonitor.registerClient(_this3);
 
-          _this3.socket.once('connect', function () {
+          _this3.socket.on('connect', function () {
             if (_this3.options.verbose) console.log('connection made');
             resolve();
           });
 
-          _this3.socket.once('error', function (error) {
+          _this3.socket.on('error', function (error) {
             reject(error);
           });
 
@@ -179,18 +179,6 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
             document.getElementById('waiting-room-overlay').style.display = 'block';
             document.getElementById('waiting-room-container').style.display = 'block';
             _this3.viewer = _this3.renderer.viewer = data.viewer;
-            var reqUpdate = setInterval(function () {
-              _this3.socket.emit('requestGroupUpdate');
-            }, 250);
-
-            _this3.socket.on('gameBegin', function (data) {
-              clearInterval(reqUpdate);
-              $('#waiting-room-overlay').remove();
-              _this3.gameEngine.playerReady[_this3.gameEngine.playerId] = true;
-              _this3.renderer.groupShipPID = data.ship_pid;
-              console.log(_this3.renderer.groupShipPID);
-            });
-
             $('#start-submit').click(function () {
               _this3.socket.emit('playerReady', {
                 viewer: _this3.viewer
@@ -198,6 +186,12 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
 
               document.getElementById('start-submit').style.visibility = 'hidden';
             });
+          });
+
+          _this3.socket.on('gameBegin', function (data) {
+            $('#waiting-room-overlay').remove();
+            _this3.gameEngine.playerReady[_this3.gameEngine.playerId] = true;
+            _this3.renderer.groupShipPID = data.ship_pid;
           });
 
           _this3.socket.on('groupFull', function () {
@@ -219,6 +213,13 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
 
           _this3.socket.on('roomUpdate', function (roomData) {
             _this3.gameEngine.emit('client__roomUpdate', roomData);
+          });
+
+          _this3.socket.on('disconnect', function (reason) {
+            console.log(reason);
+            window.alert('Server disconnected. Please refresh when server is available.');
+
+            _this3.socket.disconnect();
           });
         });
       };

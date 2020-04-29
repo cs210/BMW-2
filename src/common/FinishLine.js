@@ -3,7 +3,7 @@ import { PhysicalObject2D, BaseTypes } from 'lance-gg';
 let game = null;
 let p2 = null;
 
-export default class Asteroid extends PhysicalObject2D {
+export default class FinishLine extends PhysicalObject2D {
 
     constructor(gameEngine, options, props, dim) {
         super(gameEngine, options, props);
@@ -25,8 +25,6 @@ export default class Asteroid extends PhysicalObject2D {
 
     // on add-to-world, create a physics body
     onAddToWorld() {
-        console.log("Variable dim that is passed thru: ");
-        console.log(this.dim);
         game = this.gameEngine;
         p2 = game.physicsEngine.p2;
         this.physicsObj = new p2.Body({
@@ -34,30 +32,29 @@ export default class Asteroid extends PhysicalObject2D {
             position: [this.position.x, this.position.y],
             velocity: [this.velocity.x, this.velocity.y]
         });
-        this.physicsObj.addShape(new p2.Circle({
-            radius: 1.125,
-            collisionGroup: game.ASTEROID, // Belongs to the ASTEROID group
-            collisionMask: game.BULLET | game.SHIP // Can collide with the BULLET or SHIP group
+        this.physicsObj.addShape(new p2.Box({
+            width: this.dim[0],
+            height: this.dim[1],
+            collisionGroup: game.FINISHLINE, // Belongs to the ASTEROID group
+            collisionMask: game.SHIP // Can collide with SHIP group
         }));
-        this.addAsteroidVerts();
+        this.addFinishLineVerts();
         game.physicsEngine.world.addBody(this.physicsObj);
+    }
+
+    addFinishLineVerts() {
+        this.physicsObj.verts = [];
+        let width = this.physicsObj.shapes[0].width;
+        let height = this.physicsObj.shapes[0].height;
+        this.physicsObj.verts.push([-width/2, -height/2]);
+        this.physicsObj.verts.push([-width/2, height/2]);
+        this.physicsObj.verts.push([width/2, height/2]);
+        this.physicsObj.verts.push([width/2, -height/2]);
     }
 
     // on remove-from-world, remove the physics body
     onRemoveFromWorld() {
         game.physicsEngine.world.removeBody(this.physicsObj);
-    }
-
-    // Adds random .verts to an asteroid body
-    addAsteroidVerts() {
-        this.physicsObj.verts = [];
-        let radius = this.physicsObj.shapes[0].radius;
-        for (let j = 0; j < game.numAsteroidVerts; j++) {
-            let angle = j*2*Math.PI / game.numAsteroidVerts;
-            let xv = radius * Math.cos(angle);
-            let yv = radius * Math.sin(angle);
-            this.physicsObj.verts.push([xv, yv]);
-        }
     }
 
     syncTo(other) {
@@ -66,6 +63,6 @@ export default class Asteroid extends PhysicalObject2D {
     }
 
     toString() {
-        return `Asteroid::${super.toString()} Level${this.level}`;
+        return `FinishLine::${super.toString()} Level${this.level}`;
     }
 }
