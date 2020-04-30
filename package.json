@@ -2,7 +2,7 @@
   "name": "lance-asteroids",
   "version": "4.0.0",
   "engines": {
-    "node": ">=11.0.0"
+    "node": ">=10.0.0"
   },
   "description": "An HTML5 multiplayer asteroids game based on Lance and P2",
   "main": "main.js",
