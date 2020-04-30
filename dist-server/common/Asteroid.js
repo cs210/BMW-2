@@ -66,8 +66,9 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
         position: [this.position.x, this.position.y],
         velocity: [this.velocity.x, this.velocity.y]
       });
-      this.physicsObj.addShape(new p2.Circle({
-        radius: 1.125,
+      this.physicsObj.addShape(new p2.Box({
+        width: this.dim.x,
+        height: this.dim.y,
         collisionGroup: game.ASTEROID,
         // Belongs to the ASTEROID group
         collisionMask: game.BULLET | game.SHIP // Can collide with the BULLET or SHIP group
@@ -87,14 +88,12 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
     key: "addAsteroidVerts",
     value: function addAsteroidVerts() {
       this.physicsObj.verts = [];
-      var radius = this.physicsObj.shapes[0].radius;
-
-      for (var j = 0; j < game.numAsteroidVerts; j++) {
-        var angle = j * 2 * Math.PI / game.numAsteroidVerts;
-        var xv = radius * Math.cos(angle);
-        var yv = radius * Math.sin(angle);
-        this.physicsObj.verts.push([xv, yv]);
-      }
+      var width = this.physicsObj.shapes[0].width;
+      var height = this.physicsObj.shapes[0].height;
+      this.physicsObj.verts.push([-width / 2, -height / 2]);
+      this.physicsObj.verts.push([-width / 2, height / 2]);
+      this.physicsObj.verts.push([width / 2, height / 2]);
+      this.physicsObj.verts.push([width / 2, -height / 2]);
     }
   }, {
     key: "syncTo",

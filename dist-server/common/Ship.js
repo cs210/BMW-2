@@ -53,7 +53,8 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
       game = gameEngine;
       p2 = gameEngine.physicsEngine.p2; // Add ship physics
 
-      var shape = this.shape = new p2.Circle({
+      var shape = this.shape = new p2.Convex({
+        vertices: [[game.shipSize * 0.6, -game.shipSize], [0, game.shipSize], [-game.shipSize * 0.6, -game.shipSize]],
         radius: game.shipSize,
         collisionGroup: game.SHIP,
         // Belongs to the SHIP group

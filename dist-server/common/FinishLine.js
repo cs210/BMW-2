@@ -65,8 +65,8 @@ var FinishLine = /*#__PURE__*/function (_PhysicalObject2D) {
         velocity: [this.velocity.x, this.velocity.y]
       });
       this.physicsObj.addShape(new p2.Box({
-        width: this.dim[0],
-        height: this.dim[1],
+        width: this.dim.x,
+        height: this.dim.y,
         collisionGroup: game.FINISHLINE,
         // Belongs to the ASTEROID group
         collisionMask: game.SHIP // Can collide with SHIP group

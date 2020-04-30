@@ -27,7 +27,8 @@ export default class Ship extends PhysicalObject2D {
         p2 = gameEngine.physicsEngine.p2;
 
         // Add ship physics
-        let shape = this.shape = new p2.Circle({
+        let shape = this.shape = new p2.Convex({
+            vertices: [[game.shipSize*0.6, -game.shipSize], [0, game.shipSize], [-game.shipSize*0.6, -game.shipSize]],
             radius: game.shipSize,
             collisionGroup: game.SHIP, // Belongs to the SHIP group
             collisionMask: game.ASTEROID | game.FINISHLINE // Only collide with the ASTEROID group

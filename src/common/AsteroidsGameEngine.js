@@ -122,46 +122,25 @@ export default class AsteroidsGameEngine extends GameEngine {
 
     // create asteroids
     addAsteroids() {
+        // add asteroids to the bottom half of the screen
+        let a = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(-1.5, -2),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(13, 1));
+        a.level = 0;
+        this.addObjectToWorld(a);
 
         // add asteroids to the bottom half of the screen
-        for(var i = -0.5; i < 0.4; i = i + 0.1) {
-            var x = i * this.spaceWidth;
-            var y = -2;
-            let vx = 0;
-            let vy = 0;
-            let va = 0;
-
-            // Create asteroid Body
-            var a = new Asteroid(this, {}, {
-                mass: 100000,
-                position: new TwoVector(x, y),
-                velocity: new TwoVector(vx, vy),
-                angularVelocity: va
-            }, new TwoVector(1, 1));
-            a.level = 0;
-            this.addObjectToWorld(a);
-        }
-
-        // add asteroids to the top half of the screen
-        for(var i = 0.5; i > -0.4; i = i - 0.1) {
-            var x = i * this.spaceWidth;
-            var y = 2;
-            let vx = 0;
-            let vy = 0;
-            let va = 0;
-
-            // Create asteroid Body
-            var a = new Asteroid(this, {}, {
-                mass: 100000,
-                position: new TwoVector(x, y),
-                velocity: new TwoVector(vx, vy),
-                angularVelocity: va
-            }, new TwoVector(1, 1));
-            a.level = 0;
-            this.addObjectToWorld(a);
-        }
-
-        
+        let b = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(1.5, 2),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(13, 1));
+        b.level = 0;
+        this.addObjectToWorld(b);
     }
 
     // Add finishline
