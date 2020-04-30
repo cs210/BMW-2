@@ -51,13 +51,14 @@ export default class Asteroid extends PhysicalObject2D {
 
     // Adds random .verts to an asteroid body
     addAsteroidVerts() {
-        this.physicsObj.verts = [];
         let width = this.physicsObj.shapes[0].width;
         let height = this.physicsObj.shapes[0].height;
-        this.physicsObj.verts.push([-width/2, -height/2]);
-        this.physicsObj.verts.push([-width/2, height/2]);
-        this.physicsObj.verts.push([width/2, height/2]);
-        this.physicsObj.verts.push([width/2, -height/2]);
+        this.physicsObj.verts = [
+          [-width/2, -height/2],
+          [-width/2, height/2],
+          [width/2, height/2],
+          [width/2, -height/2]
+        ];
     }
 
     syncTo(other) {
