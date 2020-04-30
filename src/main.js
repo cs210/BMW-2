@@ -17,7 +17,7 @@ const io = socketIO(requestHandler);
 
 // Game Instances
 const gameEngine = new AsteroidsGameEngine({ traceLevel: Lib.Trace.TRACE_NONE });
-const serverEngine = new AsteroidsServerEngine(io, gameEngine, { debug: {}, updateRate: 6 });
+const serverEngine = new AsteroidsServerEngine(io, gameEngine, { debug: {}, updateRate: 6, timeoutInterval: 0 });
 
 // start the game
 serverEngine.start();
