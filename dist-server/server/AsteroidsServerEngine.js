@@ -135,7 +135,15 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
   }, {
     key: "kill",
     value: function kill(ship) {
+      console.log(ship.playerId);
+      console.log(ship.c_playerName);
+      console.log(ship.c_playerID);
+      console.log(ship.v_playerName);
+      console.log(ship.v_playerID);
+      console.log("end");
+      var pid = ship.playerId;
       if (ship.lives-- === 0) this.gameEngine.removeObjectFromWorld(ship.id);
+      this.gameEngine.addShip(pid); //here
     }
   }, {
     key: "gameWon",
@@ -235,10 +243,9 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
     value: function onPlayerDisconnected(socketId, playerId) {
       var group_code = this.connectedPlayers[socketId].privateCode;
 
-      _get(_getPrototypeOf(AsteroidsServerEngine.prototype), "onPlayerDisconnected", this).call(this, socketId, playerId);
+      _get(_getPrototypeOf(AsteroidsServerEngine.prototype), "onPlayerDisconnected", this).call(this, socketId, playerId); //console.log('Player from ' + group_code + ' is being deleted');
+      //console.log(this.playerGroups[group_code]);
 
-      console.log('Player from ' + group_code + ' is being deleted');
-      console.log(this.playerGroups[group_code]);
 
       if (group_code && this.playerGroups[group_code]) {
         if (playerId === this.playerGroups[group_code].c_playerID) {
@@ -261,12 +268,11 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
           if (this.playerGroups[group_code].c_socketID) {
             this.io.to(this.playerGroups[group_code].c_socketID).emit('groupUpdate', this.playerGroups[group_code]);
           }
-        }
+        } //console.log(this.playerGroups[group_code]);
 
-        console.log(this.playerGroups[group_code]);
 
         if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
-          console.log(group_code + ' has been deleted.');
+          //console.log(group_code + ' has been deleted.');
           delete this.playerGroups[group_code];
         }
 
