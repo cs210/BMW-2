@@ -94,17 +94,20 @@ module.exports = g;
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global, process, Buffer) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof2(obj){if(typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"){_typeof2=function _typeof2(obj){return typeof obj;};}else{_typeof2=function _typeof2(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};}return _typeof2(obj);}(function(global,factory){( false?"undefined":_typeof2(exports))==='object'&&typeof module!=='undefined'?factory(exports,__webpack_require__(10)): true?!(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports,__webpack_require__(10)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+/* WEBPACK VAR INJECTION */(function(global, process, Buffer) {var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof2(obj){"@babel/helpers - typeof";if(typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"){_typeof2=function _typeof2(obj){return typeof obj;};}else{_typeof2=function _typeof2(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};}return _typeof2(obj);}(function(global,factory){( false?"undefined":_typeof2(exports))==='object'&&typeof module!=='undefined'?factory(exports,__webpack_require__(10)): true?!(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports,__webpack_require__(10)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)):(global=global||self,factory(global.Client={},global.http));})(this,function(exports,http){'use strict';http=http&&http.hasOwnProperty('default')?http['default']:http;function _typeof(obj){if(typeof Symbol==="function"&&_typeof2(Symbol.iterator)==="symbol"){_typeof=function _typeof(obj){return _typeof2(obj);};}else{_typeof=function _typeof(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":_typeof2(obj);};}return _typeof(obj);}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}function _createClass(Constructor,protoProps,staticProps){if(protoProps)_defineProperties(Constructor.prototype,protoProps);if(staticProps)_defineProperties(Constructor,staticProps);return Constructor;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function");}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,writable:true,configurable:true}});if(superClass)_setPrototypeOf(subClass,superClass);}function _getPrototypeOf(o){_getPrototypeOf=Object.setPrototypeOf?Object.getPrototypeOf:function _getPrototypeOf(o){return o.__proto__||Object.getPrototypeOf(o);};return _getPrototypeOf(o);}function _setPrototypeOf(o,p){_setPrototypeOf=Object.setPrototypeOf||function _setPrototypeOf(o,p){o.__proto__=p;return o;};return _setPrototypeOf(o,p);}function _assertThisInitialized(self){if(self===void 0){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return self;}function _possibleConstructorReturn(self,call){if(call&&(_typeof2(call)==="object"||typeof call==="function")){return call;}return _assertThisInitialized(self);}function _superPropBase(object,property){while(!Object.prototype.hasOwnProperty.call(object,property)){object=_getPrototypeOf(object);if(object===null)break;}return object;}function _get(target,property,receiver){if(typeof Reflect!=="undefined"&&Reflect.get){_get=Reflect.get;}else{_get=function _get(target,property,receiver){var base=_superPropBase(target,property);if(!base)return;var desc=Object.getOwnPropertyDescriptor(base,property);if(desc.get){return desc.get.call(receiver);}return desc.value;};}return _get(target,property,receiver||target);}/**
-   * This class represents an instance of the game world,
-   * where all data pertaining to the current state of the
-   * world is saved.
+   * This class implements a singleton game world instance, created by Lance.
+   * It represents an instance of the game world, and includes all the game objects.
+   * It is the state of the game.
    */var GameWorld=/*#__PURE__*/function(){/**
-     * Constructor of the World instance
+     * Constructor of the World instance.  Invoked by Lance on startup.
+     *
+     * @hideconstructor
      */function GameWorld(){_classCallCheck(this,GameWorld);this.stepCount=0;this.objects={};this.playerCount=0;this.idCount=0;}/**
      * Gets a new, fresh and unused id that can be used for a new object
+     * @private
      * @return {Number} the new id
      */_createClass(GameWorld,[{key:"getNewId",value:function getNewId(){var possibleId=this.idCount;// find a free id
 while(possibleId in this.objects){possibleId++;}this.idCount=possibleId+1;return possibleId;}/**
@@ -115,7 +118,7 @@ while(possibleId in this.objects){possibleId++;}this.idCount=possibleId+1;return
        * @param {Class} [query.instanceType] matches whether `object instanceof instanceType`
        * @param {Array} [query.components] An array of component names
        * @param {Boolean} [query.returnSingle] Return the first object matched
-       * @returns {Array | Object} All game objects which match all the query parameters, or the first match if returnSingle was specified
+       * @return {Array | Object} All game objects which match all the query parameters, or the first match if returnSingle was specified
        */},{key:"queryObjects",value:function queryObjects(query){var queriedObjects=[];// todo this is currently a somewhat inefficient implementation for API testing purposes.
 // It should be implemented with cached dictionaries like in nano-ecs
 this.forEachObject(function(id,object){var conditions=[];// object id condition
@@ -126,14 +129,16 @@ if('components'in query){query.components.forEach(function(componentClass){condi
 if(conditions.every(function(value){return value;})){queriedObjects.push(object);if(query.returnSingle)return false;}});// return a single object or null
 if(query.returnSingle){return queriedObjects.length>0?queriedObjects[0]:null;}return queriedObjects;}/**
        * Returns The first game object encountered which matches a criteria.
-       * Syntactic sugar for {@link queryObject} with `returnSingle: true`
-       * @param query See queryObjects
-       * @returns {Object}
+       * Syntactic sugar for {@link queryObjects} with `returnSingle: true`
+       * @param {Object} query See queryObjects
+       * @return {Object} The game object, if found
        */},{key:"queryObject",value:function queryObject(query){return this.queryObjects(Object.assign(query,{returnSingle:true}));}/**
        * Add an object to the game world
+       * @private
        * @param {Object} object object to add
        */},{key:"addObject",value:function addObject(object){this.objects[object.id]=object;}/**
        * Remove an object from the game world
+       * @private
        * @param {number} id id of the object to remove
        */},{key:"removeObject",value:function removeObject(id){delete this.objects[id];}/**
        * World object iterator.
@@ -141,11 +146,12 @@ if(query.returnSingle){return queriedObjects.length>0?queriedObjects[0]:null;}re
        *
        * @param {function} callback function receives id and object. If callback returns false, the iteration will cease
        */},{key:"forEachObject",value:function forEachObject(callback){var _arr=Object.keys(this.objects);for(var _i=0;_i<_arr.length;_i++){var id=_arr[_i];var returnValue=callback(id,this.objects[id]);// TODO: the key should be Number(id)
-if(returnValue===false)break;}}}]);return GameWorld;}();var commonjsGlobal=typeof window!=='undefined'?window:typeof global!=='undefined'?global:typeof self!=='undefined'?self:{};function createCommonjsModule(fn,module){return module={exports:{}},fn(module,module.exports),module.exports;}function getCjsExportFromNamespace(n){return n&&n["default"]||n;}var isImplemented=function isImplemented(){var assign=Object.assign,obj;if(typeof assign!=="function")return false;obj={foo:"raz"};assign(obj,{bar:"dwa"},{trzy:"trzy"});return obj.foo+obj.bar+obj.trzy==="razdwatrzy";};var isImplemented$1=function isImplemented$1(){try{return true;}catch(e){return false;}};// eslint-disable-next-line no-empty-function
-var noop=function noop(){};var _undefined=noop();// Support ES3 engines
-var isValue=function isValue(val){return val!==_undefined&&val!==null;};var keys=Object.keys;var shim=function shim(object){return keys(isValue(object)?Object(object):object);};var keys$1=isImplemented$1()?Object.keys:shim;var validValue=function validValue(value){if(!isValue(value))throw new TypeError("Cannot use null or undefined");return value;};var max=Math.max;var shim$1=function shim$1(dest,src/*, …srcn*/){var error,i,length=max(arguments.length,2),assign;dest=Object(validValue(dest));assign=function assign(key){try{dest[key]=src[key];}catch(e){if(!error)error=e;}};for(i=1;i<length;++i){src=arguments[i];keys$1(src).forEach(assign);}if(error!==undefined)throw error;return dest;};var assign=isImplemented()?Object.assign:shim$1;var forEach=Array.prototype.forEach,create=Object.create;var process$1=function process$1(src,obj){var key;for(key in src){obj[key]=src[key];}};// eslint-disable-next-line no-unused-vars
-var normalizeOptions=function normalizeOptions(opts1/*, …options*/){var result=create(null);forEach.call(arguments,function(options){if(!isValue(options))return;process$1(Object(options),result);});return result;};// Deprecated
-var isCallable=function isCallable(obj){return typeof obj==="function";};var str="razdwatrzy";var isImplemented$2=function isImplemented$2(){if(typeof str.contains!=="function")return false;return str.contains("dwa")===true&&str.contains("foo")===false;};var indexOf=String.prototype.indexOf;var shim$2=function shim$2(searchString/*, position*/){return indexOf.call(this,searchString,arguments[1])>-1;};var contains=isImplemented$2()?String.prototype.contains:shim$2;var d_1=createCommonjsModule(function(module){var d;d=module.exports=function(dscr,value/*, options*/){var c,e,w,options,desc;if(arguments.length<2||typeof dscr!=='string'){options=value;value=dscr;dscr=null;}else{options=arguments[2];}if(dscr==null){c=w=true;e=false;}else{c=contains.call(dscr,'c');e=contains.call(dscr,'e');w=contains.call(dscr,'w');}desc={value:value,configurable:c,enumerable:e,writable:w};return!options?desc:assign(normalizeOptions(options),desc);};d.gs=function(dscr,get,set/*, options*/){var c,e,options,desc;if(typeof dscr!=='string'){options=set;set=get;get=dscr;dscr=null;}else{options=arguments[3];}if(get==null){get=undefined;}else if(!isCallable(get)){options=get;get=set=undefined;}else if(set==null){set=undefined;}else if(!isCallable(set)){options=set;set=undefined;}if(dscr==null){c=true;e=false;}else{c=contains.call(dscr,'c');e=contains.call(dscr,'e');}desc={get:get,set:set,configurable:c,enumerable:e};return!options?desc:assign(normalizeOptions(options),desc);};});var validCallable=function validCallable(fn){if(typeof fn!=="function")throw new TypeError(fn+" is not a function");return fn;};var eventEmitter=createCommonjsModule(function(module,exports){var apply=Function.prototype.apply,call=Function.prototype.call,create=Object.create,defineProperty=Object.defineProperty,defineProperties=Object.defineProperties,hasOwnProperty=Object.prototype.hasOwnProperty,descriptor={configurable:true,enumerable:false,writable:true},on,_once2,off,emit,methods,descriptors,base;on=function on(type,listener){var data;validCallable(listener);if(!hasOwnProperty.call(this,'__ee__')){data=descriptor.value=create(null);defineProperty(this,'__ee__',descriptor);descriptor.value=null;}else{data=this.__ee__;}if(!data[type])data[type]=listener;else if(_typeof2(data[type])==='object')data[type].push(listener);else data[type]=[data[type],listener];return this;};_once2=function once(type,listener){var _once,self;validCallable(listener);self=this;on.call(this,type,_once=function once(){off.call(self,type,_once);apply.call(listener,this,arguments);});_once.__eeOnceListener__=listener;return this;};off=function off(type,listener){var data,listeners,candidate,i;validCallable(listener);if(!hasOwnProperty.call(this,'__ee__'))return this;data=this.__ee__;if(!data[type])return this;listeners=data[type];if(_typeof2(listeners)==='object'){for(i=0;candidate=listeners[i];++i){if(candidate===listener||candidate.__eeOnceListener__===listener){if(listeners.length===2)data[type]=listeners[i?0:1];else listeners.splice(i,1);}}}else{if(listeners===listener||listeners.__eeOnceListener__===listener){delete data[type];}}return this;};emit=function emit(type){var i,l,listener,listeners,args;if(!hasOwnProperty.call(this,'__ee__'))return;listeners=this.__ee__[type];if(!listeners)return;if(_typeof2(listeners)==='object'){l=arguments.length;args=new Array(l-1);for(i=1;i<l;++i){args[i-1]=arguments[i];}listeners=listeners.slice();for(i=0;listener=listeners[i];++i){apply.call(listener,this,args);}}else{switch(arguments.length){case 1:call.call(listeners,this);break;case 2:call.call(listeners,this,arguments[1]);break;case 3:call.call(listeners,this,arguments[1],arguments[2]);break;default:l=arguments.length;args=new Array(l-1);for(i=1;i<l;++i){args[i-1]=arguments[i];}apply.call(listeners,this,args);}}};methods={on:on,once:_once2,off:off,emit:emit};descriptors={on:d_1(on),once:d_1(_once2),off:d_1(off),emit:d_1(emit)};base=defineProperties({},descriptors);module.exports=exports=function exports(o){return o==null?create(base):defineProperties(Object(o),descriptors);};exports.methods=methods;});var eventEmitter_1=eventEmitter.methods;// TODO: needs documentation
+if(returnValue===false)break;}}}]);return GameWorld;}();var commonjsGlobal=typeof window!=='undefined'?window:typeof global!=='undefined'?global:typeof self!=='undefined'?self:{};function createCommonjsModule(fn,module){return module={exports:{}},fn(module,module.exports),module.exports;}function getCjsExportFromNamespace(n){return n&&n["default"]||n;}// ES3 safe
+var _undefined=void 0;var is=function is(value){return value!==_undefined&&value!==null;};// prettier-ignore
+var possibleTypes={"object":true,"function":true,"undefined":true/* document.all */};var is$1=function is$1(value){if(!is(value))return false;return hasOwnProperty.call(possibleTypes,_typeof2(value));};var is$2=function is$2(value){if(!is$1(value))return false;try{if(!value.constructor)return false;return value.constructor.prototype===value;}catch(error){return false;}};var is$3=function is$3(value){if(typeof value!=="function")return false;if(!hasOwnProperty.call(value,"length"))return false;try{if(typeof value.length!=="number")return false;if(typeof value.call!=="function")return false;if(typeof value.apply!=="function")return false;}catch(error){return false;}return!is$2(value);};var classRe=/^\s*class[\s{/}]/,functionToString=Function.prototype.toString;var is$4=function is$4(value){if(!is$3(value))return false;if(classRe.test(functionToString.call(value)))return false;return true;};var isImplemented=function isImplemented(){var assign=Object.assign,obj;if(typeof assign!=="function")return false;obj={foo:"raz"};assign(obj,{bar:"dwa"},{trzy:"trzy"});return obj.foo+obj.bar+obj.trzy==="razdwatrzy";};var isImplemented$1=function isImplemented$1(){try{return true;}catch(e){return false;}};// eslint-disable-next-line no-empty-function
+var noop=function noop(){};var _undefined$1=noop();// Support ES3 engines
+var isValue=function isValue(val){return val!==_undefined$1&&val!==null;};var keys=Object.keys;var shim=function shim(object){return keys(isValue(object)?Object(object):object);};var keys$1=isImplemented$1()?Object.keys:shim;var validValue=function validValue(value){if(!isValue(value))throw new TypeError("Cannot use null or undefined");return value;};var max=Math.max;var shim$1=function shim$1(dest,src/*, …srcn*/){var error,i,length=max(arguments.length,2),assign;dest=Object(validValue(dest));assign=function assign(key){try{dest[key]=src[key];}catch(e){if(!error)error=e;}};for(i=1;i<length;++i){src=arguments[i];keys$1(src).forEach(assign);}if(error!==undefined)throw error;return dest;};var assign=isImplemented()?Object.assign:shim$1;var forEach=Array.prototype.forEach,create=Object.create;var process$1=function process$1(src,obj){var key;for(key in src){obj[key]=src[key];}};// eslint-disable-next-line no-unused-vars
+var normalizeOptions=function normalizeOptions(opts1/*, …options*/){var result=create(null);forEach.call(arguments,function(options){if(!isValue(options))return;process$1(Object(options),result);});return result;};var str="razdwatrzy";var isImplemented$2=function isImplemented$2(){if(typeof str.contains!=="function")return false;return str.contains("dwa")===true&&str.contains("foo")===false;};var indexOf=String.prototype.indexOf;var shim$2=function shim$2(searchString/*, position*/){return indexOf.call(this,searchString,arguments[1])>-1;};var contains=isImplemented$2()?String.prototype.contains:shim$2;var d_1=createCommonjsModule(function(module){var d=module.exports=function(dscr,value/*, options*/){var c,e,w,options,desc;if(arguments.length<2||typeof dscr!=="string"){options=value;value=dscr;dscr=null;}else{options=arguments[2];}if(is(dscr)){c=contains.call(dscr,"c");e=contains.call(dscr,"e");w=contains.call(dscr,"w");}else{c=w=true;e=false;}desc={value:value,configurable:c,enumerable:e,writable:w};return!options?desc:assign(normalizeOptions(options),desc);};d.gs=function(dscr,get,set/*, options*/){var c,e,options,desc;if(typeof dscr!=="string"){options=set;set=get;get=dscr;dscr=null;}else{options=arguments[3];}if(!is(get)){get=undefined;}else if(!is$4(get)){options=get;get=set=undefined;}else if(!is(set)){set=undefined;}else if(!is$4(set)){options=set;set=undefined;}if(is(dscr)){c=contains.call(dscr,"c");e=contains.call(dscr,"e");}else{c=true;e=false;}desc={get:get,set:set,configurable:c,enumerable:e};return!options?desc:assign(normalizeOptions(options),desc);};});var validCallable=function validCallable(fn){if(typeof fn!=="function")throw new TypeError(fn+" is not a function");return fn;};var eventEmitter=createCommonjsModule(function(module,exports){var apply=Function.prototype.apply,call=Function.prototype.call,create=Object.create,defineProperty=Object.defineProperty,defineProperties=Object.defineProperties,hasOwnProperty=Object.prototype.hasOwnProperty,descriptor={configurable:true,enumerable:false,writable:true},on,_once2,off,emit,methods,descriptors,base;on=function on(type,listener){var data;validCallable(listener);if(!hasOwnProperty.call(this,'__ee__')){data=descriptor.value=create(null);defineProperty(this,'__ee__',descriptor);descriptor.value=null;}else{data=this.__ee__;}if(!data[type])data[type]=listener;else if(_typeof2(data[type])==='object')data[type].push(listener);else data[type]=[data[type],listener];return this;};_once2=function once(type,listener){var _once,self;validCallable(listener);self=this;on.call(this,type,_once=function once(){off.call(self,type,_once);apply.call(listener,this,arguments);});_once.__eeOnceListener__=listener;return this;};off=function off(type,listener){var data,listeners,candidate,i;validCallable(listener);if(!hasOwnProperty.call(this,'__ee__'))return this;data=this.__ee__;if(!data[type])return this;listeners=data[type];if(_typeof2(listeners)==='object'){for(i=0;candidate=listeners[i];++i){if(candidate===listener||candidate.__eeOnceListener__===listener){if(listeners.length===2)data[type]=listeners[i?0:1];else listeners.splice(i,1);}}}else{if(listeners===listener||listeners.__eeOnceListener__===listener){delete data[type];}}return this;};emit=function emit(type){var i,l,listener,listeners,args;if(!hasOwnProperty.call(this,'__ee__'))return;listeners=this.__ee__[type];if(!listeners)return;if(_typeof2(listeners)==='object'){l=arguments.length;args=new Array(l-1);for(i=1;i<l;++i){args[i-1]=arguments[i];}listeners=listeners.slice();for(i=0;listener=listeners[i];++i){apply.call(listener,this,args);}}else{switch(arguments.length){case 1:call.call(listeners,this);break;case 2:call.call(listeners,this,arguments[1]);break;case 3:call.call(listeners,this,arguments[1],arguments[2]);break;default:l=arguments.length;args=new Array(l-1);for(i=1;i<l;++i){args[i-1]=arguments[i];}apply.call(listeners,this,args);}}};methods={on:on,once:_once2,off:off,emit:emit};descriptors={on:d_1(on),once:d_1(_once2),off:d_1(off),emit:d_1(emit)};base=defineProperties({},descriptors);module.exports=exports=function exports(o){return o==null?create(base):defineProperties(Object(o),descriptors);};exports.methods=methods;});var eventEmitter_1=eventEmitter.methods;// TODO: needs documentation
 // I think the API could be simpler
 //   - Timer.run(waitSteps, cb)
 //   - Timer.repeat(waitSteps, count, cb) // count=null=>forever
@@ -207,15 +213,14 @@ if(typeof dataCB!=='function'){throw new Error("Lance trace was called but inste
       * once on the server, and once on each client.
       *
       * @param {Object} options - options object
-      * @param {Number} options.traceLevel - the trace level from 0 to 5.  Lower value traces more.
-      * @param {Number} options.delayInputCount - client side only.  Introduce an artificial delay on the client to better match the time it will occur on the server.  This value sets the number of steps the client will wait before applying the input locally
+      * @param {Number} options.traceLevel - the trace level.
       */function GameEngine(options){_classCallCheck(this,GameEngine);// place the game engine in the LANCE globals
 var isServerSide=typeof window==='undefined';var glob=isServerSide?global:window;glob.LANCE={gameEngine:this};// set options
-var defaultOpts={GameWorld:GameWorld,traceLevel:Trace.TRACE_NONE};if(!isServerSide)defaultOpts.clientIDSpace=1000000;this.options=Object.assign(defaultOpts,options);/**
+var defaultOpts={traceLevel:Trace.TRACE_NONE};if(!isServerSide)defaultOpts.clientIDSpace=1000000;this.options=Object.assign(defaultOpts,options);/**
        * client's player ID, as a string. If running on the client, this is set at runtime by the clientEngine
        * @member {String}
        */this.playerId=NaN;// set up event emitting and interface
-var eventEmitter$1=new eventEmitter();/**
+var eventEmitter$1=this.options.eventEmitter;if(typeof eventEmitter$1==='undefined')eventEmitter$1=new eventEmitter();/**
        * Register a handler for an event
        *
        * @method on
@@ -277,7 +282,7 @@ this.emit('postStep',{step:step,isReenact:isReenact});}/**
        * is using delayed-input, and the RTT is very low.
        *
        * @param {Object} object - the object.
-       * @return {Object} object - the final object.
+       * @return {Object} the final object.
        */},{key:"addObjectToWorld",value:function addObjectToWorld(object){// if we are asked to create a local shadow object
 // the server copy may already have arrived.
 if(Number(object.id)>=this.options.clientIDSpace){var serverCopyArrived=false;this.world.forEachObject(function(id,o){if(o.hasOwnProperty('inputId')&&o.inputId===object.inputId){serverCopyArrived=true;return false;}});if(serverCopyArrived){this.trace.info(function(){return"========== shadow object NOT added ".concat(object.toString()," ==========");});return null;}}this.world.addObject(object);// tell the object to join the game, by creating
@@ -316,8 +321,8 @@ if(typeof object.onAddToWorld==='function')object.onAddToWorld(this);this.emit('
        *
        * @example
        * registerClasses(serializer) {
-       *   serializer.registerClass(require('../common/Paddle'));
-       *   serializer.registerClass(require('../common/Ball'));
+       *   serializer.registerClass(Paddle);
+       *   serializer.registerClass(Ball);
        * }
        *
        * @param {Serializer} serializer - the serializer
@@ -4292,7 +4297,7 @@ var ri_x_f=vec2_1.crossLength(ri,f);var rj_x_f=vec2_1.crossLength(rj,f);bodyA.an
        */this.restAngle=typeof options.restAngle==="number"?options.restAngle:bodyB.angle-bodyA.angle;}RotationalSpring.prototype=new Spring_1();RotationalSpring.prototype.constructor=RotationalSpring;/**
    * Apply the spring force to the connected bodies.
    * @method applyForce
-   */RotationalSpring.prototype.applyForce=function(){var k=this.stiffness,d=this.damping,l=this.restAngle,bodyA=this.bodyA,bodyB=this.bodyB,x=bodyB.angle-bodyA.angle,u=bodyB.angularVelocity-bodyA.angularVelocity;var torque=-k*(x-l)-d*u*0;bodyA.angularForce-=torque;bodyB.angularForce+=torque;};var _from="p2@^0.7.1";var _id="p2@0.7.1";var _inBundle=false;var _integrity="sha1-JfJHTZvDptMUCh2iamfJ4RislUM=";var _location="/lance-gg/p2";var _phantomChildren={};var _requested={type:"range",registry:true,raw:"p2@^0.7.1",name:"p2",escapedName:"p2",rawSpec:"^0.7.1",saveSpec:null,fetchSpec:"^0.7.1"};var _requiredBy=["/lance-gg"];var _resolved="https://registry.npmjs.org/p2/-/p2-0.7.1.tgz";var _shasum="25f2474d9bc3a6d3140a1da26a67c9e118ac9543";var _spec="p2@^0.7.1";var _where="/mnt/c/work/git/lance";var author={name:"Stefan Hedman",email:"schteppe@gmail.com",url:"http://steffe.se"};var bugs={url:"https://github.com/schteppe/p2.js/issues"};var bundleDependencies=false;var dependencies={"poly-decomp":"0.1.1"};var deprecated=false;var description="A JavaScript 2D physics engine.";var devDependencies={grunt:"^0.4.5","grunt-browserify":"~2.0.1","grunt-contrib-concat":"^0.4.0","grunt-contrib-jshint":"^0.11.2","grunt-contrib-nodeunit":"^0.4.1","grunt-contrib-uglify":"~0.4.0","grunt-contrib-watch":"~0.5.0"};var engines={node:"*"};var homepage="https://github.com/schteppe/p2.js#readme";var keywords=["p2.js","p2","physics","engine","2d"];var licenses=[{type:"MIT"}];var main="./src/p2.js";var name="p2";var repository={type:"git",url:"git+https://github.com/schteppe/p2.js.git"};var version="0.7.1";var _package={_from:_from,_id:_id,_inBundle:_inBundle,_integrity:_integrity,_location:_location,_phantomChildren:_phantomChildren,_requested:_requested,_requiredBy:_requiredBy,_resolved:_resolved,_shasum:_shasum,_spec:_spec,_where:_where,author:author,bugs:bugs,bundleDependencies:bundleDependencies,dependencies:dependencies,deprecated:deprecated,description:description,devDependencies:devDependencies,engines:engines,homepage:homepage,keywords:keywords,licenses:licenses,main:main,name:name,repository:repository,version:version};var _package$1=/*#__PURE__*/Object.freeze({_from:_from,_id:_id,_inBundle:_inBundle,_integrity:_integrity,_location:_location,_phantomChildren:_phantomChildren,_requested:_requested,_requiredBy:_requiredBy,_resolved:_resolved,_shasum:_shasum,_spec:_spec,_where:_where,author:author,bugs:bugs,bundleDependencies:bundleDependencies,dependencies:dependencies,deprecated:deprecated,description:description,devDependencies:devDependencies,engines:engines,homepage:homepage,keywords:keywords,licenses:licenses,main:main,name:name,repository:repository,version:version,"default":_package});var OverlapKeeperRecord_1=OverlapKeeperRecord;/**
+   */RotationalSpring.prototype.applyForce=function(){var k=this.stiffness,d=this.damping,l=this.restAngle,bodyA=this.bodyA,bodyB=this.bodyB,x=bodyB.angle-bodyA.angle,u=bodyB.angularVelocity-bodyA.angularVelocity;var torque=-k*(x-l)-d*u*0;bodyA.angularForce-=torque;bodyB.angularForce+=torque;};var _from="p2@^0.7.1";var _id="p2@0.7.1";var _inBundle=false;var _integrity="sha1-JfJHTZvDptMUCh2iamfJ4RislUM=";var _location="/lance-gg/p2";var _phantomChildren={};var _requested={type:"range",registry:true,raw:"p2@^0.7.1",name:"p2",escapedName:"p2",rawSpec:"^0.7.1",saveSpec:null,fetchSpec:"^0.7.1"};var _requiredBy=["/lance-gg"];var _resolved="https://registry.npmjs.org/p2/-/p2-0.7.1.tgz";var _shasum="25f2474d9bc3a6d3140a1da26a67c9e118ac9543";var _spec="p2@^0.7.1";var _where="/Users/namel/git/lance";var author={name:"Stefan Hedman",email:"schteppe@gmail.com",url:"http://steffe.se"};var bugs={url:"https://github.com/schteppe/p2.js/issues"};var bundleDependencies=false;var dependencies={"poly-decomp":"0.1.1"};var deprecated=false;var description="A JavaScript 2D physics engine.";var devDependencies={grunt:"^0.4.5","grunt-browserify":"~2.0.1","grunt-contrib-concat":"^0.4.0","grunt-contrib-jshint":"^0.11.2","grunt-contrib-nodeunit":"^0.4.1","grunt-contrib-uglify":"~0.4.0","grunt-contrib-watch":"~0.5.0"};var engines={node:"*"};var homepage="https://github.com/schteppe/p2.js#readme";var keywords=["p2.js","p2","physics","engine","2d"];var licenses=[{type:"MIT"}];var main="./src/p2.js";var name="p2";var repository={type:"git",url:"git+https://github.com/schteppe/p2.js.git"};var version="0.7.1";var _package={_from:_from,_id:_id,_inBundle:_inBundle,_integrity:_integrity,_location:_location,_phantomChildren:_phantomChildren,_requested:_requested,_requiredBy:_requiredBy,_resolved:_resolved,_shasum:_shasum,_spec:_spec,_where:_where,author:author,bugs:bugs,bundleDependencies:bundleDependencies,dependencies:dependencies,deprecated:deprecated,description:description,devDependencies:devDependencies,engines:engines,homepage:homepage,keywords:keywords,licenses:licenses,main:main,name:name,repository:repository,version:version};var _package$1=/*#__PURE__*/Object.freeze({_from:_from,_id:_id,_inBundle:_inBundle,_integrity:_integrity,_location:_location,_phantomChildren:_phantomChildren,_requested:_requested,_requiredBy:_requiredBy,_resolved:_resolved,_shasum:_shasum,_spec:_spec,_where:_where,author:author,bugs:bugs,bundleDependencies:bundleDependencies,dependencies:dependencies,deprecated:deprecated,description:description,devDependencies:devDependencies,engines:engines,homepage:homepage,keywords:keywords,licenses:licenses,main:main,name:name,repository:repository,version:version,"default":_package});var OverlapKeeperRecord_1=OverlapKeeperRecord;/**
    * Overlap data container for the OverlapKeeper
    * @class OverlapKeeperRecord
    * @constructor
@@ -4937,7 +4942,7 @@ var body=new p2_1.Body({mass:mass,position:[0,0]});body.addShape(new p2_1.Box({w
 // integers. Since we want the results to be always positive, convert the
 // signed int to an unsigned by doing an unsigned bitshift. */
 return hash;}},{key:"arrayBuffersEqual",value:function arrayBuffersEqual(buf1,buf2){if(buf1.byteLength!==buf2.byteLength)return false;var dv1=new Int8Array(buf1);var dv2=new Int8Array(buf2);for(var i=0;i!==buf1.byteLength;i++){if(dv1[i]!==dv2[i])return false;}return true;}},{key:"httpGetPromise",value:function httpGetPromise(url){return new Promise(function(resolve,reject){var req=new XMLHttpRequest();req.open('GET',url,true);req.onload=function(){if(req.status>=200&&req.status<400)resolve(JSON.parse(req.responseText));else reject();};req.onerror=function(){};req.send();});}}]);return Utils;}();/**
-   * The BaseTypes class defines the base types used in lance.
+   * The BaseTypes class defines the base types used in Lance.
    * These are the types which can be used to define an object's netscheme attributes,
    * which can be serialized by lance.
    * @example
@@ -5419,12 +5424,14 @@ var axis=new ThreeVector(1,0,0);this.normalize();var angle=2*Math.acos(this.w);v
    * object interface.
    * Game developers will use one of the subclasses such as DynamicObject,
    * or PhysicalObject.
-   */var GameObject=/*#__PURE__*/function(_Serializable){_inherits(GameObject,_Serializable);_createClass(GameObject,null,[{key:"netScheme",get:function get(){return{id:{type:BaseTypes.TYPES.INT32}};}/**
+   */var GameObject=/*#__PURE__*/function(_Serializable){_inherits(GameObject,_Serializable);_createClass(GameObject,null,[{key:"netScheme",get:function get(){return{id:{type:BaseTypes.TYPES.INT32},playerId:{type:BaseTypes.TYPES.INT16}};}/**
       * Creates an instance of a game object.
       * @param {GameEngine} gameEngine - the gameEngine this object will be used in
       * @param {Object} options - options for instantiation of the GameObject
       * @param {Number} id - if set, the new instantiated object will be set to this id instead of being generated a new one. Use with caution!
-      */}]);function GameObject(gameEngine,options){var _this;_classCallCheck(this,GameObject);_this=_possibleConstructorReturn(this,_getPrototypeOf(GameObject).call(this));/**
+      * @param {Object} props - additional properties for creation
+      * @param {Number} props.playerId - the playerId value of the player who owns this object
+      */}]);function GameObject(gameEngine,options,props){var _this;_classCallCheck(this,GameObject);_this=_possibleConstructorReturn(this,_getPrototypeOf(GameObject).call(this));/**
        * The gameEngine this object will be used in
        * @member {GameEngine}
        */_this.gameEngine=gameEngine;/**
@@ -5439,7 +5446,10 @@ var axis=new ThreeVector(1,0,0);this.normalize();var angle=2*Math.acos(this.w);v
       * These are used for interpolation purposes and as bending targets of position, velocity,
       * angular velocity, and orientation.  In this case the id will be set to null.
       * @member {Number}
-      */_this.id=null;if(options&&'id'in options)_this.id=options.id;else if(_this.gameEngine)_this.id=_this.gameEngine.world.getNewId();_this.components={};return _this;}/**
+      */_this.id=null;if(options&&'id'in options)_this.id=options.id;else if(_this.gameEngine)_this.id=_this.gameEngine.world.getNewId();/**
+      * playerId of player who created this object
+      * @member {Number}
+      */_this.playerId=props&&props.playerId?props.playerId:0;_this.components={};return _this;}/**
      * Called after the object is added to to the game world.
      * This is the right place to add renderer sub-objects, physics sub-objects
      * and any other resources that should be created
@@ -5487,7 +5497,7 @@ value:function bendToCurrentState(bending,worldSettings,isLocal,bendingIncrement
        * synchronize this object to the state of an other object, by copying all the netscheme variables.
        * This is used by the synchronizer to create temporary objects, and must be implemented by all sub-classes as well.
        * @param {GameObject} other the other object to synchronize to
-       */},{key:"syncTo",value:function syncTo(other){_get(_getPrototypeOf(GameObject.prototype),"syncTo",this).call(this,other);}// copy physical attributes to physics sub-object
+       */},{key:"syncTo",value:function syncTo(other){_get(_getPrototypeOf(GameObject.prototype),"syncTo",this).call(this,other);this.playerId=other.playerId;}// copy physical attributes to physics sub-object
 },{key:"refreshToPhysics",value:function refreshToPhysics(){}// copy physical attributes from physics sub-object
 },{key:"refreshFromPhysics",value:function refreshFromPhysics(){}// apply a single bending increment
 },{key:"applyIncrementalBending",value:function applyIncrementalBending(){}// clean up resources
@@ -5507,8 +5517,8 @@ value:function interpolate(start,end,percent){return(end-start)*percent+start;}/
 //
 // returns just the delta. i.e. the value that must be added to the start value
 },{key:"interpolateDeltaWithWrapping",value:function interpolateDeltaWithWrapping(start,end,percent,wrapMin,wrapMax){var wrapTest=wrapMax-wrapMin;if(start-end>wrapTest/2)end+=wrapTest;else if(end-start>wrapTest/2)start+=wrapTest;if(Math.abs(start-end)>wrapTest/3){console.log('wrap interpolation is close to limit.  Not sure which edge to wrap to.');}return(end-start)*percent;}},{key:"interpolateWithWrapping",value:function interpolateWithWrapping(start,end,percent,wrapMin,wrapMax){var interpolatedVal=start+this.interpolateDeltaWithWrapping(start,end,percent,wrapMin,wrapMax);var wrapLength=wrapMax-wrapMin;if(interpolatedVal>=wrapLength)interpolatedVal-=wrapLength;if(interpolatedVal<0)interpolatedVal+=wrapLength;return interpolatedVal;}}]);return MathUtils;}();/**
-   * DynamicObject is the base class of the game's objects, for games which
-   * rely on SimplePhysicsEngine.  It defines the
+   * DynamicObject is the base class of the game's objects, for 2D games which
+   * rely on {@link SimplePhysicsEngine}.  It defines the
    * base object which can move around in the game world.  The
    * extensions of this object (the subclasses)
    * will be periodically synchronized from the server to every client.
@@ -5537,9 +5547,11 @@ value:function interpolate(start,end,percent){return(end-start)*percent+start;}/
       *           mojo: { type: BaseTypes.TYPES.UINT8 },
       *         }, super.netScheme);
       *     }
-      */get:function get(){return Object.assign({playerId:{type:BaseTypes.TYPES.INT16},position:{type:BaseTypes.TYPES.CLASSINSTANCE},width:{type:BaseTypes.TYPES.INT16},height:{type:BaseTypes.TYPES.INT16},isStatic:{type:BaseTypes.TYPES.UINT8},velocity:{type:BaseTypes.TYPES.CLASSINSTANCE},angle:{type:BaseTypes.TYPES.FLOAT32}},_get(_getPrototypeOf(DynamicObject),"netScheme",this));}/**
+      */get:function get(){return Object.assign({position:{type:BaseTypes.TYPES.CLASSINSTANCE},width:{type:BaseTypes.TYPES.INT16},height:{type:BaseTypes.TYPES.INT16},isStatic:{type:BaseTypes.TYPES.UINT8},velocity:{type:BaseTypes.TYPES.CLASSINSTANCE},angle:{type:BaseTypes.TYPES.FLOAT32}},_get(_getPrototypeOf(DynamicObject),"netScheme",this));}/**
       * Creates an instance of a dynamic object.
-      * NOTE: all subclasses of this class must comply with this constructor signature.
+      * NOTE 1: do not add logic to subcclasses of this function, instead, create an instance and
+      *       assign attributes to the new objects.
+      * NOTE 2: all subclasses of this class must comply with this constructor signature.
       *       This is required because the engine will create temporary instances when
       *       syncs arrive on the clients.
       * @param {GameEngine} gameEngine - the gameEngine this object will be used in
@@ -5549,10 +5561,7 @@ value:function interpolate(start,end,percent){return(end-start)*percent+start;}/
       * @param {TwoVector} props.velocity - velocity vector
       * @param {Number} props.height - object height
       * @param {Number} props.width - object width
-      */}]);function DynamicObject(gameEngine,options,props){var _this;_classCallCheck(this,DynamicObject);_this=_possibleConstructorReturn(this,_getPrototypeOf(DynamicObject).call(this,gameEngine,options));/**
-      * ID of player who created this object
-      * @member {Number}
-      */_this.playerId=props&&props.playerId?props.playerId:0;_this.bendingIncrements=0;_this.position=new TwoVector(0,0);_this.velocity=new TwoVector(0,0);/**
+      */}]);function DynamicObject(gameEngine,options,props){var _this;_classCallCheck(this,DynamicObject);_this=_possibleConstructorReturn(this,_getPrototypeOf(DynamicObject).call(this,gameEngine,options,props));_this.bendingIncrements=0;_this.position=new TwoVector(0,0);_this.velocity=new TwoVector(0,0);/**
        * Object width for collision detection purposes. Default is 1
        * @member {Number}
        */_this.width=props&&props.width?props.width:1;/**
@@ -5565,9 +5574,6 @@ value:function interpolate(start,end,percent){return(end-start)*percent+start;}/
        * The friction coefficient. Velocity is multiplied by this for each step. Default is (1,1)
        * @member {TwoVector}
        */_this.friction=new TwoVector(1,1);/**
-      * playerId
-      * @member {Number}
-      */if(props&&props.playerId)_this.playerId=props.playerId;/**
       * position
       * @member {TwoVector}
       */if(props&&props.position)_this.position.copy(props.position);/**
@@ -5607,7 +5613,7 @@ _createClass(DynamicObject,[{key:"toString",/**
        * Each object class can define its own bending overrides.
        * return an object which can include attributes: position, velocity,
        * and angle.  In each case, you can specify a min value, max
-       * value, and a percent value.
+       * value, and a percent value.  { @see GameObject.bending }
        *
        * @return {Object} bending - an object with bending paramters
        */},{key:"turnRight",/**
@@ -5630,7 +5636,7 @@ _createClass(DynamicObject,[{key:"toString",/**
       * @memberof DynamicObject
       * @member {Number} maxSpeed
       */},{key:"syncTo",/**
-      * Copy the netscheme variables from another DynamicObject
+      * Copy the netscheme variables from another DynamicObject.
       * This is used by the synchronizer to create temporary objects, and must be implemented by all sub-classes as well.
       * @param {DynamicObject} other DynamicObject
       */value:function syncTo(other){_get(_getPrototypeOf(DynamicObject.prototype),"syncTo",this).call(this,other);this.position.copy(other.position);this.velocity.copy(other.velocity);this.width=other.width;this.height=other.height;this.bendingAngle=other.bendingAngle;this.rotationSpeed=other.rotationSpeed;this.acceleration=other.acceleration;this.deceleration=other.deceleration;}},{key:"bendToCurrent",value:function bendToCurrent(original,percent,worldSettings,isLocal,increments){var bending={increments:increments,percent:percent};// if the object has defined a bending multiples for this object, use them
@@ -5671,7 +5677,7 @@ return{min:[this.x-this.width/2,this.y-this.height/2],max:[this.x+this.width/2,t
       *           mojo: { type: BaseTypes.TYPES.UINT8 },
       *         }, super.netScheme);
       *     }
-      */get:function get(){return Object.assign({playerId:{type:BaseTypes.TYPES.INT16},mass:{type:BaseTypes.TYPES.FLOAT32},position:{type:BaseTypes.TYPES.CLASSINSTANCE},angle:{type:BaseTypes.TYPES.FLOAT32},velocity:{type:BaseTypes.TYPES.CLASSINSTANCE},angularVelocity:{type:BaseTypes.TYPES.FLOAT32}},_get(_getPrototypeOf(PhysicalObject2D),"netScheme",this));}/**
+      */get:function get(){return Object.assign({mass:{type:BaseTypes.TYPES.FLOAT32},position:{type:BaseTypes.TYPES.CLASSINSTANCE},angle:{type:BaseTypes.TYPES.FLOAT32},velocity:{type:BaseTypes.TYPES.CLASSINSTANCE},angularVelocity:{type:BaseTypes.TYPES.FLOAT32}},_get(_getPrototypeOf(PhysicalObject2D),"netScheme",this));}/**
       * Creates an instance of a physical object.
       * Override to provide starting values for position, velocity, angle and angular velocity.
       * NOTE: all subclasses of this class must comply with this constructor signature.
@@ -5685,9 +5691,9 @@ return{min:[this.x-this.width/2,this.y-this.height/2],max:[this.x+this.width/2,t
       * @param {Number} props.angle - orientation angle
       * @param {Number} props.mass - the mass
       * @param {Number} props.angularVelocity - angular velocity
-      */}]);function PhysicalObject2D(gameEngine,options,props){var _this;_classCallCheck(this,PhysicalObject2D);_this=_possibleConstructorReturn(this,_getPrototypeOf(PhysicalObject2D).call(this,gameEngine,options));_this.playerId=0;_this.bendingIncrements=0;// set default position, velocity and quaternion
+      */}]);function PhysicalObject2D(gameEngine,options,props){var _this;_classCallCheck(this,PhysicalObject2D);_this=_possibleConstructorReturn(this,_getPrototypeOf(PhysicalObject2D).call(this,gameEngine,options,props));_this.bendingIncrements=0;// set default position, velocity and quaternion
 _this.position=new TwoVector(0,0);_this.velocity=new TwoVector(0,0);_this.angle=0;_this.angularVelocity=0;_this.mass=0;// use values if provided
-props=props||{};if(props.playerId)_this.playerId=props.playerId;if(props.position)_this.position.copy(props.position);if(props.velocity)_this.velocity.copy(props.velocity);if(props.angle)_this.angle=props.angle;if(props.angularVelocity)_this.angularVelocity=props.angularVelocity;if(props.mass)_this.mass=props.mass;_this["class"]=PhysicalObject2D;return _this;}/**
+props=props||{};if(props.position)_this.position.copy(props.position);if(props.velocity)_this.velocity.copy(props.velocity);if(props.angle)_this.angle=props.angle;if(props.angularVelocity)_this.angularVelocity=props.angularVelocity;if(props.mass)_this.mass=props.mass;_this["class"]=PhysicalObject2D;return _this;}/**
      * Called after the object is added to to the game world.
      * This is the right place to add renderer sub-objects, physics sub-objects
      * and any other resources that should be created
@@ -5756,7 +5762,7 @@ this.position.lerp(nextObj.position,percent);this.angle=MathUtils.interpolateDel
       *           mojo: { type: BaseTypes.TYPES.UINT8 },
       *         }, super.netScheme);
       *     }
-      */get:function get(){return Object.assign({playerId:{type:BaseTypes.TYPES.INT16},position:{type:BaseTypes.TYPES.CLASSINSTANCE},quaternion:{type:BaseTypes.TYPES.CLASSINSTANCE},velocity:{type:BaseTypes.TYPES.CLASSINSTANCE},angularVelocity:{type:BaseTypes.TYPES.CLASSINSTANCE}},_get(_getPrototypeOf(PhysicalObject3D),"netScheme",this));}/**
+      */get:function get(){return Object.assign({position:{type:BaseTypes.TYPES.CLASSINSTANCE},quaternion:{type:BaseTypes.TYPES.CLASSINSTANCE},velocity:{type:BaseTypes.TYPES.CLASSINSTANCE},angularVelocity:{type:BaseTypes.TYPES.CLASSINSTANCE}},_get(_getPrototypeOf(PhysicalObject3D),"netScheme",this));}/**
       * Creates an instance of a physical object.
       * Override to provide starting values for position, velocity, quaternion and angular velocity.
       * NOTE: all subclasses of this class must comply with this constructor signature.
@@ -5769,7 +5775,7 @@ this.position.lerp(nextObj.position,percent);this.angle=MathUtils.interpolateDel
       * @param {ThreeVector} props.velocity - velocity vector
       * @param {Quaternion} props.quaternion - orientation quaternion
       * @param {ThreeVector} props.angularVelocity - 3-vector representation of angular velocity
-      */}]);function PhysicalObject3D(gameEngine,options,props){var _this;_classCallCheck(this,PhysicalObject3D);_this=_possibleConstructorReturn(this,_getPrototypeOf(PhysicalObject3D).call(this,gameEngine,options));_this.playerId=0;_this.bendingIncrements=0;// set default position, velocity and quaternion
+      */}]);function PhysicalObject3D(gameEngine,options,props){var _this;_classCallCheck(this,PhysicalObject3D);_this=_possibleConstructorReturn(this,_getPrototypeOf(PhysicalObject3D).call(this,gameEngine,options,props));_this.bendingIncrements=0;// set default position, velocity and quaternion
 _this.position=new ThreeVector(0,0,0);_this.velocity=new ThreeVector(0,0,0);_this.quaternion=new Quaternion(1,0,0,0);_this.angularVelocity=new ThreeVector(0,0,0);// use values if provided
 props=props||{};if(props.position)_this.position.copy(props.position);if(props.velocity)_this.velocity.copy(props.velocity);if(props.quaternion)_this.quaternion.copy(props.quaternion);if(props.angularVelocity)_this.angularVelocity.copy(props.angularVelocity);_this["class"]=PhysicalObject3D;return _this;}/**
      * Formatted textual description of the dynamic object.
@@ -7565,7 +7571,7 @@ _createClass(Scheduler,[{key:"nextTickChecker",value:function nextTickChecker(){
        * delay next execution
        */},{key:"delayTick",value:function delayTick(){this.requestedDelay+=this.options.delay;}/**
        * hurry the next execution
-       */},{key:"hurryTick",value:function hurryTick(){this.requestedDelay-=this.options.delay;}}]);return Scheduler;}();var SyncStrategy=/*#__PURE__*/function(){function SyncStrategy(clientEngine,inputOptions){_classCallCheck(this,SyncStrategy);this.clientEngine=clientEngine;this.gameEngine=clientEngine.gameEngine;this.options=Object.assign({},inputOptions);this.gameEngine.on('client__postStep',this.syncStep.bind(this));this.gameEngine.on('client__syncReceived',this.collectSync.bind(this));this.requiredSyncs=[];this.SYNC_APPLIED='SYNC_APPLIED';this.STEP_DRIFT_THRESHOLDS={onServerSync:{MAX_LEAD:1,MAX_LAG:3},// max step lead/lag allowed after every server sync
+       */},{key:"hurryTick",value:function hurryTick(){this.requestedDelay-=this.options.delay;}}]);return Scheduler;}();var SyncStrategy=/*#__PURE__*/function(){function SyncStrategy(clientEngine,inputOptions){_classCallCheck(this,SyncStrategy);this.clientEngine=clientEngine;this.gameEngine=clientEngine.gameEngine;this.needFirstSync=true;this.options=Object.assign({},inputOptions);this.gameEngine.on('client__postStep',this.syncStep.bind(this));this.gameEngine.on('client__syncReceived',this.collectSync.bind(this));this.requiredSyncs=[];this.SYNC_APPLIED='SYNC_APPLIED';this.STEP_DRIFT_THRESHOLDS={onServerSync:{MAX_LEAD:1,MAX_LAG:3},// max step lead/lag allowed after every server sync
 onEveryStep:{MAX_LEAD:7,MAX_LAG:8},// max step lead/lag allowed at every step
 clientReset:20// if we are behind this many steps, just reset the step counter
 };}// collect a sync and its events
@@ -7629,7 +7635,7 @@ extrapolate:2,// player performs method "X" which means extrapolate to match ser
 localObjBending:0.1,// amount of bending towards position of sync object
 remoteObjBending:0.6,// amount of bending towards position of sync object
 bendingIncrements:10// the bending should be applied increments (how many steps for entire bend)
-};var ExtrapolateStrategy=/*#__PURE__*/function(_SyncStrategy){_inherits(ExtrapolateStrategy,_SyncStrategy);function ExtrapolateStrategy(clientEngine,inputOptions){var _this;_classCallCheck(this,ExtrapolateStrategy);var options=Object.assign({},defaults$1,inputOptions);_this=_possibleConstructorReturn(this,_getPrototypeOf(ExtrapolateStrategy).call(this,clientEngine,options));_this.lastSync=null;_this.needFirstSync=true;_this.recentInputs={};_this.gameEngine.on('client__processInput',_this.clientInputSave.bind(_assertThisInitialized(_this)));_this.STEP_DRIFT_THRESHOLDS={onServerSync:{MAX_LEAD:2,MAX_LAG:3},// max step lead/lag allowed after every server sync
+};var ExtrapolateStrategy=/*#__PURE__*/function(_SyncStrategy){_inherits(ExtrapolateStrategy,_SyncStrategy);function ExtrapolateStrategy(clientEngine,inputOptions){var _this;_classCallCheck(this,ExtrapolateStrategy);var options=Object.assign({},defaults$1,inputOptions);_this=_possibleConstructorReturn(this,_getPrototypeOf(ExtrapolateStrategy).call(this,clientEngine,options));_this.lastSync=null;_this.recentInputs={};_this.gameEngine.on('client__processInput',_this.clientInputSave.bind(_assertThisInitialized(_this)));_this.STEP_DRIFT_THRESHOLDS={onServerSync:{MAX_LEAD:2,MAX_LAG:3},// max step lead/lag allowed after every server sync
 onEveryStep:{MAX_LEAD:7,MAX_LAG:4},// max step lead/lag allowed at every step
 clientReset:40// if we are behind this many steps, just reset the step counter
 };return _this;}// keep a buffer of inputs so that we can replay them on extrapolation
@@ -7675,17 +7681,12 @@ var _arr4=Object.keys(world.objects);var _loop3=function _loop3(){var objId=_arr
 var _arr5=Object.keys(world.objects);var _loop4=function _loop4(){var objId=_arr5[_i5];var objEvents=sync.syncObjects[objId];// if this was a full sync, and we did not get a corresponding object,
 // remove the local object
 if(sync.fullUpdate&&!objEvents&&objId<_this2.gameEngine.options.clientIDSpace){_this2.gameEngine.removeObjectFromWorld(objId);return"continue";}if(!objEvents||objId>=_this2.gameEngine.options.clientIDSpace)return"continue";// if we got an objectDestroy event, destroy the object
-objEvents.forEach(function(e){if(e.eventName==='objectDestroy')_this2.gameEngine.removeObjectFromWorld(objId);});};for(var _i5=0;_i5<_arr5.length;_i5++){var _ret2=_loop4();if(_ret2==="continue")continue;}return this.SYNC_APPLIED;}}]);return ExtrapolateStrategy;}(SyncStrategy);var defaults$2={worldBufferLength:60,clientStepLag:0};var FrameSyncStrategy=/*#__PURE__*/function(_SyncStrategy){_inherits(FrameSyncStrategy,_SyncStrategy);function FrameSyncStrategy(clientEngine,inputOptions){var _this;_classCallCheck(this,FrameSyncStrategy);_this=_possibleConstructorReturn(this,_getPrototypeOf(FrameSyncStrategy).call(this,clientEngine,inputOptions));_this.options=Object.assign(defaults$2,inputOptions);_this.gameEngine=_this.clientEngine.gameEngine;_this.gameEngine.on('postStep',_this.frameSync.bind(_assertThisInitialized(_this)));_this.gameEngine.on('client__syncReceived',_this.keepSnapshot.bind(_assertThisInitialized(_this)));return _this;}// keep snapshot if it's the most recent we've seen
-_createClass(FrameSyncStrategy,[{key:"keepSnapshot",value:function keepSnapshot(e){if(!this.latestSnapshot||e.snapshot.stepCount>this.latestSnapshot.stepCount){this.latestSnapshot=e.snapshot;}}/**
-       * Perform client-side interpolation.
-       */},{key:"frameSync",value:function frameSync(){var world=this.gameEngine.world;var nextWorld=this.latestSnapshot;// see if we need to sync
-// TODO: might as well exit this function now if (nextWorld.step == world.step)
-if(!nextWorld){return;}// create new objects, interpolate existing objects
-for(var objId in nextWorld.objects){if(nextWorld.objects.hasOwnProperty(objId)){var curObj=null;var nextObj=nextWorld.objects[objId];// if the object is new, add it
-if(!world.objects.hasOwnProperty(objId)){curObj=new nextObj.constructor();curObj.copyFrom(nextObj);world.objects[objId]=curObj;curObj.init({velX:nextObj.velX,velY:nextObj.velY,velZ:nextObj.velZ});curObj.initRenderObject(this.gameEngine.renderer);// if this game keeps a physics engine on the client side,
-// we need to update it as well
-if(this.gameEngine.physicsEngine){curObj.initPhysicsObject(this.gameEngine.physicsEngine);}}else{curObj=world.objects[objId];curObj.copy(nextObj);}// update render sub-object
-curObj.updateRenderObject();}}}}]);return FrameSyncStrategy;}(SyncStrategy);var strategies={extrapolate:ExtrapolateStrategy,interpolate:InterpolateStrategy,frameSync:FrameSyncStrategy};var Synchronizer=// create a synchronizer instance
+objEvents.forEach(function(e){if(e.eventName==='objectDestroy')_this2.gameEngine.removeObjectFromWorld(objId);});};for(var _i5=0;_i5<_arr5.length;_i5++){var _ret2=_loop4();if(_ret2==="continue")continue;}return this.SYNC_APPLIED;}}]);return ExtrapolateStrategy;}(SyncStrategy);var defaults$2={worldBufferLength:60,clientStepLag:0};var FrameSyncStrategy=/*#__PURE__*/function(_SyncStrategy){_inherits(FrameSyncStrategy,_SyncStrategy);function FrameSyncStrategy(clientEngine,inputOptions){var _this;_classCallCheck(this,FrameSyncStrategy);var options=Object.assign({},defaults$2,inputOptions);_this=_possibleConstructorReturn(this,_getPrototypeOf(FrameSyncStrategy).call(this,clientEngine,options));_this.gameEngine=_this.clientEngine.gameEngine;return _this;}// apply a new sync
+_createClass(FrameSyncStrategy,[{key:"applySync",value:function applySync(sync,required){var _this2=this;this.needFirstSync=false;this.gameEngine.trace.debug(function(){return'framySync applying sync';});var world=this.gameEngine.world;var _arr=Object.keys(sync.syncObjects);for(var _i=0;_i<_arr.length;_i++){var ids=_arr[_i];var ev=sync.syncObjects[ids][0];var curObj=world.objects[ev.objectInstance.id];if(curObj){curObj.syncTo(ev.objectInstance);}else{this.addNewObject(ev.objectInstance.id,ev.objectInstance);}}// destroy objects
+var _arr2=Object.keys(world.objects);var _loop=function _loop(){var objId=_arr2[_i2];var objEvents=sync.syncObjects[objId];// if this was a full sync, and we did not get a corresponding object,
+// remove the local object
+if(sync.fullUpdate&&!objEvents&&objId<_this2.gameEngine.options.clientIDSpace){_this2.gameEngine.removeObjectFromWorld(objId);return"continue";}if(!objEvents||objId>=_this2.gameEngine.options.clientIDSpace)return"continue";// if we got an objectDestroy event, destroy the object
+objEvents.forEach(function(e){if(e.eventName==='objectDestroy')_this2.gameEngine.removeObjectFromWorld(objId);});};for(var _i2=0;_i2<_arr2.length;_i2++){var _ret=_loop();if(_ret==="continue")continue;}return this.SYNC_APPLIED;}}]);return FrameSyncStrategy;}(SyncStrategy);var strategies={extrapolate:ExtrapolateStrategy,interpolate:InterpolateStrategy,frameSync:FrameSyncStrategy};var Synchronizer=// create a synchronizer instance
 function Synchronizer(clientEngine,options){_classCallCheck(this,Synchronizer);this.clientEngine=clientEngine;this.options=options||{};if(!strategies.hasOwnProperty(this.options.sync)){throw new Error("ERROR: unknown synchronzation strategy ".concat(this.options.sync));}this.syncStrategy=new strategies[this.options.sync](this.clientEngine,this.options);};var MAX_UINT_16=0xFFFF;/**
    * The Serializer is responsible for serializing the game world and its
    * objects on the server, before they are sent to each client.  On the client side the
@@ -7740,6 +7741,9 @@ var STEP_HURRY_MSEC=8;// if backward drift detected, hurry next execution by thi
    * process, starting the game engine, listening to network messages,
    * starting client steps, and handling world updates which arrive from
    * the server.
+   * Normally, a game will implement its own sub-class of ClientEngine, and may
+   * override the constructor {@link ClientEngine#constructor} and the methods
+   * {@link ClientEngine#start} and {@link ClientEngine#connect}
    */var ClientEngine=/*#__PURE__*/function(){/**
       * Create a client engine instance.
       *
@@ -7751,9 +7755,9 @@ var STEP_HURRY_MSEC=8;// if backward drift detected, hurry next execution by thi
       * @param {Number} inputOptions.delayInputCount - if set, inputs will be delayed by this many steps before they are actually applied on the client.
       * @param {Number} inputOptions.healthCheckInterval - health check message interval (millisec). Default is 1000.
       * @param {Number} inputOptions.healthCheckRTTSample - health check RTT calculation sample size. Default is 10.
-      * @param {Object} inputOptions.syncOptions - an object describing the synchronization method. If not set, will be set to extrapolate, with local object bending set to 0.0 and remote object bending set to 0.6. If the query-string parameter "sync" is defined, then that value is passed to this object's sync attribute.
       * @param {String} inputOptions.scheduler - When set to "render-schedule" the game step scheduling is controlled by the renderer and step time is variable.  When set to "fixed" the game step is run independently with a fixed step time. Default is "render-schedule".
-      * @param {String} inputOptions.syncOptions.sync - chosen sync option, can be interpolate, extrapolate, or frameSync
+      * @param {Object} inputOptions.syncOptions - an object describing the synchronization method. If not set, will be set to extrapolate, with local object bending set to 0.0 and remote object bending set to 0.6. If the query-string parameter "sync" is defined, then that value is passed to this object's sync attribute.
+      * @param {String} inputOptions.syncOptions.sync - chosen sync option, can be "interpolate", "extrapolate", or "frameSync"
       * @param {Number} inputOptions.syncOptions.localObjBending - amount (0 to 1.0) of bending towards original client position, after each sync, for local objects
       * @param {Number} inputOptions.syncOptions.remoteObjBending - amount (0 to 1.0) of bending towards original client position, after each sync, for remote objects
       * @param {String} inputOptions.serverURL - Socket server url
@@ -7810,7 +7814,7 @@ if(this.gameEngine.ignoreInputs){return;}var inputEvent={input:message.data,play
        * so configured) and will transmit the input to the server as well.
        *
        * This function can be called by the extended client engine class,
-       * typically at the beginning of client-side step processing (see event client__preStep)
+       * typically at the beginning of client-side step processing {@see GameEngine#client__preStep}.
        *
        * @param {String} input - string representing the input
        * @param {Object} inputOptions - options for the input
@@ -7824,12 +7828,34 @@ if(syncHeader.stepCount>this.gameEngine.world.stepCount+this.synchronizer.syncSt
 // keyboard handling
 var keyCodeTable={3:'break',8:'backspace',// backspace / delete
 9:'tab',12:'clear',13:'enter',16:'shift',17:'ctrl',18:'alt',19:'pause/break',20:'caps lock',27:'escape',28:'conversion',29:'non-conversion',32:'space',33:'page up',34:'page down',35:'end',36:'home',37:'left',38:'up',39:'right',40:'down',41:'select',42:'print',43:'execute',44:'Print Screen',45:'insert',46:'delete',48:'0',49:'1',50:'2',51:'3',52:'4',53:'5',54:'6',55:'7',56:'8',57:'9',58:':',59:'semicolon (firefox), equals',60:'<',61:'equals (firefox)',63:'ß',64:'@',65:'a',66:'b',67:'c',68:'d',69:'e',70:'f',71:'g',72:'h',73:'i',74:'j',75:'k',76:'l',77:'m',78:'n',79:'o',80:'p',81:'q',82:'r',83:'s',84:'t',85:'u',86:'v',87:'w',88:'x',89:'y',90:'z',91:'Windows Key / Left ⌘ / Chromebook Search key',92:'right window key',93:'Windows Menu / Right ⌘',96:'numpad 0',97:'numpad 1',98:'numpad 2',99:'numpad 3',100:'numpad 4',101:'numpad 5',102:'numpad 6',103:'numpad 7',104:'numpad 8',105:'numpad 9',106:'multiply',107:'add',108:'numpad period (firefox)',109:'subtract',110:'decimal point',111:'divide',112:'f1',113:'f2',114:'f3',115:'f4',116:'f5',117:'f6',118:'f7',119:'f8',120:'f9',121:'f10',122:'f11',123:'f12',124:'f13',125:'f14',126:'f15',127:'f16',128:'f17',129:'f18',130:'f19',131:'f20',132:'f21',133:'f22',134:'f23',135:'f24',144:'num lock',145:'scroll lock',160:'^',161:'!',163:'#',164:'$',165:'ù',166:'page backward',167:'page forward',169:'closing paren (AZERTY)',170:'*',171:'~ + * key',173:'minus (firefox), mute/unmute',174:'decrease volume level',175:'increase volume level',176:'next',177:'previous',178:'stop',179:'play/pause',180:'e-mail',181:'mute/unmute (firefox)',182:'decrease volume level (firefox)',183:'increase volume level (firefox)',186:'semi-colon / ñ',187:'equal sign',188:'comma',189:'dash',190:'period',191:'forward slash / ç',192:'grave accent / ñ / æ',193:'?, / or °',194:'numpad period (chrome)',219:'open bracket',220:'back slash',221:'close bracket / å',222:'single quote / ø',223:'`',224:'left or right ⌘ key (firefox)',225:'altgr',226:'< /git >',230:'GNOME Compose Key',231:'ç',233:'XF86Forward',234:'XF86Back',240:'alphanumeric',242:'hiragana/katakana',243:'half-width/full-width',244:'kanji',255:'toggle touchpad'};/**
-   * This class allows easy usage of device keyboard controls
+   * This class allows easy usage of device keyboard controls.  Use the method {@link KeyboardControls#bindKey} to
+   * generate events whenever a key is pressed.
+   *
+   * @example
+   *    // in the ClientEngine constructor
+   *    this.controls = new KeyboardControls(this);
+   *    this.controls.bindKey('left', 'left', { repeat: true } );
+   *    this.controls.bindKey('right', 'right', { repeat: true } );
+   *    this.controls.bindKey('space', 'space');
+   *
    */var KeyboardControls=/*#__PURE__*/function(){function KeyboardControls(clientEngine){var _this=this;_classCallCheck(this,KeyboardControls);this.clientEngine=clientEngine;this.gameEngine=clientEngine.gameEngine;this.setupListeners();// keep a reference for key press state
 this.keyState={};// a list of bound keys and their corresponding actions
 this.boundKeys={};this.gameEngine.on('client__preStep',function(){var _arr=Object.keys(_this.boundKeys);for(var _i=0;_i<_arr.length;_i++){var keyName=_arr[_i];if(_this.keyState[keyName]&&_this.keyState[keyName].isDown){// handle repeat press
 if(_this.boundKeys[keyName].options.repeat||_this.keyState[keyName].count==0){// todo movement is probably redundant
-_this.clientEngine.sendInput(_this.boundKeys[keyName].actionName,{movement:true});_this.keyState[keyName].count++;}}}});}_createClass(KeyboardControls,[{key:"setupListeners",value:function setupListeners(){var _this2=this;document.addEventListener('keydown',function(e){_this2.onKeyChange(e,true);});document.addEventListener('keyup',function(e){_this2.onKeyChange(e,false);});}},{key:"bindKey",value:function bindKey(keys,actionName,options){var _this3=this;if(!Array.isArray(keys))keys=[keys];var keyOptions=Object.assign({repeat:false},options);keys.forEach(function(keyName){_this3.boundKeys[keyName]={actionName:actionName,options:keyOptions};});}// todo implement unbindKey
+_this.clientEngine.sendInput(_this.boundKeys[keyName].actionName,{movement:true});_this.keyState[keyName].count++;}}}});}_createClass(KeyboardControls,[{key:"setupListeners",value:function setupListeners(){var _this2=this;document.addEventListener('keydown',function(e){_this2.onKeyChange(e,true);});document.addEventListener('keyup',function(e){_this2.onKeyChange(e,false);});}/**
+       * Bind a keyboard key to a Lance client event.  Each time the key is pressed,
+       * an event will be transmitted by the client engine, using {@link ClientEngine#sendInput},
+       * and the specified event name.
+       *
+       * Common key names: up, down, left, right, enter, shift, ctrl, alt,
+       * escape, space, page up, page down, end, home, 0..9, a..z, A..Z.
+       * For a full list, please check the source link above.
+       *
+       * @param {String} keys - keyboard key (or array of keys) which will cause the event.
+       * @param {String} actionName - the event name
+       * @param {Object} options - options object
+       * @param {Boolean} options.repeat - if set to true, an event continues to be sent on each game step, while the key is pressed
+       */},{key:"bindKey",value:function bindKey(keys,actionName,options){var _this3=this;if(!Array.isArray(keys))keys=[keys];var keyOptions=Object.assign({repeat:false},options);keys.forEach(function(keyName){_this3.boundKeys[keyName]={actionName:actionName,options:keyOptions};});}// todo implement unbindKey
 },{key:"onKeyChange",value:function onKeyChange(e,isDown){e=e||window.event;var keyName=keyCodeTable[e.keyCode];if(keyName&&this.boundKeys[keyName]){if(this.keyState[keyName]==null){this.keyState[keyName]={count:0};}this.keyState[keyName].isDown=isDown;// key up, reset press count
 if(!isDown)this.keyState[keyName].count=0;// keep reference to the last key pressed to avoid duplicates
 this.lastKeyPressed=isDown?e.keyCode:null;// this.renderer.onKeyChange({ keyName, isDown });
@@ -7899,7 +7925,7 @@ networkedPhysics.setGlobals(gameEngine,_assertThisInitialized(_this));AFRAME.reg
 }/**
        * In AFrame, we set the draw method (which is called at requestAnimationFrame)
        * to a NO-OP. See tick() instead
-       */},{key:"draw",value:function draw(){}},{key:"tick",value:function tick(t,dt){_get(_getPrototypeOf(AFrameRenderer.prototype),"draw",this).call(this,t,dt);}}]);return AFrameRenderer;}(Renderer);exports.GameEngine=GameEngine;exports.GameWorld=GameWorld;exports.P2PhysicsEngine=P2PhysicsEngine;exports.SimplePhysicsEngine=SimplePhysicsEngine;exports.CannonPhysicsEngine=CannonPhysicsEngine;exports.BaseTypes=BaseTypes;exports.TwoVector=TwoVector;exports.ThreeVector=ThreeVector;exports.Quaternion=Quaternion;exports.DynamicObject=DynamicObject;exports.PhysicalObject2D=PhysicalObject2D;exports.PhysicalObject3D=PhysicalObject3D;exports.Lib=lib;exports.ClientEngine=ClientEngine;exports.KeyboardControls=KeyboardControls;exports.Renderer=Renderer;exports.AFrameRenderer=AFrameRenderer;Object.defineProperty(exports,'__esModule',{value:true});});
+       */},{key:"draw",value:function draw(){}},{key:"tick",value:function tick(t,dt){_get(_getPrototypeOf(AFrameRenderer.prototype),"draw",this).call(this,t,dt);}}]);return AFrameRenderer;}(Renderer);exports.GameEngine=GameEngine;exports.GameWorld=GameWorld;exports.P2PhysicsEngine=P2PhysicsEngine;exports.SimplePhysicsEngine=SimplePhysicsEngine;exports.CannonPhysicsEngine=CannonPhysicsEngine;exports.BaseTypes=BaseTypes;exports.TwoVector=TwoVector;exports.ThreeVector=ThreeVector;exports.Quaternion=Quaternion;exports.GameObject=GameObject;exports.DynamicObject=DynamicObject;exports.PhysicalObject2D=PhysicalObject2D;exports.PhysicalObject3D=PhysicalObject3D;exports.Lib=lib;exports.ClientEngine=ClientEngine;exports.KeyboardControls=KeyboardControls;exports.Renderer=Renderer;exports.AFrameRenderer=AFrameRenderer;Object.defineProperty(exports,'__esModule',{value:true});});
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(2), __webpack_require__(4).Buffer))
 
 /***/ }),
@@ -13360,7 +13386,7 @@ function done(stream, er, data) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Asteroid; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lance_gg__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lance_gg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lance_gg__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -13368,33 +13394,37 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 var game = null;
 var p2 = null;
 
-var Asteroid =
-/*#__PURE__*/
-function (_PhysicalObject2D) {
+var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
   _inherits(Asteroid, _PhysicalObject2D);
+
+  var _super = _createSuper(Asteroid);
 
   function Asteroid() {
     _classCallCheck(this, Asteroid);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Asteroid).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
   _createClass(Asteroid, [{
@@ -13485,7 +13515,7 @@ function (_PhysicalObject2D) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Bullet; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lance_gg__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lance_gg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lance_gg__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -13493,33 +13523,37 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 var game = null;
 var p2 = null;
 
-var Bullet =
-/*#__PURE__*/
-function (_PhysicalObject2D) {
+var Bullet = /*#__PURE__*/function (_PhysicalObject2D) {
   _inherits(Bullet, _PhysicalObject2D);
+
+  var _super = _createSuper(Bullet);
 
   function Bullet() {
     _classCallCheck(this, Bullet);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Bullet).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
   _createClass(Bullet, [{
@@ -13575,7 +13609,7 @@ function (_PhysicalObject2D) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Ship; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lance_gg__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lance_gg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lance_gg__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -13583,33 +13617,37 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 var game = null;
 var p2 = null;
 
-var Ship =
-/*#__PURE__*/
-function (_PhysicalObject2D) {
+var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
   _inherits(Ship, _PhysicalObject2D);
+
+  var _super = _createSuper(Ship);
 
   function Ship() {
     _classCallCheck(this, Ship);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Ship).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
   _createClass(Ship, [{
@@ -30466,7 +30504,7 @@ World.prototype.clearForces = function(){
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lance_gg__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lance_gg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lance_gg__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__client_AsteroidsRenderer__ = __webpack_require__(50);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -30474,15 +30512,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
 
@@ -30490,17 +30532,17 @@ var betaTiltThreshold = 40;
 var gammaTiltThreshold = 40;
 var steerThreshold = 0.4;
 
-var AsteroidsClientEngine =
-/*#__PURE__*/
-function (_ClientEngine) {
+var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
   _inherits(AsteroidsClientEngine, _ClientEngine);
+
+  var _super = _createSuper(AsteroidsClientEngine);
 
   function AsteroidsClientEngine(gameEngine, options) {
     var _this;
 
     _classCallCheck(this, AsteroidsClientEngine);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(AsteroidsClientEngine).call(this, gameEngine, options, __WEBPACK_IMPORTED_MODULE_1__client_AsteroidsRenderer__["a" /* default */])); //  Game input
+    _this = _super.call(this, gameEngine, options, __WEBPACK_IMPORTED_MODULE_1__client_AsteroidsRenderer__["a" /* default */]); //  Game input
 
     if (isTouchDevice()) {
       document.querySelector('#instructionsMobile').classList.remove('hidden');
@@ -30603,7 +30645,7 @@ function isTouchDevice() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Asteroid__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__common_Bullet__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__common_Ship__ = __webpack_require__(23);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -30611,19 +30653,23 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
 
@@ -30633,17 +30679,17 @@ var ctx = null;
 var game = null;
 var canvas = null;
 
-var AsteroidsRenderer =
-/*#__PURE__*/
-function (_Renderer) {
+var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
   _inherits(AsteroidsRenderer, _Renderer);
+
+  var _super = _createSuper(AsteroidsRenderer);
 
   function AsteroidsRenderer(gameEngine, clientEngine) {
     var _this;
 
     _classCallCheck(this, AsteroidsRenderer);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(AsteroidsRenderer).call(this, gameEngine, clientEngine));
+    _this = _super.call(this, gameEngine, clientEngine);
     game = gameEngine; // Init canvas
 
     canvas = document.createElement('canvas');
@@ -30788,7 +30834,7 @@ function (_Renderer) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Asteroid__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Bullet__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Ship__ = __webpack_require__(23);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -30796,36 +30842,40 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
 
 
 
-var AsteroidsGameEngine =
-/*#__PURE__*/
-function (_GameEngine) {
+
+var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
   _inherits(AsteroidsGameEngine, _GameEngine);
+
+  var _super = _createSuper(AsteroidsGameEngine);
 
   function AsteroidsGameEngine(options) {
     var _this;
 
     _classCallCheck(this, AsteroidsGameEngine);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(AsteroidsGameEngine).call(this, options)); // create physics with no friction; wrap positions after each step
+    _this = _super.call(this, options); // create physics with no friction; wrap positions after each step
 
     _this.physicsEngine = new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["P2PhysicsEngine"]({
       gameEngine: _assertThisInitialized(_this)
