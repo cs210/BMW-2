@@ -15470,8 +15470,9 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
         position: [this.position.x, this.position.y],
         velocity: [this.velocity.x, this.velocity.y]
       });
-      this.physicsObj.addShape(new p2.Circle({
-        radius: 1.125,
+      this.physicsObj.addShape(new p2.Box({
+        width: this.dim.x,
+        height: this.dim.y,
         collisionGroup: game.ASTEROID,
         // Belongs to the ASTEROID group
         collisionMask: game.BULLET | game.SHIP // Can collide with the BULLET or SHIP group
@@ -15491,14 +15492,12 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
     key: "addAsteroidVerts",
     value: function addAsteroidVerts() {
       this.physicsObj.verts = [];
-      var radius = this.physicsObj.shapes[0].radius;
-
-      for (var j = 0; j < game.numAsteroidVerts; j++) {
-        var angle = j * 2 * Math.PI / game.numAsteroidVerts;
-        var xv = radius * Math.cos(angle);
-        var yv = radius * Math.sin(angle);
-        this.physicsObj.verts.push([xv, yv]);
-      }
+      var width = this.physicsObj.shapes[0].width;
+      var height = this.physicsObj.shapes[0].height;
+      this.physicsObj.verts.push([-width / 2, -height / 2]);
+      this.physicsObj.verts.push([-width / 2, height / 2]);
+      this.physicsObj.verts.push([width / 2, height / 2]);
+      this.physicsObj.verts.push([width / 2, -height / 2]);
     }
   }, {
     key: "syncTo",
@@ -15691,7 +15690,8 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
       game = gameEngine;
       p2 = gameEngine.physicsEngine.p2; // Add ship physics
 
-      var shape = this.shape = new p2.Circle({
+      var shape = this.shape = new p2.Convex({
+        vertices: [[game.shipSize * 0.6, -game.shipSize], [0, game.shipSize], [-game.shipSize * 0.6, -game.shipSize]],
         radius: game.shipSize,
         collisionGroup: game.SHIP,
         // Belongs to the SHIP group
@@ -15829,8 +15829,8 @@ var FinishLine = /*#__PURE__*/function (_PhysicalObject2D) {
         velocity: [this.velocity.x, this.velocity.y]
       });
       this.physicsObj.addShape(new p2.Box({
-        width: this.dim[0],
-        height: this.dim[1],
+        width: this.dim.x,
+        height: this.dim.y,
         collisionGroup: game.FINISHLINE,
         // Belongs to the ASTEROID group
         collisionMask: game.SHIP // Can collide with SHIP group
@@ -45612,11 +45612,18 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.rotate(body.angle); // Rotate to ship orientation
 
       ctx.beginPath();
-      ctx.moveTo(-radius * 0.6, -radius);
-      ctx.lineTo(0, radius);
-      ctx.lineTo(radius * 0.6, -radius);
-      ctx.moveTo(-radius * 0.5, -radius * 0.5);
-      ctx.lineTo(radius * 0.5, -radius * 0.5);
+
+      for (var j = 0; j < 3; j++) {
+        var xv = body.shapes[0].vertices[j][0];
+        var yv = body.shapes[0].vertices[j][1];
+        if (j == 0) ctx.moveTo(xv, yv);else ctx.lineTo(xv, yv);
+      } //ctx.moveTo(-radius*0.6, -radius);
+      //ctx.lineTo(0, radius);
+      //ctx.lineTo( radius*0.6, -radius);
+      //ctx.moveTo(-radius*0.5, -radius*0.5);
+      //ctx.lineTo( radius*0.5, -radius*0.5);
+
+
       ctx.closePath();
       ctx.stroke();
       ctx.restore();
@@ -45652,7 +45659,6 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.save();
       ctx.translate(body.position[0], body.position[1]); // Translate to the center
 
-      ctx.rotate(.785);
       ctx.beginPath();
 
       for (var j = 0; j < game.numAsteroidVerts; j++) {
@@ -50125,40 +50131,23 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
     key: "addAsteroids",
     value: function addAsteroids() {
       // add asteroids to the bottom half of the screen
-      for (var i = -0.5; i < 0.4; i = i + 0.1) {
-        var x = i * this.spaceWidth;
-        var y = -2;
-        var vx = 0;
-        var vy = 0;
-        var va = 0; // Create asteroid Body
+      var a = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+        mass: 100000,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-1.5, -2),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+        angularVelocity: 0
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](13, 1));
+      a.level = 0;
+      this.addObjectToWorld(a); // add asteroids to the bottom half of the screen
 
-        var a = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
-          mass: 100000,
-          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](x, y),
-          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](vx, vy),
-          angularVelocity: va
-        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 1));
-        a.level = 0;
-        this.addObjectToWorld(a);
-      } // add asteroids to the top half of the screen
-
-
-      for (var i = 0.5; i > -0.4; i = i - 0.1) {
-        var x = i * this.spaceWidth;
-        var y = 2;
-        var _vx = 0;
-        var _vy = 0;
-        var _va = 0; // Create asteroid Body
-
-        var a = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
-          mass: 100000,
-          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](x, y),
-          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](_vx, _vy),
-          angularVelocity: _va
-        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 1));
-        a.level = 0;
-        this.addObjectToWorld(a);
-      }
+      var b = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+        mass: 100000,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1.5, 2),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+        angularVelocity: 0
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](13, 1));
+      b.level = 0;
+      this.addObjectToWorld(b);
     } // Add finishline
 
   }, {

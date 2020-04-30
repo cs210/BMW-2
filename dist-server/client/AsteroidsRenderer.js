@@ -151,11 +151,18 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.rotate(body.angle); // Rotate to ship orientation
 
       ctx.beginPath();
-      ctx.moveTo(-radius * 0.6, -radius);
-      ctx.lineTo(0, radius);
-      ctx.lineTo(radius * 0.6, -radius);
-      ctx.moveTo(-radius * 0.5, -radius * 0.5);
-      ctx.lineTo(radius * 0.5, -radius * 0.5);
+
+      for (var j = 0; j < 3; j++) {
+        var xv = body.shapes[0].vertices[j][0];
+        var yv = body.shapes[0].vertices[j][1];
+        if (j == 0) ctx.moveTo(xv, yv);else ctx.lineTo(xv, yv);
+      } //ctx.moveTo(-radius*0.6, -radius);
+      //ctx.lineTo(0, radius);
+      //ctx.lineTo( radius*0.6, -radius);
+      //ctx.moveTo(-radius*0.5, -radius*0.5);
+      //ctx.lineTo( radius*0.5, -radius*0.5);
+
+
       ctx.closePath();
       ctx.stroke();
       ctx.restore();
@@ -191,7 +198,6 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.save();
       ctx.translate(body.position[0], body.position[1]); // Translate to the center
 
-      ctx.rotate(.785);
       ctx.beginPath();
 
       for (var j = 0; j < game.numAsteroidVerts; j++) {

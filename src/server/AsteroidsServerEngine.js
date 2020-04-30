@@ -77,7 +77,10 @@ export default class AsteroidsServerEngine extends ServerEngine {
     }
 
     kill(ship) {
+        console.log(ship.playerId)
+        let pl_id = ship.playerId
         if(ship.lives-- === 0) this.gameEngine.removeObjectFromWorld(ship.id);
+        this.gameEngine.addShip(pl_id);
     }
 
     gameWon(ship) {
@@ -166,8 +169,8 @@ export default class AsteroidsServerEngine extends ServerEngine {
     onPlayerDisconnected(socketId, playerId) {
         let group_code = this.connectedPlayers[socketId].privateCode;
         super.onPlayerDisconnected(socketId, playerId);
-        console.log('Player from ' + group_code + ' is being deleted');
-        console.log(this.playerGroups[group_code]);
+        //console.log('Player from ' + group_code + ' is being deleted');
+        //console.log(this.playerGroups[group_code]);
         if (group_code && this.playerGroups[group_code]) {
             if (playerId === this.playerGroups[group_code].c_playerID) {
                 this.playerGroups[group_code].c_playerID = null;
@@ -189,9 +192,9 @@ export default class AsteroidsServerEngine extends ServerEngine {
                 }
             }
 
-            console.log(this.playerGroups[group_code]);
+            //console.log(this.playerGroups[group_code]);
             if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
-                console.log(group_code + ' has been deleted.');
+                //console.log(group_code + ' has been deleted.');
                 delete this.playerGroups[group_code];
             }
 

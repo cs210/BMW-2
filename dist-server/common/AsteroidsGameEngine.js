@@ -191,40 +191,23 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
     key: "addAsteroids",
     value: function addAsteroids() {
       // add asteroids to the bottom half of the screen
-      for (var i = -0.5; i < 0.4; i = i + 0.1) {
-        var x = i * this.spaceWidth;
-        var y = -2;
-        var vx = 0;
-        var vy = 0;
-        var va = 0; // Create asteroid Body
+      var a = new _Asteroid["default"](this, {}, {
+        mass: 100000,
+        position: new _lanceGg.TwoVector(-1.5, -2),
+        velocity: new _lanceGg.TwoVector(0, 0),
+        angularVelocity: 0
+      }, new _lanceGg.TwoVector(13, 1));
+      a.level = 0;
+      this.addObjectToWorld(a); // add asteroids to the bottom half of the screen
 
-        var a = new _Asteroid["default"](this, {}, {
-          mass: 100000,
-          position: new _lanceGg.TwoVector(x, y),
-          velocity: new _lanceGg.TwoVector(vx, vy),
-          angularVelocity: va
-        }, new _lanceGg.TwoVector(1, 1));
-        a.level = 0;
-        this.addObjectToWorld(a);
-      } // add asteroids to the top half of the screen
-
-
-      for (var i = 0.5; i > -0.4; i = i - 0.1) {
-        var x = i * this.spaceWidth;
-        var y = 2;
-        var _vx = 0;
-        var _vy = 0;
-        var _va = 0; // Create asteroid Body
-
-        var a = new _Asteroid["default"](this, {}, {
-          mass: 100000,
-          position: new _lanceGg.TwoVector(x, y),
-          velocity: new _lanceGg.TwoVector(_vx, _vy),
-          angularVelocity: _va
-        }, new _lanceGg.TwoVector(1, 1));
-        a.level = 0;
-        this.addObjectToWorld(a);
-      }
+      var b = new _Asteroid["default"](this, {}, {
+        mass: 100000,
+        position: new _lanceGg.TwoVector(1.5, 2),
+        velocity: new _lanceGg.TwoVector(0, 0),
+        angularVelocity: 0
+      }, new _lanceGg.TwoVector(13, 1));
+      b.level = 0;
+      this.addObjectToWorld(b);
     } // Add finishline
 
   }, {
