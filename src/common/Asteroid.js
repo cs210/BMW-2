@@ -54,10 +54,10 @@ export default class Asteroid extends PhysicalObject2D {
         let width = this.physicsObj.shapes[0].width;
         let height = this.physicsObj.shapes[0].height;
         this.physicsObj.verts = [
-          [-width/2, -height/2],
-          [-width/2, height/2],
-          [width/2, height/2],
-          [width/2, -height/2]
+            [-width / 2, -height / 2],
+            [-width / 2, height / 2],
+            [width / 2, height / 2],
+            [width / 2, -height / 2],
         ];
     }
 

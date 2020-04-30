@@ -27,11 +27,7 @@ var defaults = {
     bendingIncrements: 6
   }
 };
-var options = Object.assign(defaults, qsOptions); // create a client engine and a game engine
-// const gameEngine = new AsteroidsGameEngine(options);
-// const clientEngine = new AsteroidsClientEngine(gameEngine, options);
-// document.addEventListener('DOMContentLoaded', function(e) { clientEngine.start(); });
-
+var options = Object.assign(defaults, qsOptions);
 $(document).ready(function () {
   $('#name-input').focus();
 
@@ -47,7 +43,8 @@ $(document).ready(function () {
       options.playerOptions = {
         playerName: name,
         privateCode: gamecode
-      };
+      }; // create a client engine and a game engine
+
       var gameEngine = new _AsteroidsGameEngine["default"](options);
       var clientEngine = new _AsteroidsClientEngine["default"](gameEngine, options);
       document.getElementById('name-prompt-overlay').style.display = 'none';
@@ -63,4 +60,4 @@ $(document).ready(function () {
   $('#name-form').submit(sendName);
   $('#name-submit').click(sendName);
 });
-//# sourceMappingURL=clientEntryPoint.js.map
+//# sourceMappingURL=ClientEntryPoint.js.map

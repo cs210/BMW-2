@@ -169,8 +169,6 @@ export default class AsteroidsServerEngine extends ServerEngine {
     onPlayerDisconnected(socketId, playerId) {
         let group_code = this.connectedPlayers[socketId].privateCode;
         super.onPlayerDisconnected(socketId, playerId);
-        //console.log('Player from ' + group_code + ' is being deleted');
-        //console.log(this.playerGroups[group_code]);
         if (group_code && this.playerGroups[group_code]) {
             if (playerId === this.playerGroups[group_code].c_playerID) {
                 this.playerGroups[group_code].c_playerID = null;

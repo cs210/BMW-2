@@ -15491,13 +15491,9 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
   }, {
     key: "addAsteroidVerts",
     value: function addAsteroidVerts() {
-      this.physicsObj.verts = [];
       var width = this.physicsObj.shapes[0].width;
       var height = this.physicsObj.shapes[0].height;
-      this.physicsObj.verts.push([-width / 2, -height / 2]);
-      this.physicsObj.verts.push([-width / 2, height / 2]);
-      this.physicsObj.verts.push([width / 2, height / 2]);
-      this.physicsObj.verts.push([width / 2, -height / 2]);
+      this.physicsObj.verts = [[-width / 2, -height / 2], [-width / 2, height / 2], [width / 2, height / 2], [width / 2, -height / 2]];
     }
   }, {
     key: "syncTo",
@@ -28446,11 +28442,7 @@ var defaults = {
     bendingIncrements: 6
   }
 };
-var options = Object.assign(defaults, qsOptions); // create a client engine and a game engine
-// const gameEngine = new AsteroidsGameEngine(options);
-// const clientEngine = new AsteroidsClientEngine(gameEngine, options);
-// document.addEventListener('DOMContentLoaded', function(e) { clientEngine.start(); });
-
+var options = Object.assign(defaults, qsOptions);
 $(document).ready(function () {
   $('#name-input').focus();
 
@@ -28466,7 +28458,8 @@ $(document).ready(function () {
       options.playerOptions = {
         playerName: name,
         privateCode: gamecode
-      };
+      }; // create a client engine and a game engine
+
       var gameEngine = new __WEBPACK_IMPORTED_MODULE_3__common_AsteroidsGameEngine__["a" /* default */](options);
       var clientEngine = new __WEBPACK_IMPORTED_MODULE_2__client_AsteroidsClientEngine__["a" /* default */](gameEngine, options);
       document.getElementById('name-prompt-overlay').style.display = 'none';
@@ -50080,11 +50073,6 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
 
         if (playerShip) {
           if (inputData.input === 'up') {
-            /*
-            console.log(playerShip.physicsObj.position.y);
-            playerShip.physicsObj.position.y += 0.5;
-            console.log(playerShip.physicsObj.position.y);
-            */
             playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
           } else if (inputData.input === 'right') {
             playerShip.physicsObj.angle -= this.shipTurnSpeed;
@@ -50092,14 +50080,9 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
             playerShip.physicsObj.angle += this.shipTurnSpeed;
           } else if (inputData.input === 'down') {
             playerShip.physicsObj.applyForceLocal([0, -this.shipSpeed]);
+          } else if (inputData.input === 'space') {
+            this.emit('shoot', playerShip);
           }
-          /*
-          else if (inputData.input === 'space')
-          {
-              this.emit('shoot', playerShip);
-          }
-          */
-
 
           playerShip.refreshFromPhysics();
         }
@@ -50130,24 +50113,65 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
   }, {
     key: "addAsteroids",
     value: function addAsteroids() {
-      // add asteroids to the bottom half of the screen
-      var a = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
-        mass: 100000,
-        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-1.5, -2),
-        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
-        angularVelocity: 0
-      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](13, 1));
-      a.level = 0;
-      this.addObjectToWorld(a); // add asteroids to the bottom half of the screen
+      var RANDOMIZE_WORLD = true; // Math.random() > 0.5;
 
-      var b = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
-        mass: 100000,
-        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1.5, 2),
-        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
-        angularVelocity: 0
-      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](13, 1));
-      b.level = 0;
-      this.addObjectToWorld(b);
+      if (RANDOMIZE_WORLD) {
+        // add asteroids to the bottom half of the screen
+        var a = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+          mass: 100000,
+          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-5, -1.5),
+          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+          angularVelocity: 0
+        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 7));
+        a.level = 0;
+        this.addObjectToWorld(a); // add asteroids to the bottom half of the screen
+
+        var b = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+          mass: 100000,
+          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](5, 1.5),
+          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+          angularVelocity: 0
+        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 7));
+        b.level = 0;
+        this.addObjectToWorld(b);
+        var c = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+          mass: 100000,
+          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 3),
+          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+          angularVelocity: 0
+        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 4));
+        c.level = 0;
+        this.addObjectToWorld(c);
+        var d = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+          mass: 100000,
+          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, -3),
+          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+          angularVelocity: 0
+        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 4));
+        d.level = 0;
+        this.addObjectToWorld(d);
+      } else {
+        // add asteroids to the bottom half of the screen
+        var _a = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+          mass: 100000,
+          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-1.5, -2),
+          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+          angularVelocity: 0
+        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](13, 1));
+
+        _a.level = 0;
+        this.addObjectToWorld(_a); // add asteroids to the bottom half of the screen
+
+        var _b = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+          mass: 100000,
+          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1.5, 2),
+          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+          angularVelocity: 0
+        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](13, 1));
+
+        _b.level = 0;
+        this.addObjectToWorld(_b);
+      }
     } // Add finishline
 
   }, {

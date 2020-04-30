@@ -22,10 +22,11 @@
     "@babel/preset-env": "^7.9.5",
     "eslint": "^3.16.1",
     "eslint-config-google": "^0.7.1",
+    "prettier": "2.0.5",
     "socket.io-client": "^2.3.0"
   },
   "scripts": {
-    "start": "node dist-server/main.js",
+    "start": "webpack && babel src --source-maps --out-dir dist-server; node dist-server/main.js",
     "start-debug": "node --inspect-brk dist-server/main.js",
     "start-dev": "nodemon dist-server/main.js",
     "postinstall": "webpack && babel src --source-maps --out-dir dist-server",

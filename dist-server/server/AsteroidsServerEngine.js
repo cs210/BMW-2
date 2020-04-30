@@ -136,14 +136,9 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
     key: "kill",
     value: function kill(ship) {
       console.log(ship.playerId);
-      console.log(ship.c_playerName);
-      console.log(ship.c_playerID);
-      console.log(ship.v_playerName);
-      console.log(ship.v_playerID);
-      console.log("end");
-      var pid = ship.playerId;
+      var pl_id = ship.playerId;
       if (ship.lives-- === 0) this.gameEngine.removeObjectFromWorld(ship.id);
-      this.gameEngine.addShip(pid); //here
+      this.gameEngine.addShip(pl_id);
     }
   }, {
     key: "gameWon",
@@ -243,9 +238,7 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
     value: function onPlayerDisconnected(socketId, playerId) {
       var group_code = this.connectedPlayers[socketId].privateCode;
 
-      _get(_getPrototypeOf(AsteroidsServerEngine.prototype), "onPlayerDisconnected", this).call(this, socketId, playerId); //console.log('Player from ' + group_code + ' is being deleted');
-      //console.log(this.playerGroups[group_code]);
-
+      _get(_getPrototypeOf(AsteroidsServerEngine.prototype), "onPlayerDisconnected", this).call(this, socketId, playerId);
 
       if (group_code && this.playerGroups[group_code]) {
         if (playerId === this.playerGroups[group_code].c_playerID) {

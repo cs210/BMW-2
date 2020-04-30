@@ -140,11 +140,6 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
 
         if (playerShip) {
           if (inputData.input === 'up') {
-            /*
-            console.log(playerShip.physicsObj.position.y);
-            playerShip.physicsObj.position.y += 0.5;
-            console.log(playerShip.physicsObj.position.y);
-            */
             playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
           } else if (inputData.input === 'right') {
             playerShip.physicsObj.angle -= this.shipTurnSpeed;
@@ -152,14 +147,9 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
             playerShip.physicsObj.angle += this.shipTurnSpeed;
           } else if (inputData.input === 'down') {
             playerShip.physicsObj.applyForceLocal([0, -this.shipSpeed]);
+          } else if (inputData.input === 'space') {
+            this.emit('shoot', playerShip);
           }
-          /*
-          else if (inputData.input === 'space')
-          {
-              this.emit('shoot', playerShip);
-          }
-          */
-
 
           playerShip.refreshFromPhysics();
         }
@@ -190,24 +180,65 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
   }, {
     key: "addAsteroids",
     value: function addAsteroids() {
-      // add asteroids to the bottom half of the screen
-      var a = new _Asteroid["default"](this, {}, {
-        mass: 100000,
-        position: new _lanceGg.TwoVector(-1.5, -2),
-        velocity: new _lanceGg.TwoVector(0, 0),
-        angularVelocity: 0
-      }, new _lanceGg.TwoVector(13, 1));
-      a.level = 0;
-      this.addObjectToWorld(a); // add asteroids to the bottom half of the screen
+      var RANDOMIZE_WORLD = true; // Math.random() > 0.5;
 
-      var b = new _Asteroid["default"](this, {}, {
-        mass: 100000,
-        position: new _lanceGg.TwoVector(1.5, 2),
-        velocity: new _lanceGg.TwoVector(0, 0),
-        angularVelocity: 0
-      }, new _lanceGg.TwoVector(13, 1));
-      b.level = 0;
-      this.addObjectToWorld(b);
+      if (RANDOMIZE_WORLD) {
+        // add asteroids to the bottom half of the screen
+        var a = new _Asteroid["default"](this, {}, {
+          mass: 100000,
+          position: new _lanceGg.TwoVector(-5, -1.5),
+          velocity: new _lanceGg.TwoVector(0, 0),
+          angularVelocity: 0
+        }, new _lanceGg.TwoVector(1, 7));
+        a.level = 0;
+        this.addObjectToWorld(a); // add asteroids to the bottom half of the screen
+
+        var b = new _Asteroid["default"](this, {}, {
+          mass: 100000,
+          position: new _lanceGg.TwoVector(5, 1.5),
+          velocity: new _lanceGg.TwoVector(0, 0),
+          angularVelocity: 0
+        }, new _lanceGg.TwoVector(1, 7));
+        b.level = 0;
+        this.addObjectToWorld(b);
+        var c = new _Asteroid["default"](this, {}, {
+          mass: 100000,
+          position: new _lanceGg.TwoVector(0, 3),
+          velocity: new _lanceGg.TwoVector(0, 0),
+          angularVelocity: 0
+        }, new _lanceGg.TwoVector(1, 4));
+        c.level = 0;
+        this.addObjectToWorld(c);
+        var d = new _Asteroid["default"](this, {}, {
+          mass: 100000,
+          position: new _lanceGg.TwoVector(0, -3),
+          velocity: new _lanceGg.TwoVector(0, 0),
+          angularVelocity: 0
+        }, new _lanceGg.TwoVector(1, 4));
+        d.level = 0;
+        this.addObjectToWorld(d);
+      } else {
+        // add asteroids to the bottom half of the screen
+        var _a = new _Asteroid["default"](this, {}, {
+          mass: 100000,
+          position: new _lanceGg.TwoVector(-1.5, -2),
+          velocity: new _lanceGg.TwoVector(0, 0),
+          angularVelocity: 0
+        }, new _lanceGg.TwoVector(13, 1));
+
+        _a.level = 0;
+        this.addObjectToWorld(_a); // add asteroids to the bottom half of the screen
+
+        var _b = new _Asteroid["default"](this, {}, {
+          mass: 100000,
+          position: new _lanceGg.TwoVector(1.5, 2),
+          velocity: new _lanceGg.TwoVector(0, 0),
+          angularVelocity: 0
+        }, new _lanceGg.TwoVector(13, 1));
+
+        _b.level = 0;
+        this.addObjectToWorld(_b);
+      }
     } // Add finishline
 
   }, {

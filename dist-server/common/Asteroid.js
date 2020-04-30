@@ -87,13 +87,9 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
   }, {
     key: "addAsteroidVerts",
     value: function addAsteroidVerts() {
-      this.physicsObj.verts = [];
       var width = this.physicsObj.shapes[0].width;
       var height = this.physicsObj.shapes[0].height;
-      this.physicsObj.verts.push([-width / 2, -height / 2]);
-      this.physicsObj.verts.push([-width / 2, height / 2]);
-      this.physicsObj.verts.push([width / 2, height / 2]);
-      this.physicsObj.verts.push([width / 2, -height / 2]);
+      this.physicsObj.verts = [[-width / 2, -height / 2], [-width / 2, height / 2], [width / 2, height / 2], [width / 2, -height / 2]];
     }
   }, {
     key: "syncTo",
