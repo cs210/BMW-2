@@ -66,8 +66,8 @@ export default class AsteroidsRenderer extends Renderer {
         let playerShip = this.gameEngine.world.queryObject({ playerId: this.groupShipPID });
 
         if (!playerShip) {
-            if (this.lives !== undefined)
-                document.getElementById('gameover').classList.remove('hidden');
+            /*if (this.lives == undefined)
+                document.getElementById('gameover').classList.remove('hidden');*/
             return;
         }
 
