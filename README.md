@@ -24,10 +24,8 @@ Eric | iOS, basic AI, Python, C++ | Public Speaking, Management, Idea Execution,
 Grant | Computer Vision, NLP, VR/AR Dev, Robotics | Team spirit, Ideation | Cool, radical, contradictory | User Interviews, Business Development | Organization | Green Hat
 
 # Team Communication
-1. Email us at [drivemaestrai@gmail.com](drivemaestrai@gmail.com).
+1. Find our group chat on FB Messenger! Email us at [cs210.maestro@gmail.com](cs210.maestro@gmail.com).
 
-2. Find our group chat on FB Messenger!
+2. [Google Drive](https://drive.google.com/drive/folders/1cV6B6hpXUVpouP2769PhZ1-WBeDPmWPm?usp=sharing) for documents.
 
-3. [Google Drive](https://drive.google.com/drive/folders/1cV6B6hpXUVpouP2769PhZ1-WBeDPmWPm?usp=sharing) for documents.
-
-4. [Trello](https://trello.com/b/2UA5CBuz/maestro) for some of our development progress.
+3. [Trello](https://trello.com/b/2UA5CBuz/maestro) for some of our development progress.
