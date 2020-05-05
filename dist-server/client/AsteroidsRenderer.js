@@ -114,7 +114,8 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       });
 
       if (!playerShip) {
-        if (this.lives !== undefined) document.getElementById('gameover').classList.remove('hidden');
+        /*if (this.lives == undefined)
+            document.getElementById('gameover').classList.remove('hidden');*/
         return;
       } // update lives if necessary
 
@@ -156,12 +157,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
         var xv = body.shapes[0].vertices[j][0];
         var yv = body.shapes[0].vertices[j][1];
         if (j == 0) ctx.moveTo(xv, yv);else ctx.lineTo(xv, yv);
-      } //ctx.moveTo(-radius*0.6, -radius);
-      //ctx.lineTo(0, radius);
-      //ctx.lineTo( radius*0.6, -radius);
-      //ctx.moveTo(-radius*0.5, -radius*0.5);
-      //ctx.lineTo( radius*0.5, -radius*0.5);
-
+      }
 
       ctx.closePath();
       ctx.stroke();

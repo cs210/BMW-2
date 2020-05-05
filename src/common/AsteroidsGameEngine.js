@@ -16,10 +16,22 @@ export default class AsteroidsGameEngine extends GameEngine {
 
         // game variables
         Object.assign(this, {
-            lives: 0, shipSize: 0.3, shipTurnSpeed: 0.05, shipSpeed: 2, bulletRadius: 0.03, bulletLifeTime: 60,
-            asteroidRadius: 1.125, numAsteroidLevels: 4, numAsteroidVerts: 4, maxAsteroidSpeed: 0,
-            spaceWidth: 16, spaceHeight: 9, SHIP: Math.pow(2, 1), BULLET: Math.pow(2, 2),
-            ASTEROID: Math.pow(2, 3), FINISHLINE: Math.pow(2, 4)
+            lives: 0,
+            shipSize: 0.3,
+            shipTurnSpeed: 0.05,
+            shipSpeed: 4, // 2
+            bulletRadius: 0.03,
+            bulletLifeTime: 60,
+            asteroidRadius: 1.125,
+            numAsteroidLevels: 4,
+            numAsteroidVerts: 4,
+            maxAsteroidSpeed: 0,
+            spaceWidth: 16,
+            spaceHeight: 9,
+            SHIP: Math.pow(2, 1),
+            BULLET: Math.pow(2, 2),
+            ASTEROID: Math.pow(2, 3),
+            FINISHLINE: Math.pow(2, 4),
         });
 
         this.playerReady = {};
@@ -84,105 +96,73 @@ export default class AsteroidsGameEngine extends GameEngine {
         }
     }
 
-    // returns a random number between -0.5 and 0.5
-    rand() {
-        return Math.random() - 0.5;
-    }
-
     // create ship
     addShip(playerId) {
         let s = new Ship(this, {}, {
             playerId: playerId,
-            mass: 10, angularVelocity: 0,
-            position: new TwoVector(-6.4, -3.6), velocity: new TwoVector(0, 0)
+            mass: 10,
+            angularVelocity: 0,
+            position: new TwoVector(-6.4, -3.6),
+            velocity: new TwoVector(0, 0),
         });
         s.lives = this.lives;
         s.won = false;
         this.addObjectToWorld(s);
     }
 
+    getRandInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
     // create asteroids
-    addAsteroids() {
-        const RANDOMIZE_WORLD = true; // Math.random() > 0.5;
-        if (RANDOMIZE_WORLD) {
-            // add asteroids to the bottom half of the screen
-            let a = new Asteroid(this, {}, {
-                mass: 100000,
-                position: new TwoVector(-5, -1.5),
-                velocity: new TwoVector(0, 0),
-                angularVelocity: 0
-            }, new TwoVector(1, 7));
-            a.level = 0;
-            this.addObjectToWorld(a);
-
-            // add asteroids to the bottom half of the screen
-            let b = new Asteroid(this, {}, {
-                mass: 100000,
-                position: new TwoVector(5, 1.5),
-                velocity: new TwoVector(0, 0),
-                angularVelocity: 0
-            }, new TwoVector(1, 7));
-            b.level = 0;
-            this.addObjectToWorld(b);
-
-            let c = new Asteroid(this, {}, {
-                mass: 100000,
-                position: new TwoVector(0, 3),
-                velocity: new TwoVector(0, 0),
-                angularVelocity: 0
-            }, new TwoVector(1, 4));
-            c.level = 0;
-            this.addObjectToWorld(c);
-
-            let d = new Asteroid(this, {}, {
-                mass: 100000,
-                position: new TwoVector(0, -3),
-                velocity: new TwoVector(0, 0),
-                angularVelocity: 0
-            }, new TwoVector(1, 4));
-            d.level = 0;
-            this.addObjectToWorld(d);
-
-        } else {
-            // add asteroids to the bottom half of the screen
-            let a = new Asteroid(this, {}, {
-                mass: 100000,
-                position: new TwoVector(-1.5, -2),
-                velocity: new TwoVector(0, 0),
-                angularVelocity: 0
-            }, new TwoVector(13, 1));
-            a.level = 0;
-            this.addObjectToWorld(a);
-
-            // add asteroids to the bottom half of the screen
-            let b = new Asteroid(this, {}, {
-                mass: 100000,
-                position: new TwoVector(1.5, 2),
-                velocity: new TwoVector(0, 0),
-                angularVelocity: 0
-            }, new TwoVector(13, 1));
-            b.level = 0;
-            this.addObjectToWorld(b);
+    addBarriers(currentWorld) {
+        let world_choice = currentWorld;
+        while (world_choice === currentWorld) {
+            world_choice = this.getRandInt(1, 5);
         }
+
+        if (world_choice === 1) {
+            this.world_one();
+        } else if (world_choice === 2) {
+            this.world_two();
+        } else if (world_choice === 3) {
+            this.world_three();
+        } else if (world_choice === 4) {
+            this.world_four();
+        }
+        return world_choice;
     }
 
     // Add finishline
     addFinishLine() {
         let a = new FinishLine(this, {}, {
-            mass: 100000,
+            mass: 10000,
             position: new TwoVector(6.5, 3.75),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
-        },
-            new TwoVector(1, 1)
-        );
+        }, new TwoVector(1, 1));
         a.level = 0;
         this.addObjectToWorld(a);
     }
 
+    removeAllBarriers() {
+        for (let o of this.world.queryObjects({ instanceType: Asteroid })) {
+            this.removeObjectFromWorld(o.id);
+        }
+        for (let o of this.world.queryObjects({ instanceType: FinishLine })) {
+            this.removeObjectFromWorld(o.id);
+        }
+    }
+
+    resetShip() {
+        for (let o of this.world.queryObjects({ instanceType: Ship })) {
+            this.removeObjectFromWorld(o.id);
+            this.addShip(o.playerId);
+        }
+    }
+
     // asteroid explosion
     explode(asteroid, bullet) {
-
         // Remove asteroid and bullet
         let asteroidBody = asteroid.physicsObj;
         let level = asteroid.level;
@@ -209,5 +189,99 @@ export default class AsteroidsGameEngine extends GameEngine {
             }
         }
         */
+    }
+
+    world_one() {
+        let a = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(-5, -1.5),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(1, 3));
+        a.level = 0;
+        this.addObjectToWorld(a);
+    }
+
+    world_two() {
+        // add asteroids to the bottom half of the screen
+        let a = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(-5, -1.5),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(1, 7));
+        a.level = 0;
+        this.addObjectToWorld(a);
+
+        // add asteroids to the bottom half of the screen
+        let b = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(5, 1.5),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(1, 7));
+        b.level = 0;
+        this.addObjectToWorld(b);
+
+        let c = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(0, 3),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(1, 4));
+        c.level = 0;
+        this.addObjectToWorld(c);
+
+        let d = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(0, -3),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(1, 4));
+        d.level = 0;
+        this.addObjectToWorld(d);
+    }
+
+    world_three() {
+        // add asteroids to the bottom half of the screen
+        let a = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(-1.5, -2),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(13, 1));
+        a.level = 0;
+        this.addObjectToWorld(a);
+
+        // add asteroids to the bottom half of the screen
+        let b = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(1.5, 2),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(13, 1));
+        b.level = 0;
+        this.addObjectToWorld(b);
+    }
+
+    world_four() {
+        // add asteroids to the bottom half of the screen
+        let a = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(-1.5, -2),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(13, 1));
+        a.level = 0;
+        this.addObjectToWorld(a);
+
+        let c = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(0, 3),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(1, 4));
+        c.level = 0;
+        this.addObjectToWorld(c);
     }
 }

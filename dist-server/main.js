@@ -34,7 +34,8 @@ var gameEngine = new _AsteroidsGameEngine["default"]({
 });
 var serverEngine = new _AsteroidsServerEngine["default"](io, gameEngine, {
   debug: {},
-  updateRate: 6
+  updateRate: 6,
+  timeoutInterval: 0
 }); // start the game
 
 serverEngine.start();

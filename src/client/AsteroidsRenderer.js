@@ -62,7 +62,6 @@ export default class AsteroidsRenderer extends Renderer {
     }
 
     updateStatus() {
-
         let playerShip = this.gameEngine.world.queryObject({ playerId: this.groupShipPID });
 
         if (!playerShip) {
@@ -98,25 +97,18 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.translate(body.position[0], body.position[1]); // Translate to the ship center
         ctx.rotate(body.angle); // Rotate to ship orientation
         ctx.beginPath();
-        for(let j=0; j < 3; j++) {
+        for(let j = 0; j < 3; j++) {
             let xv = body.shapes[0].vertices[j][0];
             let yv = body.shapes[0].vertices[j][1];
-            if (j==0) ctx.moveTo(xv, yv);
+            if (j == 0) ctx.moveTo(xv, yv);
             else ctx.lineTo(xv, yv);
         }
-        //ctx.moveTo(-radius*0.6, -radius);
-        //ctx.lineTo(0, radius);
-        //ctx.lineTo( radius*0.6, -radius);
-        //ctx.moveTo(-radius*0.5, -radius*0.5);
-        //ctx.lineTo( radius*0.5, -radius*0.5);
         ctx.closePath();
         ctx.stroke();
         ctx.restore();
         ctx.strokeStyle = ctx.fillStyle = 'white';
         ctx.shadowColor = "white";
     }
-
-
 
     drawFinishLine(body) {
         ctx.strokeStyle = ctx.fillStyle = "#FAF602";
@@ -125,10 +117,10 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.translate(body.position[0], body.position[1]);  // Translate to the center
         //ctx.rotate(.785);
         ctx.beginPath();
-        for(let j=0; j < game.numAsteroidVerts; j++) {
+        for(let j = 0; j < game.numAsteroidVerts; j++) {
             let xv = body.verts[j][0];
             let yv = body.verts[j][1];
-            if (j==0) ctx.moveTo(xv, yv);
+            if (j == 0) ctx.moveTo(xv, yv);
             else ctx.lineTo(xv, yv);
         }
         ctx.closePath();
@@ -142,10 +134,10 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.save();
         ctx.translate(body.position[0], body.position[1]);  // Translate to the center
         ctx.beginPath();
-        for(let j=0; j < game.numAsteroidVerts; j++) {
+        for(let j = 0; j < game.numAsteroidVerts; j++) {
             let xv = body.verts[j][0];
             let yv = body.verts[j][1];
-            if (j==0) ctx.moveTo(xv, yv);
+            if (j == 0) ctx.moveTo(xv, yv);
             else ctx.lineTo(xv, yv);
         }
         ctx.closePath();
@@ -155,18 +147,18 @@ export default class AsteroidsRenderer extends Renderer {
 
     drawBullet(body) {
         ctx.beginPath();
-        ctx.arc(body.position[0], body.position[1], game.bulletRadius, 0, 2*Math.PI);
+        ctx.arc(body.position[0], body.position[1], game.bulletRadius, 0, 2 * Math.PI);
         ctx.fill();
         ctx.closePath();
     }
 
     drawBounds() {
         ctx.beginPath();
-        ctx.moveTo(-game.spaceWidth/2, -game.spaceHeight/2);
-        ctx.lineTo(-game.spaceWidth/2, game.spaceHeight/2);
-        ctx.lineTo( game.spaceWidth/2, game.spaceHeight/2);
-        ctx.lineTo( game.spaceWidth/2, -game.spaceHeight/2);
-        ctx.lineTo(-game.spaceWidth/2, -game.spaceHeight/2);
+        ctx.moveTo(-game.spaceWidth / 2, -game.spaceHeight / 2);
+        ctx.lineTo(-game.spaceWidth / 2, game.spaceHeight / 2);
+        ctx.lineTo(game.spaceWidth / 2, game.spaceHeight / 2);
+        ctx.lineTo(game.spaceWidth / 2, -game.spaceHeight / 2);
+        ctx.lineTo(-game.spaceWidth / 2, -game.spaceHeight / 2);
         ctx.closePath();
         ctx.stroke();
     }

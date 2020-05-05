@@ -28457,7 +28457,8 @@ $(document).ready(function () {
     if (name && name.length < 20) {
       options.playerOptions = {
         playerName: name,
-        privateCode: gamecode
+        privateCode: gamecode,
+        verbose: true
       }; // create a client engine and a game engine
 
       var gameEngine = new __WEBPACK_IMPORTED_MODULE_3__common_AsteroidsGameEngine__["a" /* default */](options);
@@ -45568,7 +45569,8 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       });
 
       if (!playerShip) {
-        if (this.lives !== undefined) document.getElementById('gameover').classList.remove('hidden');
+        /*if (this.lives == undefined)
+            document.getElementById('gameover').classList.remove('hidden');*/
         return;
       } // update lives if necessary
 
@@ -45610,12 +45612,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
         var xv = body.shapes[0].vertices[j][0];
         var yv = body.shapes[0].vertices[j][1];
         if (j == 0) ctx.moveTo(xv, yv);else ctx.lineTo(xv, yv);
-      } //ctx.moveTo(-radius*0.6, -radius);
-      //ctx.lineTo(0, radius);
-      //ctx.lineTo( radius*0.6, -radius);
-      //ctx.moveTo(-radius*0.5, -radius*0.5);
-      //ctx.lineTo( radius*0.5, -radius*0.5);
-
+      }
 
       ctx.closePath();
       ctx.stroke();
@@ -49946,6 +49943,12 @@ Backoff.prototype.setJitter = function(jitter){
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FinishLine__ = __webpack_require__(34);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -50000,7 +50003,8 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       lives: 0,
       shipSize: 0.3,
       shipTurnSpeed: 0.05,
-      shipSpeed: 2,
+      shipSpeed: 4,
+      // 2
       bulletRadius: 0.03,
       bulletLifeTime: 60,
       asteroidRadius: 1.125,
@@ -50087,12 +50091,6 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
           playerShip.refreshFromPhysics();
         }
       }
-    } // returns a random number between -0.5 and 0.5
-
-  }, {
-    key: "rand",
-    value: function rand() {
-      return Math.random() - 0.5;
     } // create ship
 
   }, {
@@ -50108,83 +50106,101 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       s.lives = this.lives;
       s.won = false;
       this.addObjectToWorld(s);
+    }
+  }, {
+    key: "getRandInt",
+    value: function getRandInt(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
     } // create asteroids
 
   }, {
-    key: "addAsteroids",
-    value: function addAsteroids() {
-      var RANDOMIZE_WORLD = true; // Math.random() > 0.5;
+    key: "addBarriers",
+    value: function addBarriers(currentWorld) {
+      var world_choice = currentWorld;
 
-      if (RANDOMIZE_WORLD) {
-        // add asteroids to the bottom half of the screen
-        var a = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
-          mass: 100000,
-          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-5, -1.5),
-          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
-          angularVelocity: 0
-        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 7));
-        a.level = 0;
-        this.addObjectToWorld(a); // add asteroids to the bottom half of the screen
-
-        var b = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
-          mass: 100000,
-          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](5, 1.5),
-          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
-          angularVelocity: 0
-        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 7));
-        b.level = 0;
-        this.addObjectToWorld(b);
-        var c = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
-          mass: 100000,
-          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 3),
-          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
-          angularVelocity: 0
-        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 4));
-        c.level = 0;
-        this.addObjectToWorld(c);
-        var d = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
-          mass: 100000,
-          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, -3),
-          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
-          angularVelocity: 0
-        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 4));
-        d.level = 0;
-        this.addObjectToWorld(d);
-      } else {
-        // add asteroids to the bottom half of the screen
-        var _a = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
-          mass: 100000,
-          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-1.5, -2),
-          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
-          angularVelocity: 0
-        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](13, 1));
-
-        _a.level = 0;
-        this.addObjectToWorld(_a); // add asteroids to the bottom half of the screen
-
-        var _b = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
-          mass: 100000,
-          position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1.5, 2),
-          velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
-          angularVelocity: 0
-        }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](13, 1));
-
-        _b.level = 0;
-        this.addObjectToWorld(_b);
+      while (world_choice === currentWorld) {
+        world_choice = this.getRandInt(1, 5);
       }
+
+      if (world_choice === 1) {
+        this.world_one();
+      } else if (world_choice === 2) {
+        this.world_two();
+      } else if (world_choice === 3) {
+        this.world_three();
+      } else if (world_choice === 4) {
+        this.world_four();
+      }
+
+      return world_choice;
     } // Add finishline
 
   }, {
     key: "addFinishLine",
     value: function addFinishLine() {
       var a = new __WEBPACK_IMPORTED_MODULE_4__FinishLine__["a" /* default */](this, {}, {
-        mass: 100000,
+        mass: 10000,
         position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](6.5, 3.75),
         velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
         angularVelocity: 0
       }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 1));
       a.level = 0;
       this.addObjectToWorld(a);
+    }
+  }, {
+    key: "removeAllBarriers",
+    value: function removeAllBarriers() {
+      var _iterator = _createForOfIteratorHelper(this.world.queryObjects({
+        instanceType: __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */]
+      })),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var o = _step.value;
+          this.removeObjectFromWorld(o.id);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+
+      var _iterator2 = _createForOfIteratorHelper(this.world.queryObjects({
+        instanceType: __WEBPACK_IMPORTED_MODULE_4__FinishLine__["a" /* default */]
+      })),
+          _step2;
+
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var _o = _step2.value;
+          this.removeObjectFromWorld(_o.id);
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+    }
+  }, {
+    key: "resetShip",
+    value: function resetShip() {
+      var _iterator3 = _createForOfIteratorHelper(this.world.queryObjects({
+        instanceType: __WEBPACK_IMPORTED_MODULE_3__Ship__["a" /* default */]
+      })),
+          _step3;
+
+      try {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var o = _step3.value;
+          this.removeObjectFromWorld(o.id);
+          this.addShip(o.playerId);
+        }
+      } catch (err) {
+        _iterator3.e(err);
+      } finally {
+        _iterator3.f();
+      }
     } // asteroid explosion
 
   }, {
@@ -50215,6 +50231,99 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
           }
       }
       */
+    }
+  }, {
+    key: "world_one",
+    value: function world_one() {
+      var a = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+        mass: 100000,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-5, -1.5),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+        angularVelocity: 0
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 3));
+      a.level = 0;
+      this.addObjectToWorld(a);
+    }
+  }, {
+    key: "world_two",
+    value: function world_two() {
+      // add asteroids to the bottom half of the screen
+      var a = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+        mass: 100000,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-5, -1.5),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+        angularVelocity: 0
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 7));
+      a.level = 0;
+      this.addObjectToWorld(a); // add asteroids to the bottom half of the screen
+
+      var b = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+        mass: 100000,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](5, 1.5),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+        angularVelocity: 0
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 7));
+      b.level = 0;
+      this.addObjectToWorld(b);
+      var c = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+        mass: 100000,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 3),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+        angularVelocity: 0
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 4));
+      c.level = 0;
+      this.addObjectToWorld(c);
+      var d = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+        mass: 100000,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, -3),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+        angularVelocity: 0
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 4));
+      d.level = 0;
+      this.addObjectToWorld(d);
+    }
+  }, {
+    key: "world_three",
+    value: function world_three() {
+      // add asteroids to the bottom half of the screen
+      var a = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+        mass: 100000,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-1.5, -2),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+        angularVelocity: 0
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](13, 1));
+      a.level = 0;
+      this.addObjectToWorld(a); // add asteroids to the bottom half of the screen
+
+      var b = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+        mass: 100000,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1.5, 2),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+        angularVelocity: 0
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](13, 1));
+      b.level = 0;
+      this.addObjectToWorld(b);
+    }
+  }, {
+    key: "world_four",
+    value: function world_four() {
+      // add asteroids to the bottom half of the screen
+      var a = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+        mass: 100000,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-1.5, -2),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+        angularVelocity: 0
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](13, 1));
+      a.level = 0;
+      this.addObjectToWorld(a);
+      var c = new __WEBPACK_IMPORTED_MODULE_1__Asteroid__["a" /* default */](this, {}, {
+        mass: 100000,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 3),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0),
+        angularVelocity: 0
+      }, new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](1, 4));
+      c.level = 0;
+      this.addObjectToWorld(c);
     }
   }]);
 

@@ -64,6 +64,19 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
     gameEngine.on('shoot', _this.shoot.bind(_assertThisInitialized(_this)));
     _this.playerReady = {};
     _this.playerGroups = {};
+    _this.currentWorld = 0; // maps groupCode -> {
+    // c_playerID : int,
+    // c_playerName : str,
+    // c_socketID : int,
+    // v_playerID : int,
+    // v_playerName : int,
+    // v_socketID : int,
+    // full : bool,
+    // c_ready : bool,
+    // v_ready : bool,
+    // gameStarted: bool
+    // };
+
     _this.io = io;
     return _this;
   }
@@ -73,7 +86,7 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
     value: function start() {
       _get(_getPrototypeOf(AsteroidsServerEngine.prototype), "start", this).call(this);
 
-      this.gameEngine.addAsteroids();
+      this.gameEngine.addBarriers();
       this.gameEngine.addFinishLine();
     } // handle a collision on server only
 
@@ -100,11 +113,7 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
       if (A instanceof _Ship["default"] && B instanceof _Asteroid["default"]) this.kill(A);
       if (B instanceof _Ship["default"] && A instanceof _Asteroid["default"]) this.kill(B);
       if (A instanceof _Ship["default"] && B instanceof _FinishLine["default"]) this.gameWon(A);
-      if (B instanceof _Ship["default"] && A instanceof _FinishLine["default"]) this.gameWon(B); // restart game
-
-      if (this.gameEngine.world.queryObjects({
-        instanceType: _Asteroid["default"]
-      }).length === 0) this.gameEngine.addAsteroids();
+      if (B instanceof _Ship["default"] && A instanceof _FinishLine["default"]) this.gameWon(B);
     } // shooting creates a bullet
 
   }, {
@@ -135,7 +144,6 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
   }, {
     key: "kill",
     value: function kill(ship) {
-      console.log(ship.playerId);
       var pl_id = ship.playerId;
       if (ship.lives-- === 0) this.gameEngine.removeObjectFromWorld(ship.id);
       this.gameEngine.addShip(pl_id);
@@ -144,6 +152,17 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
     key: "gameWon",
     value: function gameWon(ship) {
       ship.won = true;
+      this.gameEngine.removeAllBarriers(); // restart game
+
+      if (this.gameEngine.world.queryObjects({
+        instanceType: _Asteroid["default"]
+      }).length === 0) {
+        this.currentWorld = this.gameEngine.addBarriers(this.currentWorld);
+        this.gameEngine.resetShip();
+        this.gameEngine.addFinishLine();
+      } else {
+        console.log("Error: not all barriers were removed.");
+      }
     }
   }, {
     key: "sendGroupUpdate",
@@ -264,7 +283,7 @@ var AsteroidsServerEngine = /*#__PURE__*/function (_ServerEngine) {
         } //console.log(this.playerGroups[group_code]);
 
 
-        if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
+        if (this.playerGroups[group_code] && this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
           //console.log(group_code + ' has been deleted.');
           delete this.playerGroups[group_code];
         }

@@ -10,20 +10,32 @@ export default class AsteroidsServerEngine extends ServerEngine {
         super(io, gameEngine, inputOptions);
         gameEngine.physicsEngine.world.on('beginContact', this.handleCollision.bind(this));
         gameEngine.on('shoot', this.shoot.bind(this));
-        this.playerReady = {}
-        this.playerGroups = {}
+        this.playerReady = {};
+        this.playerGroups = {};
+        this.currentWorld = 0;
+        // maps groupCode -> {
+        // c_playerID : int,
+        // c_playerName : str,
+        // c_socketID : int,
+        // v_playerID : int,
+        // v_playerName : int,
+        // v_socketID : int,
+        // full : bool,
+        // c_ready : bool,
+        // v_ready : bool,
+        // gameStarted: bool
+        // };
         this.io = io;
     }
 
     start() {
         super.start();
-        this.gameEngine.addAsteroids();
+        this.gameEngine.addBarriers();
         this.gameEngine.addFinishLine();
     }
 
     // handle a collision on server only
     handleCollision(evt) {
-
         // identify the two objects which collided
         let A;
         let B;
@@ -42,14 +54,10 @@ export default class AsteroidsServerEngine extends ServerEngine {
         if (B instanceof Ship && A instanceof Asteroid) this.kill(B);
         if (A instanceof Ship && B instanceof FinishLine) this.gameWon(A);
         if (B instanceof Ship && A instanceof FinishLine) this.gameWon(B);
-
-        // restart game
-        if (this.gameEngine.world.queryObjects({ instanceType: Asteroid }).length === 0) this.gameEngine.addAsteroids();
     }
 
     // shooting creates a bullet
     shoot(player) {
-
         let radius = player.physicsObj.shapes[0].radius;
         let angle = player.physicsObj.angle + Math.PI / 2;
         let bullet = new Bullet(this.gameEngine, {}, {
@@ -77,14 +85,22 @@ export default class AsteroidsServerEngine extends ServerEngine {
     }
 
     kill(ship) {
-        console.log(ship.playerId)
-        let pl_id = ship.playerId
-        if(ship.lives-- === 0) this.gameEngine.removeObjectFromWorld(ship.id);
+        let pl_id = ship.playerId;
+        if (ship.lives-- === 0) this.gameEngine.removeObjectFromWorld(ship.id);
         this.gameEngine.addShip(pl_id);
     }
 
     gameWon(ship) {
         ship.won = true;
+        this.gameEngine.removeAllBarriers();
+        // restart game
+        if (this.gameEngine.world.queryObjects({ instanceType: Asteroid }).length === 0) {
+            this.currentWorld = this.gameEngine.addBarriers(this.currentWorld);
+            this.gameEngine.resetShip();
+            this.gameEngine.addFinishLine();
+        } else {
+            console.log("Error: not all barriers were removed.");
+        }
     }
 
     sendGroupUpdate(groupCode) {
@@ -191,14 +207,17 @@ export default class AsteroidsServerEngine extends ServerEngine {
             }
 
             //console.log(this.playerGroups[group_code]);
-            if (this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
+            if (this.playerGroups[group_code] && this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
                 //console.log(group_code + ' has been deleted.');
                 delete this.playerGroups[group_code];
             }
 
             if (this.playerGroups[group_code] && this.playerGroups[group_code].c_playerID && playerId !== this.playerGroups[group_code].c_playerID) {
-                for (let o of this.gameEngine.world.queryObjects({ playerId : this.playerGroups[group_code].c_playerID }))
+                for (let o of this.gameEngine.world.queryObjects({
+                    playerId : this.playerGroups[group_code].c_playerID
+                })) {
                     this.gameEngine.removeObjectFromWorld(o.id);
+                }
             }
         }
         for (let o of this.gameEngine.world.queryObjects({ playerId }))

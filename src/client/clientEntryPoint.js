@@ -32,7 +32,8 @@ $(document).ready(() => {
         if (name && name.length < 20) {
             options.playerOptions = {
                 playerName: name,
-                privateCode: gamecode
+                privateCode: gamecode,
+                verbose: true,
             };
             // create a client engine and a game engine
             const gameEngine = new AsteroidsGameEngine(options);
