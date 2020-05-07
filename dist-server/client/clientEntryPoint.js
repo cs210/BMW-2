@@ -61,4 +61,4 @@ $(document).ready(function () {
   $('#name-form').submit(sendName);
   $('#name-submit').click(sendName);
 });
-//# sourceMappingURL=ClientEntryPoint.js.map
+//# sourceMappingURL=clientEntryPoint.js.map

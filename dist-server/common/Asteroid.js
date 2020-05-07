@@ -55,8 +55,6 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
     key: "onAddToWorld",
     // on add-to-world, create a physics body
     value: function onAddToWorld() {
-      console.log("Variable dim that is passed thru: ");
-      console.log(this.dim);
       game = this.gameEngine;
       p2 = game.physicsEngine.p2;
       this.physicsObj = new p2.Body({

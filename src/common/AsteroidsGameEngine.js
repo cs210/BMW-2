@@ -80,13 +80,17 @@ export default class AsteroidsGameEngine extends GameEngine {
             let playerShip = this.world.queryObject({ playerId: playerId, instanceType: Ship });
             if (playerShip) {
                 if (inputData.input === 'up') {
-                    playerShip.physicsObj.applyForceLocal([0,this.shipSpeed]);
+                    playerShip.physicsObj.applyForce([0,this.shipSpeed]);
+                    // playerShip.physicsObj.applyForceLocal([0,this.shipSpeed]);
                 } else if (inputData.input === 'right') {
-                    playerShip.physicsObj.angle -= this.shipTurnSpeed;
+                    playerShip.physicsObj.applyForce([this.shipSpeed, 0]);
+                    // playerShip.physicsObj.angle -= this.shipTurnSpeed;
                 } else if (inputData.input === 'left') {
-                    playerShip.physicsObj.angle += this.shipTurnSpeed;
+                    playerShip.physicsObj.applyForce([-this.shipSpeed, 0]);
+                    // playerShip.physicsObj.angle += this.shipTurnSpeed;
                 } else if (inputData.input === 'down') {
-                    playerShip.physicsObj.applyForceLocal([0,-this.shipSpeed]);
+                    playerShip.physicsObj.applyForce([0,-this.shipSpeed]);
+                    // playerShip.physicsObj.applyForceLocal([0,-this.shipSpeed]);
                 } else if (inputData.input === 'space') {
                     this.emit('shoot', playerShip);
                 }

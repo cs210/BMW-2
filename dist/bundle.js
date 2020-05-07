@@ -15459,8 +15459,6 @@ var Asteroid = /*#__PURE__*/function (_PhysicalObject2D) {
     key: "onAddToWorld",
     // on add-to-world, create a physics body
     value: function onAddToWorld() {
-      console.log("Variable dim that is passed thru: ");
-      console.log(this.dim);
       game = this.gameEngine;
       p2 = game.physicsEngine.p2;
       this.physicsObj = new p2.Body({
@@ -50077,13 +50075,13 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
 
         if (playerShip) {
           if (inputData.input === 'up') {
-            playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
+            playerShip.physicsObj.applyForce([0, this.shipSpeed]); // playerShip.physicsObj.applyForceLocal([0,this.shipSpeed]);
           } else if (inputData.input === 'right') {
-            playerShip.physicsObj.angle -= this.shipTurnSpeed;
+            playerShip.physicsObj.applyForce([this.shipSpeed, 0]); // playerShip.physicsObj.angle -= this.shipTurnSpeed;
           } else if (inputData.input === 'left') {
-            playerShip.physicsObj.angle += this.shipTurnSpeed;
+            playerShip.physicsObj.applyForce([-this.shipSpeed, 0]); // playerShip.physicsObj.angle += this.shipTurnSpeed;
           } else if (inputData.input === 'down') {
-            playerShip.physicsObj.applyForceLocal([0, -this.shipSpeed]);
+            playerShip.physicsObj.applyForce([0, -this.shipSpeed]); // playerShip.physicsObj.applyForceLocal([0,-this.shipSpeed]);
           } else if (inputData.input === 'space') {
             this.emit('shoot', playerShip);
           }
