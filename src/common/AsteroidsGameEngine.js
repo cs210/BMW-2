@@ -101,7 +101,7 @@ export default class AsteroidsGameEngine extends GameEngine {
     }
 
     // create ship
-    addShip(playerId) {
+    addShip(playerId, c_name, v_name) {
         let s = new Ship(this, {}, {
             playerId: playerId,
             mass: 10,
@@ -109,24 +109,26 @@ export default class AsteroidsGameEngine extends GameEngine {
             position: new TwoVector(-6.4, -3.6),
             velocity: new TwoVector(0, 0),
         });
-        s.lives = this.lives;
+        s.score = 0;
         s.won = false;
-        s.name = "SHIP";
+        s.c_name = c_name;
+        s.v_name = v_name;
         this.addObjectToWorld(s);
     }
 
-    addShipOnReset(oldShip) {
+    addShipOnReset(playerId, c_name, v_name, score) {
         let s = new Ship(this, {}, {
-            playerId: oldShip.playerId,
+            playerId: playerId,
             mass: 10,
             angularVelocity: 0,
             position: new TwoVector(-6.4, -3.6),
             velocity: new TwoVector(0, 0),
         });
-        s.lives = oldShip.lives;
-        console.log("lives now: "+ s.lives);
+        s.score = score;
+        console.log("score now: "+ s.score);
         s.won = false;
-        s.name = oldShip.name;
+        s.c_name = c_name;
+        s.v_name = v_name;
         this.addObjectToWorld(s);
     }
 
@@ -174,11 +176,19 @@ export default class AsteroidsGameEngine extends GameEngine {
         }
     }
 
-    resetShip() {
+    resetAllShips() {
         for (let o of this.world.queryObjects({ instanceType: Ship })) {
-            this.removeObjectFromWorld(o.id);
-            this.addShipOnReset(o);
+            this.resetShip(o)
         }
+    }
+
+    resetShip(ship) {
+        let old_score = ship.score;
+        let c_name = ship.c_name;
+        let v_name = ship.v_name;
+        let old_pid = ship.playerId;
+        this.removeObjectFromWorld(ship.id);
+        this.addShipOnReset(old_pid, c_name, v_name, old_score);
     }
 
     // asteroid explosion

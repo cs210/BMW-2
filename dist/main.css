@@ -27,6 +27,19 @@ canvas {
     height:100%;
     position:absolute;
 }
+
+.column {
+    float: left;
+    width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 .textBox {
     margin:10px;
     position:absolute;
@@ -165,37 +178,36 @@ canvas {
     text-align: center;
 }
 #waiting-room-overlay #waiting-room-container #txt_label_l {
-    position: absolute;
-    left: 10%;
-    margin-bottom: 20px;
+    display: block;
+    text-align: center;
 }
 #waiting-room-overlay #waiting-room-container #txt_label_r {
-    position: absolute;
-    right: 15%;
+    display: block;
+    text-align: center;
 }
 #waiting-room-overlay #waiting-room-container #controller_label {
-    position: absolute;
-    left: 20%;
+    display: block;
+    text-align: center;
     margin-bottom: 20px;
 }
 #waiting-room-overlay #waiting-room-container #viewer_label {
-    position: absolute;
-    right: 20%;
+    display: block;
+    text-align: center;
     margin-bottom: 20px;
 }
 #waiting-room-overlay #waiting-room-container #start-submit {
-    position: absolute;
-    bottom: 15%;
-    left: 45%;
+    display: block;
+    margin:0 auto;
+    margin-top: 20px;
 }
 #waiting-room-overlay #waiting-room-container #controller_ready_img {
-    position: absolute;
-    left: 20%;
+    display: block;
+    margin:0 auto;
     visibility: hidden;
 }
 #waiting-room-overlay #waiting-room-container #viewer_ready_img {
-    position: absolute;
-    right: 32%;
+    display: block;
+    margin:0 auto;
     visibility: hidden;
 }
 

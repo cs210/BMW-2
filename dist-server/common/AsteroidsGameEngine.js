@@ -165,7 +165,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
 
   }, {
     key: "addShip",
-    value: function addShip(playerId) {
+    value: function addShip(playerId, c_name, v_name) {
       var s = new _Ship["default"](this, {}, {
         playerId: playerId,
         mass: 10,
@@ -173,25 +173,27 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
         position: new _lanceGg.TwoVector(-6.4, -3.6),
         velocity: new _lanceGg.TwoVector(0, 0)
       });
-      s.lives = this.lives;
+      s.score = 0;
       s.won = false;
-      s.name = "SHIP";
+      s.c_name = c_name;
+      s.v_name = v_name;
       this.addObjectToWorld(s);
     }
   }, {
     key: "addShipOnReset",
-    value: function addShipOnReset(oldShip) {
+    value: function addShipOnReset(playerId, c_name, v_name, score) {
       var s = new _Ship["default"](this, {}, {
-        playerId: oldShip.playerId,
+        playerId: playerId,
         mass: 10,
         angularVelocity: 0,
         position: new _lanceGg.TwoVector(-6.4, -3.6),
         velocity: new _lanceGg.TwoVector(0, 0)
       });
-      s.lives = oldShip.lives;
-      console.log("lives now: " + s.lives);
+      s.score = score;
+      console.log("score now: " + s.score);
       s.won = false;
-      s.name = oldShip.name;
+      s.c_name = c_name;
+      s.v_name = v_name;
       this.addObjectToWorld(s);
     }
   }, {
@@ -270,8 +272,8 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       }
     }
   }, {
-    key: "resetShip",
-    value: function resetShip() {
+    key: "resetAllShips",
+    value: function resetAllShips() {
       var _iterator3 = _createForOfIteratorHelper(this.world.queryObjects({
         instanceType: _Ship["default"]
       })),
@@ -280,14 +282,23 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       try {
         for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var o = _step3.value;
-          this.removeObjectFromWorld(o.id);
-          this.addShipOnReset(o);
+          this.resetShip(o);
         }
       } catch (err) {
         _iterator3.e(err);
       } finally {
         _iterator3.f();
       }
+    }
+  }, {
+    key: "resetShip",
+    value: function resetShip(ship) {
+      var old_score = ship.score;
+      var c_name = ship.c_name;
+      var v_name = ship.v_name;
+      var old_pid = ship.playerId;
+      this.removeObjectFromWorld(ship.id);
+      this.addShipOnReset(old_pid, c_name, v_name, old_score);
     } // asteroid explosion
 
   }, {

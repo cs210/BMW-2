@@ -56,7 +56,7 @@ export default class AsteroidsRenderer extends Renderer {
         // Draw all things
         this.drawBounds();
         game.world.forEachObject((id, obj) => {
-            if (obj instanceof Ship) this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID, obj.name);
+            if (obj instanceof Ship) this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID, obj.c_name, obj.v_name);
             else if (obj instanceof Bullet) this.drawBullet(obj.physicsObj);
             else if (obj instanceof FinishLine) this.drawFinishLine(obj.physicsObj);
             else if (obj instanceof Asteroid && this.viewer) this.drawAsteroid(obj.physicsObj);
@@ -76,10 +76,10 @@ export default class AsteroidsRenderer extends Renderer {
             return;
         }
 
-        // update lives if necessary
-        if (playerShip.playerId === this.groupShipPID && this.lives != playerShip.lives) {
-            document.getElementById('lives').innerHTML = 'Score: ' + playerShip.lives;
-            this.lives = playerShip.lives;
+        // update score if necessary
+        if (playerShip.playerId === this.groupShipPID && this.score != playerShip.score) {
+            document.getElementById('score').innerHTML = 'Score: ' + playerShip.score;
+            this.score = playerShip.score;
         }
 
         // update winning if necessary
@@ -94,7 +94,7 @@ export default class AsteroidsRenderer extends Renderer {
         document.getElementById('instructionsMobile').classList.add('hidden');
     }
 
-    drawShip(body, special, name) {
+    drawShip(body, special, c_name, v_name) {
         let radius = body.shapes[0].radius;
         if (special) {
             ctx.strokeStyle = ctx.fillStyle = "#18CAE6";
@@ -102,7 +102,8 @@ export default class AsteroidsRenderer extends Renderer {
         }
         ctx.save();
         ctx.translate(body.position[0], body.position[1]); // Translate to the ship center
-        ctx.fillText(name, 0, -0.5);
+        ctx.fillText(v_name, 0, -0.6);
+        ctx.fillText(c_name, 0, -0.37);
         ctx.rotate(body.angle); // Rotate to ship orientation
         ctx.beginPath();
         for(let j = 0; j < 3; j++) {

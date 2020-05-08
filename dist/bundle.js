@@ -15710,16 +15710,17 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
   }, {
     key: "toString",
     value: function toString() {
-      return "Ship::".concat(_get(_getPrototypeOf(Ship.prototype), "toString", this).call(this), " lives=").concat(this.lives);
+      return "Ship::".concat(_get(_getPrototypeOf(Ship.prototype), "toString", this).call(this), " score=").concat(this.score);
     }
   }, {
     key: "syncTo",
     value: function syncTo(other) {
       _get(_getPrototypeOf(Ship.prototype), "syncTo", this).call(this, other);
 
-      this.lives = other.lives;
+      this.score = other.score;
       this.won = other.won;
-      this.name = other.name;
+      this.c_name = other.c_name;
+      this.v_name = other.v_name;
     }
   }, {
     key: "bending",
@@ -15742,13 +15743,16 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
     key: "netScheme",
     get: function get() {
       return Object.assign({
-        lives: {
+        score: {
           type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.INT8
         },
         won: {
           type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.INT8
         },
-        name: {
+        c_name: {
+          type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.STRING
+        },
+        v_name: {
           type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.STRING
         }
       }, _get(_getPrototypeOf(Ship), "netScheme", this));
@@ -45569,7 +45573,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
 
       this.drawBounds();
       game.world.forEachObject(function (id, obj) {
-        if (obj instanceof __WEBPACK_IMPORTED_MODULE_3__common_Ship__["a" /* default */]) _this2.drawShip(obj.physicsObj, obj.playerId === _this2.groupShipPID, obj.name);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_2__common_Bullet__["a" /* default */]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_4__common_FinishLine__["a" /* default */]) _this2.drawFinishLine(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_1__common_Asteroid__["a" /* default */] && _this2.viewer) _this2.drawAsteroid(obj.physicsObj);
+        if (obj instanceof __WEBPACK_IMPORTED_MODULE_3__common_Ship__["a" /* default */]) _this2.drawShip(obj.physicsObj, obj.playerId === _this2.groupShipPID, obj.c_name, obj.v_name);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_2__common_Bullet__["a" /* default */]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_4__common_FinishLine__["a" /* default */]) _this2.drawFinishLine(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_1__common_Asteroid__["a" /* default */] && _this2.viewer) _this2.drawAsteroid(obj.physicsObj);
       }); // update status and restore
 
       this.updateStatus();
@@ -45586,12 +45590,12 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
         /*if (this.lives == undefined)
             document.getElementById('gameover').classList.remove('hidden');*/
         return;
-      } // update lives if necessary
+      } // update score if necessary
 
 
-      if (playerShip.playerId === this.groupShipPID && this.lives != playerShip.lives) {
-        document.getElementById('lives').innerHTML = 'Score: ' + playerShip.lives;
-        this.lives = playerShip.lives;
+      if (playerShip.playerId === this.groupShipPID && this.score != playerShip.score) {
+        document.getElementById('score').innerHTML = 'Score: ' + playerShip.score;
+        this.score = playerShip.score;
       } // update winning if necessary
 
 
@@ -45607,7 +45611,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     }
   }, {
     key: "drawShip",
-    value: function drawShip(body, special, name) {
+    value: function drawShip(body, special, c_name, v_name) {
       var radius = body.shapes[0].radius;
 
       if (special) {
@@ -45618,7 +45622,8 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.save();
       ctx.translate(body.position[0], body.position[1]); // Translate to the ship center
 
-      ctx.fillText(name, 0, -0.5);
+      ctx.fillText(v_name, 0, -0.6);
+      ctx.fillText(c_name, 0, -0.37);
       ctx.rotate(body.angle); // Rotate to ship orientation
 
       ctx.beginPath();
@@ -50111,7 +50116,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
 
   }, {
     key: "addShip",
-    value: function addShip(playerId) {
+    value: function addShip(playerId, c_name, v_name) {
       var s = new __WEBPACK_IMPORTED_MODULE_3__Ship__["a" /* default */](this, {}, {
         playerId: playerId,
         mass: 10,
@@ -50119,25 +50124,27 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
         position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-6.4, -3.6),
         velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0)
       });
-      s.lives = this.lives;
+      s.score = 0;
       s.won = false;
-      s.name = "SHIP";
+      s.c_name = c_name;
+      s.v_name = v_name;
       this.addObjectToWorld(s);
     }
   }, {
     key: "addShipOnReset",
-    value: function addShipOnReset(oldShip) {
+    value: function addShipOnReset(playerId, c_name, v_name, score) {
       var s = new __WEBPACK_IMPORTED_MODULE_3__Ship__["a" /* default */](this, {}, {
-        playerId: oldShip.playerId,
+        playerId: playerId,
         mass: 10,
         angularVelocity: 0,
         position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-6.4, -3.6),
         velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0)
       });
-      s.lives = oldShip.lives;
-      console.log("lives now: " + s.lives);
+      s.score = score;
+      console.log("score now: " + s.score);
       s.won = false;
-      s.name = oldShip.name;
+      s.c_name = c_name;
+      s.v_name = v_name;
       this.addObjectToWorld(s);
     }
   }, {
@@ -50216,8 +50223,8 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       }
     }
   }, {
-    key: "resetShip",
-    value: function resetShip() {
+    key: "resetAllShips",
+    value: function resetAllShips() {
       var _iterator3 = _createForOfIteratorHelper(this.world.queryObjects({
         instanceType: __WEBPACK_IMPORTED_MODULE_3__Ship__["a" /* default */]
       })),
@@ -50226,14 +50233,23 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       try {
         for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var o = _step3.value;
-          this.removeObjectFromWorld(o.id);
-          this.addShipOnReset(o);
+          this.resetShip(o);
         }
       } catch (err) {
         _iterator3.e(err);
       } finally {
         _iterator3.f();
       }
+    }
+  }, {
+    key: "resetShip",
+    value: function resetShip(ship) {
+      var old_score = ship.score;
+      var c_name = ship.c_name;
+      var v_name = ship.v_name;
+      var old_pid = ship.playerId;
+      this.removeObjectFromWorld(ship.id);
+      this.addShipOnReset(old_pid, c_name, v_name, old_score);
     } // asteroid explosion
 
   }, {

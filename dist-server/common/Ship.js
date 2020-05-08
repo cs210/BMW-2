@@ -79,16 +79,17 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
   }, {
     key: "toString",
     value: function toString() {
-      return "Ship::".concat(_get(_getPrototypeOf(Ship.prototype), "toString", this).call(this), " lives=").concat(this.lives);
+      return "Ship::".concat(_get(_getPrototypeOf(Ship.prototype), "toString", this).call(this), " score=").concat(this.score);
     }
   }, {
     key: "syncTo",
     value: function syncTo(other) {
       _get(_getPrototypeOf(Ship.prototype), "syncTo", this).call(this, other);
 
-      this.lives = other.lives;
+      this.score = other.score;
       this.won = other.won;
-      this.name = other.name;
+      this.c_name = other.c_name;
+      this.v_name = other.v_name;
     }
   }, {
     key: "bending",
@@ -111,13 +112,16 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
     key: "netScheme",
     get: function get() {
       return Object.assign({
-        lives: {
+        score: {
           type: _lanceGg.BaseTypes.TYPES.INT8
         },
         won: {
           type: _lanceGg.BaseTypes.TYPES.INT8
         },
-        name: {
+        c_name: {
+          type: _lanceGg.BaseTypes.TYPES.STRING
+        },
+        v_name: {
           type: _lanceGg.BaseTypes.TYPES.STRING
         }
       }, _get(_getPrototypeOf(Ship), "netScheme", this));

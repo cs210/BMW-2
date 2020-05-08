@@ -50,8 +50,8 @@ export default class AsteroidsServerEngine extends ServerEngine {
         this.gameEngine.trace.trace(() => `collision and     B=${B.toString()}`);
         if (A instanceof Bullet && B instanceof Asteroid) this.gameEngine.explode(B, A);
         if (B instanceof Bullet && A instanceof Asteroid) this.gameEngine.explode(A, B);
-        if (A instanceof Ship && B instanceof Asteroid) this.kill(A);
-        if (B instanceof Ship && A instanceof Asteroid) this.kill(B);
+        if (A instanceof Ship && B instanceof Asteroid) this.gameEngine.resetShip(A);
+        if (B instanceof Ship && A instanceof Asteroid) this.gameEngine.resetShip(B);
         if (A instanceof Ship && B instanceof FinishLine) this.gameWon(A);
         if (B instanceof Ship && A instanceof FinishLine) this.gameWon(B);
     }
@@ -84,22 +84,16 @@ export default class AsteroidsServerEngine extends ServerEngine {
         }
     }
 
-    kill(ship) {
-        let pl_id = ship.playerId;
-        if (ship.lives-- === 0) this.gameEngine.removeObjectFromWorld(ship.id);
-        this.gameEngine.addShip(pl_id);
-    }
-
     gameWon(ship) {
         ship.won = true;
-        ship.lives++; //ADDED
+        ship.score++; //ADDED
         //this.lives++;
         this.gameEngine.removeAllBarriers();
         // restart game
         if (this.gameEngine.world.queryObjects({ instanceType: Asteroid }).length === 0) {
             console.log("restarting");
             this.currentWorld = this.gameEngine.addBarriers(this.currentWorld);
-            this.gameEngine.resetShip();
+            this.gameEngine.resetAllShips();
             this.gameEngine.addFinishLine();
         } else {
             console.log("Error: not all barriers were removed.");
@@ -177,7 +171,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
             that.sendGroupUpdate(groupCode);
             let group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
             if (group.v_ready && group.c_ready) {
-                that.gameEngine.addShip(group.c_playerID);
+                that.gameEngine.addShip(group.c_playerID, group.c_playerName, group.v_playerName);
                 that.gameEngine.playerReady[group.c_playerID] = true;
                 that.io.to(group.c_socketID).to(group.v_socketID).emit('gameBegin', {ship_pid : group.c_playerID});
                 that.playerGroups[that.connectedPlayers[socket.id].privateCode].gameStarted = true;

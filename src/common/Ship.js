@@ -7,9 +7,10 @@ export default class Ship extends PhysicalObject2D {
 
     static get netScheme() {
         return Object.assign({
-            lives: { type: BaseTypes.TYPES.INT8 },
+            score: { type: BaseTypes.TYPES.INT8 },
             won: { type: BaseTypes.TYPES.INT8 },
-            name: { type: BaseTypes.TYPES.STRING }
+            c_name: { type: BaseTypes.TYPES.STRING },
+            v_name: { type: BaseTypes.TYPES.STRING }
         }, super.netScheme);
     }
 
@@ -48,13 +49,14 @@ export default class Ship extends PhysicalObject2D {
     }
 
     toString() {
-        return `Ship::${super.toString()} lives=${this.lives}`;
+        return `Ship::${super.toString()} score=${this.score}`;
     }
 
     syncTo(other) {
         super.syncTo(other);
-        this.lives = other.lives;
+        this.score = other.score;
         this.won = other.won;
-        this.name = other.name;
+        this.c_name = other.c_name;
+        this.v_name = other.v_name;
     }
 }

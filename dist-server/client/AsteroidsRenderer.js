@@ -107,7 +107,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
 
       this.drawBounds();
       game.world.forEachObject(function (id, obj) {
-        if (obj instanceof _Ship["default"]) _this2.drawShip(obj.physicsObj, obj.playerId === _this2.groupShipPID, obj.name);else if (obj instanceof _Bullet["default"]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof _FinishLine["default"]) _this2.drawFinishLine(obj.physicsObj);else if (obj instanceof _Asteroid["default"] && _this2.viewer) _this2.drawAsteroid(obj.physicsObj);
+        if (obj instanceof _Ship["default"]) _this2.drawShip(obj.physicsObj, obj.playerId === _this2.groupShipPID, obj.c_name, obj.v_name);else if (obj instanceof _Bullet["default"]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof _FinishLine["default"]) _this2.drawFinishLine(obj.physicsObj);else if (obj instanceof _Asteroid["default"] && _this2.viewer) _this2.drawAsteroid(obj.physicsObj);
       }); // update status and restore
 
       this.updateStatus();
@@ -124,12 +124,12 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
         /*if (this.lives == undefined)
             document.getElementById('gameover').classList.remove('hidden');*/
         return;
-      } // update lives if necessary
+      } // update score if necessary
 
 
-      if (playerShip.playerId === this.groupShipPID && this.lives != playerShip.lives) {
-        document.getElementById('lives').innerHTML = 'Score: ' + playerShip.lives;
-        this.lives = playerShip.lives;
+      if (playerShip.playerId === this.groupShipPID && this.score != playerShip.score) {
+        document.getElementById('score').innerHTML = 'Score: ' + playerShip.score;
+        this.score = playerShip.score;
       } // update winning if necessary
 
 
@@ -145,7 +145,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     }
   }, {
     key: "drawShip",
-    value: function drawShip(body, special, name) {
+    value: function drawShip(body, special, c_name, v_name) {
       var radius = body.shapes[0].radius;
 
       if (special) {
@@ -156,7 +156,8 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.save();
       ctx.translate(body.position[0], body.position[1]); // Translate to the ship center
 
-      ctx.fillText(name, 0, -0.5);
+      ctx.fillText(v_name, 0, -0.6);
+      ctx.fillText(c_name, 0, -0.37);
       ctx.rotate(body.angle); // Rotate to ship orientation
 
       ctx.beginPath();

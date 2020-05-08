@@ -33,14 +33,22 @@
     <div id='waiting-room-overlay'>
         <div id='waiting-room-container'>
             <h3 id='waiting-room-header'> Waiting for players </h3>
-            <label id='txt_label_l'> Controller </label>
-            <label id='txt_label_r'> Viewer </label>
-            <br />
-            <label id='controller_label'> </label>
-            <label id='viewer_label'> </label>
-            <br />
-            <img id="controller_ready_img" src="./ready.png">
-            <img id="viewer_ready_img" src="./ready.png">
+            <div class="row">
+                <div class="column">
+                    <label id='txt_label_l'> Controller </label>
+                    <br />
+                    <label id='controller_label'> </label>
+                    <br />
+                    <img id="controller_ready_img" src="./ready.png">
+                </div>
+                <div class="column">
+                    <label id='txt_label_r'> Viewer </label>
+                    <br />
+                    <label id='viewer_label'> </label>
+                    <br />
+                    <img id="viewer_ready_img" src="./ready.png">
+                </div>
+            </div>
             <br />
             <button id='start-submit'>
                 Ready
@@ -48,7 +56,7 @@
         </div>
     </div>
     <div id="level" class="textBox"></div>
-    <div id="lives" class="textBox"></div>
+    <div id="score" class="textBox"></div>
     <div id="gameover" class="textBox centered hidden">GAME OVER</div>
     <div id="gamewin" class="textBox centered hidden">YOU WON</div>
     <div id="instructions" class="textBox centered hidden">
