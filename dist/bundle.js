@@ -50126,17 +50126,18 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
     }
   }, {
     key: "addShipOnReset",
-    value: function addShipOnReset(playerId, lives) {
+    value: function addShipOnReset(oldShip) {
       var s = new __WEBPACK_IMPORTED_MODULE_3__Ship__["a" /* default */](this, {}, {
-        playerId: playerId,
+        playerId: oldShip.playerId,
         mass: 10,
         angularVelocity: 0,
         position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-6.4, -3.6),
         velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0)
       });
-      s.lives = lives;
+      s.lives = oldShip.lives;
       console.log("lives now: " + s.lives);
       s.won = false;
+      s.name = oldShip.name;
       this.addObjectToWorld(s);
     }
   }, {
@@ -50226,7 +50227,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
         for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var o = _step3.value;
           this.removeObjectFromWorld(o.id);
-          this.addShipOnReset(o.playerId, o.lives);
+          this.addShipOnReset(o);
         }
       } catch (err) {
         _iterator3.e(err);
