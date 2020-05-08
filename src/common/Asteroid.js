@@ -25,8 +25,6 @@ export default class Asteroid extends PhysicalObject2D {
 
     // on add-to-world, create a physics body
     onAddToWorld() {
-        console.log("Variable dim that is passed thru: ");
-        console.log(this.dim);
         game = this.gameEngine;
         p2 = game.physicsEngine.p2;
         this.physicsObj = new p2.Body({

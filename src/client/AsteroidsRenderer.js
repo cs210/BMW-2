@@ -16,6 +16,7 @@ export default class AsteroidsRenderer extends Renderer {
 
         // Init canvas
         canvas = document.createElement('canvas');
+        canvas.style.visibility = 'hidden';
         canvas.width = window.innerWidth * window.devicePixelRatio;
         canvas.height = window.innerHeight * window.devicePixelRatio;
         document.body.insertBefore(canvas, document.getElementById('logo'));
@@ -28,8 +29,14 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.strokeStyle = ctx.fillStyle = 'white';
         ctx.shadowBlur = 10;
         ctx.shadowColor = "white";
+        ctx.font = "0.2px ONEDAY";
+        ctx.textAlign = "center";
         this.viewer = false;
         this.groupShipPID = null;
+    }
+
+    showCanvas() {
+        canvas.style.visibility = 'visible';
     }
 
     draw(t, dt) {
@@ -43,12 +50,13 @@ export default class AsteroidsRenderer extends Renderer {
         // goes from top to bottom, while physics does the opposite.
         ctx.save();
         ctx.translate(game.w/2, game.h/2); // Translate to the center
-        ctx.scale(game.zoom, -game.zoom);  // Zoom in and flip y axis
+        // ctx.scale(game.zoom, -game.zoom);  // Zoom in and flip y axis
+        ctx.scale(game.zoom, game.zoom); // original y flip doesnt allow for text
 
         // Draw all things
         this.drawBounds();
         game.world.forEachObject((id, obj) => {
-            if (obj instanceof Ship) this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID);
+            if (obj instanceof Ship) this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID, obj.c_name, obj.v_name);
             else if (obj instanceof Bullet) this.drawBullet(obj.physicsObj);
             else if (obj instanceof FinishLine) this.drawFinishLine(obj.physicsObj);
             else if (obj instanceof Asteroid && this.viewer) this.drawAsteroid(obj.physicsObj);
@@ -68,10 +76,10 @@ export default class AsteroidsRenderer extends Renderer {
             return;
         }
 
-        // update lives if necessary
-        if (playerShip.playerId === this.groupShipPID && this.lives != playerShip.lives) {
-            document.getElementById('lives').innerHTML = 'Score: ' + playerShip.lives;
-            this.lives = playerShip.lives;
+        // update score if necessary
+        if (playerShip.playerId === this.groupShipPID && this.score != playerShip.score) {
+            document.getElementById('score').innerHTML = 'Score: ' + playerShip.score;
+            this.score = playerShip.score;
         }
 
         // update winning if necessary
@@ -86,7 +94,7 @@ export default class AsteroidsRenderer extends Renderer {
         document.getElementById('instructionsMobile').classList.add('hidden');
     }
 
-    drawShip(body, special) {
+    drawShip(body, special, c_name, v_name) {
         let radius = body.shapes[0].radius;
         if (special) {
             ctx.strokeStyle = ctx.fillStyle = "#18CAE6";
@@ -94,6 +102,8 @@ export default class AsteroidsRenderer extends Renderer {
         }
         ctx.save();
         ctx.translate(body.position[0], body.position[1]); // Translate to the ship center
+        ctx.fillText(v_name, 0, -0.6);
+        ctx.fillText(c_name, 0, -0.37);
         ctx.rotate(body.angle); // Rotate to ship orientation
         ctx.beginPath();
         for(let j = 0; j < 3; j++) {
@@ -114,6 +124,7 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.shadowColor = "#FAF602";
         ctx.save();
         ctx.translate(body.position[0], body.position[1]);  // Translate to the center
+        ctx.fillText("Finish", 0, 0);
         //ctx.rotate(.785);
         ctx.beginPath();
         for(let j = 0; j < game.numAsteroidVerts; j++) {
