@@ -106,10 +106,7 @@ canvas {
     transform: translateX(-50%) translateY(-50%);
 }
 
-
-
-#name-prompt-overlay {
-    display: block;
+.overlay {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -118,13 +115,10 @@ canvas {
     bottom: 0;
     left: 0;
     <!-- background-color: rgba(49, 49, 49, 0.5); -->
-    z-index: 1;
 }
-#name-prompt-overlay #name-prompt-container {
-    display: block;
+
+.input_container{
     position: absolute;
-    width: 490px;
-    height: 220px;
     top: 40%;
     right: 0;
     left: 0;
@@ -135,6 +129,16 @@ canvas {
     border-color: #18CAE6;
     border-width: 30px;
     border-style: ridge;
+}
+
+#name-prompt-overlay {
+    display: block;
+    z-index: 1;
+}
+#name-prompt-overlay #name-prompt-container {
+    display: block;
+    width: 490px;
+    height: 220px;
 }
 #name-prompt-overlay #name-prompt-container input,
 #name-prompt-overlay #name-prompt-container input:focus {
@@ -146,68 +150,42 @@ canvas {
 #name-prompt-overlay #name-prompt-container #name-submit:hover {
     cursor: pointer;
 }
+
 #waiting-room-overlay {
     display: none;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    <!-- background-color: rgba(49, 49, 49, 0.5); -->
     z-index: 1;
 }
 #waiting-room-overlay #waiting-room-container {
     display: none;
-    position: absolute;
     width: 600px;
     height: 300px;
-    top: 40%;
-    right: 0;
-    left: 0;
-    margin: -50px auto;
-    padding: 30px;
-    z-index: 2;
-    border-radius: 10px;
-    border-color: #18CAE6;
-    border-width: 30px;
-    border-style: ridge;
 }
+
+.name_labels_centered {
+    display: block;
+    text-align: center;
+}
+
+.name_labels_centered.bottom_margin {
+    margin-bottom: 20px;
+}
+
+.obj_centered{
+    display: block;
+    margin:0 auto;
+}
+
 #waiting-room-overlay #waiting-room-container #waiting-room-header {
     text-align: center;
 }
-#waiting-room-overlay #waiting-room-container #txt_label_l {
-    display: block;
-    text-align: center;
-}
-#waiting-room-overlay #waiting-room-container #txt_label_r {
-    display: block;
-    text-align: center;
-}
-#waiting-room-overlay #waiting-room-container #controller_label {
-    display: block;
-    text-align: center;
-    margin-bottom: 20px;
-}
-#waiting-room-overlay #waiting-room-container #viewer_label {
-    display: block;
-    text-align: center;
-    margin-bottom: 20px;
-}
+
 #waiting-room-overlay #waiting-room-container #start-submit {
-    display: block;
-    margin:0 auto;
     margin-top: 20px;
 }
 #waiting-room-overlay #waiting-room-container #controller_ready_img {
-    display: block;
-    margin:0 auto;
     visibility: hidden;
 }
 #waiting-room-overlay #waiting-room-container #viewer_ready_img {
-    display: block;
-    margin:0 auto;
     visibility: hidden;
 }
 

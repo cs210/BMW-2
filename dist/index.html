@@ -15,8 +15,8 @@
 </head>
 
 <body>
-    <div id='name-prompt-overlay'>
-        <div id='name-prompt-container'>
+    <div class='overlay' id='name-prompt-overlay'>
+        <div class='input_container' id='name-prompt-container'>
             <h3> Join Game </h3>
             <form id='name-form'>
                 <input type='text' id='name-input' placeholder='Nickname' autocomplete='off' />
@@ -30,27 +30,27 @@
             </form>
         </div>
     </div>
-    <div id='waiting-room-overlay'>
-        <div id='waiting-room-container'>
+    <div class='overlay' id='waiting-room-overlay'>
+        <div class='input_container' id='waiting-room-container'>
             <h3 id='waiting-room-header'> Waiting for players </h3>
             <div class="row">
                 <div class="column">
-                    <label id='txt_label_l'> Controller </label>
+                    <label class='name_labels_centered' id='txt_label_l'> Controller </label>
                     <br />
-                    <label id='controller_label'> </label>
+                    <label class='name_labels_centered bottom_margin' id='controller_label'> </label>
                     <br />
-                    <img id="controller_ready_img" src="./ready.png">
+                    <img class='obj_centered' id="controller_ready_img" src="./ready.png">
                 </div>
                 <div class="column">
-                    <label id='txt_label_r'> Viewer </label>
+                    <label class='name_labels_centered' id='txt_label_r'> Viewer </label>
                     <br />
-                    <label id='viewer_label'> </label>
+                    <label class='name_labels_centered bottom_margin' id='viewer_label'> </label>
                     <br />
-                    <img id="viewer_ready_img" src="./ready.png">
+                    <img class='obj_centered' id="viewer_ready_img" src="./ready.png">
                 </div>
             </div>
             <br />
-            <button id='start-submit'>
+            <button class='obj_centered' id='start-submit'>
                 Ready
             </button>
         </div>
