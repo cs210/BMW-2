@@ -32,9 +32,9 @@ canvas {
     position:absolute;
 }
 .textBox.centered {
-    width:500px;
+    width:800px;
     height:100px;
-    margin-left: -250px;
+    margin-left: -450px;
     margin-top: -50px;
     position: absolute;
     top:20%;
