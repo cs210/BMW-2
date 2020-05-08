@@ -147,13 +147,13 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
 
         if (playerShip) {
           if (inputData.input === 'up') {
-            playerShip.physicsObj.applyForce([0, -this.shipSpeed]); // playerShip.physicsObj.applyForceLocal([0,this.shipSpeed]);
+            playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
           } else if (inputData.input === 'right') {
-            playerShip.physicsObj.applyForce([this.shipSpeed, 0]); // playerShip.physicsObj.angle -= this.shipTurnSpeed;
+            playerShip.physicsObj.angle += this.shipTurnSpeed;
           } else if (inputData.input === 'left') {
-            playerShip.physicsObj.applyForce([-this.shipSpeed, 0]); // playerShip.physicsObj.angle += this.shipTurnSpeed;
+            playerShip.physicsObj.angle -= this.shipTurnSpeed;
           } else if (inputData.input === 'down') {
-            playerShip.physicsObj.applyForce([0, this.shipSpeed]); // playerShip.physicsObj.applyForceLocal([0,-this.shipSpeed]);
+            playerShip.physicsObj.applyForceLocal([0, -this.shipSpeed]);
           } else if (inputData.input === 'space') {
             this.emit('shoot', playerShip);
           }
