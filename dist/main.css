@@ -1,8 +1,14 @@
 @font-face {
-    font-family: 'ONEDAY';
-    /*font-style: normal;
-    font-weight: normal; */
-    src: url('ONEDAY.ttf') format('truetype');
+    font-family: "ONEDAY";
+    src: url("./fonts/ONEDAY.eot"); /* IE9 Compat Modes */
+    src: url("./fonts/ONEDAY.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./fonts/ONEDAY.otf") format("opentype"), /* Open Type Font */
+    url("./fonts/ONEDAY.svg") format("svg"), /* Legacy iOS */
+    url("./fonts/ONEDAY.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("./fonts/ONEDAY.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/ONEDAY.woff2") format("woff2"); /* Modern Browsers */
+    font-weight: normal;
+    font-style: normal;
 }
 
 body {
