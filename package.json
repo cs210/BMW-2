@@ -46,6 +46,5 @@
     "multiplayer",
     "websockets"
   ],
-  "author": "Gary Weiss",
   "license": "Apache-2.0"
 }
