@@ -15719,6 +15719,7 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
 
       this.lives = other.lives;
       this.won = other.won;
+      this.name = other.name;
     }
   }, {
     key: "bending",
@@ -15746,6 +15747,9 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
         },
         won: {
           type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.INT8
+        },
+        name: {
+          type: __WEBPACK_IMPORTED_MODULE_0_lance_gg__["BaseTypes"].TYPES.STRING
         }
       }, _get(_getPrototypeOf(Ship), "netScheme", this));
     }
@@ -45530,6 +45534,8 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     ctx.strokeStyle = ctx.fillStyle = 'white';
     ctx.shadowBlur = 10;
     ctx.shadowColor = "white";
+    ctx.font = "0.2px ONEDAY";
+    ctx.textAlign = "center";
     _this.viewer = false;
     _this.groupShipPID = null; // remove instructions on first input
 
@@ -45556,13 +45562,14 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
 
       ctx.save();
       ctx.translate(game.w / 2, game.h / 2); // Translate to the center
+      // ctx.scale(game.zoom, -game.zoom);  // Zoom in and flip y axis
 
-      ctx.scale(game.zoom, -game.zoom); // Zoom in and flip y axis
+      ctx.scale(game.zoom, game.zoom); // original y flip doesnt allow for text
       // Draw all things
 
       this.drawBounds();
       game.world.forEachObject(function (id, obj) {
-        if (obj instanceof __WEBPACK_IMPORTED_MODULE_3__common_Ship__["a" /* default */]) _this2.drawShip(obj.physicsObj, obj.playerId === _this2.groupShipPID);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_2__common_Bullet__["a" /* default */]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_4__common_FinishLine__["a" /* default */]) _this2.drawFinishLine(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_1__common_Asteroid__["a" /* default */] && _this2.viewer) _this2.drawAsteroid(obj.physicsObj);
+        if (obj instanceof __WEBPACK_IMPORTED_MODULE_3__common_Ship__["a" /* default */]) _this2.drawShip(obj.physicsObj, obj.playerId === _this2.groupShipPID, obj.name);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_2__common_Bullet__["a" /* default */]) _this2.drawBullet(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_4__common_FinishLine__["a" /* default */]) _this2.drawFinishLine(obj.physicsObj);else if (obj instanceof __WEBPACK_IMPORTED_MODULE_1__common_Asteroid__["a" /* default */] && _this2.viewer) _this2.drawAsteroid(obj.physicsObj);
       }); // update status and restore
 
       this.updateStatus();
@@ -45600,7 +45607,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     }
   }, {
     key: "drawShip",
-    value: function drawShip(body, special) {
+    value: function drawShip(body, special, name) {
       var radius = body.shapes[0].radius;
 
       if (special) {
@@ -45611,6 +45618,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.save();
       ctx.translate(body.position[0], body.position[1]); // Translate to the ship center
 
+      ctx.fillText(name, 0, -0.5);
       ctx.rotate(body.angle); // Rotate to ship orientation
 
       ctx.beginPath();
@@ -45634,7 +45642,8 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       ctx.shadowColor = "#FAF602";
       ctx.save();
       ctx.translate(body.position[0], body.position[1]); // Translate to the center
-      //ctx.rotate(.785);
+
+      ctx.fillText("Finish", 0, 0); //ctx.rotate(.785);
 
       ctx.beginPath();
 
@@ -50084,13 +50093,13 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
 
         if (playerShip) {
           if (inputData.input === 'up') {
-            playerShip.physicsObj.applyForce([0, this.shipSpeed]); // playerShip.physicsObj.applyForceLocal([0,this.shipSpeed]);
+            playerShip.physicsObj.applyForce([0, -this.shipSpeed]); // playerShip.physicsObj.applyForceLocal([0,this.shipSpeed]);
           } else if (inputData.input === 'right') {
             playerShip.physicsObj.applyForce([this.shipSpeed, 0]); // playerShip.physicsObj.angle -= this.shipTurnSpeed;
           } else if (inputData.input === 'left') {
             playerShip.physicsObj.applyForce([-this.shipSpeed, 0]); // playerShip.physicsObj.angle += this.shipTurnSpeed;
           } else if (inputData.input === 'down') {
-            playerShip.physicsObj.applyForce([0, -this.shipSpeed]); // playerShip.physicsObj.applyForceLocal([0,-this.shipSpeed]);
+            playerShip.physicsObj.applyForce([0, this.shipSpeed]); // playerShip.physicsObj.applyForceLocal([0,-this.shipSpeed]);
           } else if (inputData.input === 'space') {
             this.emit('shoot', playerShip);
           }
@@ -50112,6 +50121,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       });
       s.lives = this.lives;
       s.won = false;
+      s.name = "SHIP";
       this.addObjectToWorld(s);
     }
   }, {

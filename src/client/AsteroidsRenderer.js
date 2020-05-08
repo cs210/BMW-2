@@ -29,6 +29,8 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.strokeStyle = ctx.fillStyle = 'white';
         ctx.shadowBlur = 10;
         ctx.shadowColor = "white";
+        ctx.font = "0.2px ONEDAY";
+        ctx.textAlign = "center";
         this.viewer = false;
         this.groupShipPID = null;
         // remove instructions on first input
@@ -50,12 +52,13 @@ export default class AsteroidsRenderer extends Renderer {
         // goes from top to bottom, while physics does the opposite.
         ctx.save();
         ctx.translate(game.w/2, game.h/2); // Translate to the center
-        ctx.scale(game.zoom, -game.zoom);  // Zoom in and flip y axis
+        // ctx.scale(game.zoom, -game.zoom);  // Zoom in and flip y axis
+        ctx.scale(game.zoom, game.zoom); // original y flip doesnt allow for text
 
         // Draw all things
         this.drawBounds();
         game.world.forEachObject((id, obj) => {
-            if (obj instanceof Ship) this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID);
+            if (obj instanceof Ship) this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID, obj.name);
             else if (obj instanceof Bullet) this.drawBullet(obj.physicsObj);
             else if (obj instanceof FinishLine) this.drawFinishLine(obj.physicsObj);
             else if (obj instanceof Asteroid && this.viewer) this.drawAsteroid(obj.physicsObj);
@@ -92,7 +95,7 @@ export default class AsteroidsRenderer extends Renderer {
         document.getElementById('instructionsMobile').classList.add('hidden');
     }
 
-    drawShip(body, special) {
+    drawShip(body, special, name) {
         let radius = body.shapes[0].radius;
         if (special) {
             ctx.strokeStyle = ctx.fillStyle = "#18CAE6";
@@ -100,6 +103,7 @@ export default class AsteroidsRenderer extends Renderer {
         }
         ctx.save();
         ctx.translate(body.position[0], body.position[1]); // Translate to the ship center
+        ctx.fillText(name, 0, -0.5);
         ctx.rotate(body.angle); // Rotate to ship orientation
         ctx.beginPath();
         for(let j = 0; j < 3; j++) {
@@ -120,6 +124,7 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.shadowColor = "#FAF602";
         ctx.save();
         ctx.translate(body.position[0], body.position[1]);  // Translate to the center
+        ctx.fillText("Finish", 0, 0);
         //ctx.rotate(.785);
         ctx.beginPath();
         for(let j = 0; j < game.numAsteroidVerts; j++) {

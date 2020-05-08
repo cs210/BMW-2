@@ -80,7 +80,7 @@ export default class AsteroidsGameEngine extends GameEngine {
             let playerShip = this.world.queryObject({ playerId: playerId, instanceType: Ship });
             if (playerShip) {
                 if (inputData.input === 'up') {
-                    playerShip.physicsObj.applyForce([0,this.shipSpeed]);
+                    playerShip.physicsObj.applyForce([0,-this.shipSpeed]);
                     // playerShip.physicsObj.applyForceLocal([0,this.shipSpeed]);
                 } else if (inputData.input === 'right') {
                     playerShip.physicsObj.applyForce([this.shipSpeed, 0]);
@@ -89,7 +89,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                     playerShip.physicsObj.applyForce([-this.shipSpeed, 0]);
                     // playerShip.physicsObj.angle += this.shipTurnSpeed;
                 } else if (inputData.input === 'down') {
-                    playerShip.physicsObj.applyForce([0,-this.shipSpeed]);
+                    playerShip.physicsObj.applyForce([0,this.shipSpeed]);
                     // playerShip.physicsObj.applyForceLocal([0,-this.shipSpeed]);
                 } else if (inputData.input === 'space') {
                     this.emit('shoot', playerShip);
@@ -111,6 +111,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         });
         s.lives = this.lives;
         s.won = false;
+        s.name = "SHIP";
         this.addObjectToWorld(s);
     }
 

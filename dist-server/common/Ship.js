@@ -88,6 +88,7 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
 
       this.lives = other.lives;
       this.won = other.won;
+      this.name = other.name;
     }
   }, {
     key: "bending",
@@ -115,6 +116,9 @@ var Ship = /*#__PURE__*/function (_PhysicalObject2D) {
         },
         won: {
           type: _lanceGg.BaseTypes.TYPES.INT8
+        },
+        name: {
+          type: _lanceGg.BaseTypes.TYPES.STRING
         }
       }, _get(_getPrototypeOf(Ship), "netScheme", this));
     }
