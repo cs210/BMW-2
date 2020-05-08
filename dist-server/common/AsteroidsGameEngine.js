@@ -179,6 +179,21 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       this.addObjectToWorld(s);
     }
   }, {
+    key: "addShipOnReset",
+    value: function addShipOnReset(playerId, lives) {
+      var s = new _Ship["default"](this, {}, {
+        playerId: playerId,
+        mass: 10,
+        angularVelocity: 0,
+        position: new _lanceGg.TwoVector(-6.4, -3.6),
+        velocity: new _lanceGg.TwoVector(0, 0)
+      });
+      s.lives = lives;
+      console.log("lives now: " + s.lives);
+      s.won = false;
+      this.addObjectToWorld(s);
+    }
+  }, {
     key: "getRandInt",
     value: function getRandInt(min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
@@ -265,7 +280,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
         for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var o = _step3.value;
           this.removeObjectFromWorld(o.id);
-          this.addShip(o.playerId);
+          this.addShipOnReset(o.playerId, o.lives);
         }
       } catch (err) {
         _iterator3.e(err);

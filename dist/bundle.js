@@ -45391,6 +45391,7 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
           });
 
           _this3.socket.on('waitingForPlayer', function (data) {
+            document.querySelector('#instructions').classList.remove('hidden');
             document.getElementById('waiting-room-overlay').style.display = 'block';
             document.getElementById('waiting-room-container').style.display = 'block';
 
@@ -45407,6 +45408,7 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
           });
 
           _this3.socket.on('gameBegin', function (data) {
+            document.querySelector('#instructions').classList.add('hidden');
             $('#waiting-room-overlay').remove();
             _this3.gameEngine.playerReady[_this3.gameEngine.playerId] = true;
             _this3.renderer.groupShipPID = data.ship_pid;
@@ -45537,9 +45539,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     ctx.font = "0.2px ONEDAY";
     ctx.textAlign = "center";
     _this.viewer = false;
-    _this.groupShipPID = null; // remove instructions on first input
-
-    setTimeout(_this.removeInstructions.bind(_assertThisInitialized(_this)), 5000);
+    _this.groupShipPID = null;
     return _this;
   }
 
@@ -45589,14 +45589,14 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       } // update lives if necessary
 
 
-      if (playerShip.playerId === this.groupShipPID && this.lives !== playerShip.lives) {
-        document.getElementById('lives').innerHTML = 'Lives ' + playerShip.lives;
+      if (playerShip.playerId === this.groupShipPID && this.lives != playerShip.lives) {
+        document.getElementById('lives').innerHTML = 'Score: ' + playerShip.lives;
         this.lives = playerShip.lives;
       } // update winning if necessary
 
 
-      if (playerShip.playerId === this.groupShipPID && playerShip.won) {
-        document.getElementById('gamewin').classList.remove('hidden');
+      if (playerShip.playerId === this.groupShipPID && playerShip.won) {//document.getElementById('gamewin').classList.remove('hidden');
+        // this.lives++;
       }
     }
   }, {
@@ -50125,6 +50125,21 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
       this.addObjectToWorld(s);
     }
   }, {
+    key: "addShipOnReset",
+    value: function addShipOnReset(playerId, lives) {
+      var s = new __WEBPACK_IMPORTED_MODULE_3__Ship__["a" /* default */](this, {}, {
+        playerId: playerId,
+        mass: 10,
+        angularVelocity: 0,
+        position: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](-6.4, -3.6),
+        velocity: new __WEBPACK_IMPORTED_MODULE_0_lance_gg__["TwoVector"](0, 0)
+      });
+      s.lives = lives;
+      console.log("lives now: " + s.lives);
+      s.won = false;
+      this.addObjectToWorld(s);
+    }
+  }, {
     key: "getRandInt",
     value: function getRandInt(min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
@@ -50211,7 +50226,7 @@ var AsteroidsGameEngine = /*#__PURE__*/function (_GameEngine) {
         for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var o = _step3.value;
           this.removeObjectFromWorld(o.id);
-          this.addShip(o.playerId);
+          this.addShipOnReset(o.playerId, o.lives);
         }
       } catch (err) {
         _iterator3.e(err);

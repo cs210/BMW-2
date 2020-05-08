@@ -92,9 +92,12 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
     gameWon(ship) {
         ship.won = true;
+        ship.lives++; //ADDED
+        //this.lives++;
         this.gameEngine.removeAllBarriers();
         // restart game
         if (this.gameEngine.world.queryObjects({ instanceType: Asteroid }).length === 0) {
+            console.log("restarting");
             this.currentWorld = this.gameEngine.addBarriers(this.currentWorld);
             this.gameEngine.resetShip();
             this.gameEngine.addFinishLine();

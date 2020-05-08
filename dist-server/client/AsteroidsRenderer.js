@@ -77,9 +77,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     ctx.font = "0.2px ONEDAY";
     ctx.textAlign = "center";
     _this.viewer = false;
-    _this.groupShipPID = null; // remove instructions on first input
-
-    setTimeout(_this.removeInstructions.bind(_assertThisInitialized(_this)), 5000);
+    _this.groupShipPID = null;
     return _this;
   }
 
@@ -129,14 +127,14 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
       } // update lives if necessary
 
 
-      if (playerShip.playerId === this.groupShipPID && this.lives !== playerShip.lives) {
-        document.getElementById('lives').innerHTML = 'Lives ' + playerShip.lives;
+      if (playerShip.playerId === this.groupShipPID && this.lives != playerShip.lives) {
+        document.getElementById('lives').innerHTML = 'Score: ' + playerShip.lives;
         this.lives = playerShip.lives;
       } // update winning if necessary
 
 
-      if (playerShip.playerId === this.groupShipPID && playerShip.won) {
-        document.getElementById('gamewin').classList.remove('hidden');
+      if (playerShip.playerId === this.groupShipPID && playerShip.won) {//document.getElementById('gamewin').classList.remove('hidden');
+        // this.lives++;
       }
     }
   }, {

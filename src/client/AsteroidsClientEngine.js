@@ -105,6 +105,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 });
 
                 this.socket.on('waitingForPlayer', (data) => {
+                    document.querySelector('#instructions').classList.remove('hidden');
                     document.getElementById('waiting-room-overlay').style.display = 'block';
                     document.getElementById('waiting-room-container').style.display = 'block';
                     this.renderer.showCanvas();
@@ -117,6 +118,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 });
 
                 this.socket.on('gameBegin', (data) => {
+                    document.querySelector('#instructions').classList.add('hidden');
                     $('#waiting-room-overlay').remove();
                     this.gameEngine.playerReady[this.gameEngine.playerId] = true;
                     this.renderer.groupShipPID = data.ship_pid;

@@ -176,6 +176,7 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
           });
 
           _this3.socket.on('waitingForPlayer', function (data) {
+            document.querySelector('#instructions').classList.remove('hidden');
             document.getElementById('waiting-room-overlay').style.display = 'block';
             document.getElementById('waiting-room-container').style.display = 'block';
 
@@ -192,6 +193,7 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
           });
 
           _this3.socket.on('gameBegin', function (data) {
+            document.querySelector('#instructions').classList.add('hidden');
             $('#waiting-room-overlay').remove();
             _this3.gameEngine.playerReady[_this3.gameEngine.playerId] = true;
             _this3.renderer.groupShipPID = data.ship_pid;
