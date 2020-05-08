@@ -80,13 +80,13 @@ export default class AsteroidsGameEngine extends GameEngine {
             let playerShip = this.world.queryObject({ playerId: playerId, instanceType: Ship });
             if (playerShip) {
                 if (inputData.input === 'up') {
-                    playerShip.physicsObj.applyForceLocal([0,this.shipSpeed]);
+                    playerShip.physicsObj.applyForceLocal([0, -this.shipSpeed]);
                 } else if (inputData.input === 'right') {
                     playerShip.physicsObj.angle += this.shipTurnSpeed;
                 } else if (inputData.input === 'left') {
                     playerShip.physicsObj.angle -= this.shipTurnSpeed;
                 } else if (inputData.input === 'down') {
-                    playerShip.physicsObj.applyForceLocal([0,-this.shipSpeed]);
+                    playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
                 } else if (inputData.input === 'space') {
                     this.emit('shoot', playerShip);
                 }
@@ -102,7 +102,7 @@ export default class AsteroidsGameEngine extends GameEngine {
             playerId: playerId,
             mass: 10,
             angularVelocity: 0,
-            position: new TwoVector(-6.4, -3.6),
+            position: new TwoVector(-6.4, 3.6),
             velocity: new TwoVector(0, 0),
         });
         s.score = 0;
@@ -117,7 +117,7 @@ export default class AsteroidsGameEngine extends GameEngine {
             playerId: playerId,
             mass: 10,
             angularVelocity: 0,
-            position: new TwoVector(-6.4, -3.6),
+            position: new TwoVector(-6.4, 3.6),
             velocity: new TwoVector(0, 0),
         });
         s.score = score;
@@ -155,7 +155,7 @@ export default class AsteroidsGameEngine extends GameEngine {
     addFinishLine() {
         let a = new FinishLine(this, {}, {
             mass: 10000,
-            position: new TwoVector(6.5, 3.75),
+            position: new TwoVector(6.5, -3.75),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
         }, new TwoVector(1, 1));
@@ -220,7 +220,7 @@ export default class AsteroidsGameEngine extends GameEngine {
     world_one() {
         let a = new Asteroid(this, {}, {
             mass: 100000,
-            position: new TwoVector(-5, -1.5),
+            position: new TwoVector(-5, 1.5),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
         }, new TwoVector(1, 3));
@@ -232,7 +232,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         // add asteroids to the bottom half of the screen
         let a = new Asteroid(this, {}, {
             mass: 100000,
-            position: new TwoVector(-5, -1.5),
+            position: new TwoVector(-5, 1.5),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
         }, new TwoVector(1, 7));
@@ -242,7 +242,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         // add asteroids to the bottom half of the screen
         let b = new Asteroid(this, {}, {
             mass: 100000,
-            position: new TwoVector(5, 1.5),
+            position: new TwoVector(5, -1.5),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
         }, new TwoVector(1, 7));
@@ -251,7 +251,7 @@ export default class AsteroidsGameEngine extends GameEngine {
 
         let c = new Asteroid(this, {}, {
             mass: 100000,
-            position: new TwoVector(0, 3),
+            position: new TwoVector(0, -3),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
         }, new TwoVector(1, 4));
@@ -260,7 +260,7 @@ export default class AsteroidsGameEngine extends GameEngine {
 
         let d = new Asteroid(this, {}, {
             mass: 100000,
-            position: new TwoVector(0, -3),
+            position: new TwoVector(0, 3),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
         }, new TwoVector(1, 4));
@@ -272,7 +272,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         // add asteroids to the bottom half of the screen
         let a = new Asteroid(this, {}, {
             mass: 100000,
-            position: new TwoVector(-1.5, -2),
+            position: new TwoVector(-1.5, 2),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
         }, new TwoVector(13, 1));
@@ -282,7 +282,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         // add asteroids to the bottom half of the screen
         let b = new Asteroid(this, {}, {
             mass: 100000,
-            position: new TwoVector(1.5, 2),
+            position: new TwoVector(1.5, -2),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
         }, new TwoVector(13, 1));
@@ -294,7 +294,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         // add asteroids to the bottom half of the screen
         let a = new Asteroid(this, {}, {
             mass: 100000,
-            position: new TwoVector(-1.5, -2),
+            position: new TwoVector(-1.5, 2),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
         }, new TwoVector(13, 1));
@@ -303,7 +303,7 @@ export default class AsteroidsGameEngine extends GameEngine {
 
         let c = new Asteroid(this, {}, {
             mass: 100000,
-            position: new TwoVector(0, 3),
+            position: new TwoVector(0, -3),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
         }, new TwoVector(1, 4));
