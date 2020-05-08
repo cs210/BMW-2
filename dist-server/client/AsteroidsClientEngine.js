@@ -178,6 +178,9 @@ var AsteroidsClientEngine = /*#__PURE__*/function (_ClientEngine) {
           _this3.socket.on('waitingForPlayer', function (data) {
             document.getElementById('waiting-room-overlay').style.display = 'block';
             document.getElementById('waiting-room-container').style.display = 'block';
+
+            _this3.renderer.showCanvas();
+
             _this3.viewer = _this3.renderer.viewer = data.viewer;
             $('#start-submit').click(function () {
               _this3.socket.emit('playerReady', {

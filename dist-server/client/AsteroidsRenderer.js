@@ -61,6 +61,7 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
     game = gameEngine; // Init canvas
 
     canvas = document.createElement('canvas');
+    canvas.style.visibility = 'hidden';
     canvas.width = window.innerWidth * window.devicePixelRatio;
     canvas.height = window.innerHeight * window.devicePixelRatio;
     document.body.insertBefore(canvas, document.getElementById('logo'));
@@ -81,6 +82,11 @@ var AsteroidsRenderer = /*#__PURE__*/function (_Renderer) {
   }
 
   _createClass(AsteroidsRenderer, [{
+    key: "showCanvas",
+    value: function showCanvas() {
+      canvas.style.visibility = 'visible';
+    }
+  }, {
     key: "draw",
     value: function draw(t, dt) {
       var _this2 = this;

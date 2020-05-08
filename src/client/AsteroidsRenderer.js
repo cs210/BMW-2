@@ -16,6 +16,7 @@ export default class AsteroidsRenderer extends Renderer {
 
         // Init canvas
         canvas = document.createElement('canvas');
+        canvas.style.visibility = 'hidden';
         canvas.width = window.innerWidth * window.devicePixelRatio;
         canvas.height = window.innerHeight * window.devicePixelRatio;
         document.body.insertBefore(canvas, document.getElementById('logo'));
@@ -32,6 +33,10 @@ export default class AsteroidsRenderer extends Renderer {
         this.groupShipPID = null;
         // remove instructions on first input
         setTimeout(this.removeInstructions.bind(this), 5000);
+    }
+
+    showCanvas() {
+        canvas.style.visibility = 'visible';
     }
 
     draw(t, dt) {

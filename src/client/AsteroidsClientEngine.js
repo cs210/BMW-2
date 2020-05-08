@@ -107,6 +107,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 this.socket.on('waitingForPlayer', (data) => {
                     document.getElementById('waiting-room-overlay').style.display = 'block';
                     document.getElementById('waiting-room-container').style.display = 'block';
+                    this.renderer.showCanvas();
                     this.viewer = this.renderer.viewer = data.viewer;
 
                     $('#start-submit').click(() => {
