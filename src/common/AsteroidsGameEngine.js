@@ -110,6 +110,20 @@ export default class AsteroidsGameEngine extends GameEngine {
         this.addObjectToWorld(s);
     }
 
+    addShipOnReset(playerId, lives) {
+        let s = new Ship(this, {}, {
+            playerId: playerId,
+            mass: 10,
+            angularVelocity: 0,
+            position: new TwoVector(-6.4, -3.6),
+            velocity: new TwoVector(0, 0),
+        });
+        s.lives = lives;
+        console.log("lives now: "+ s.lives);
+        s.won = false;
+        this.addObjectToWorld(s);
+    }
+
     getRandInt(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
     }
@@ -157,7 +171,7 @@ export default class AsteroidsGameEngine extends GameEngine {
     resetShip() {
         for (let o of this.world.queryObjects({ instanceType: Ship })) {
             this.removeObjectFromWorld(o.id);
-            this.addShip(o.playerId);
+            this.addShipOnReset(o.playerId, o.lives);
         }
     }
 

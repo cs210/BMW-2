@@ -71,14 +71,15 @@ export default class AsteroidsRenderer extends Renderer {
         }
 
         // update lives if necessary
-        if (playerShip.playerId === this.groupShipPID && this.lives !== playerShip.lives) {
-            document.getElementById('lives').innerHTML = 'Lives ' + playerShip.lives;
+        if (playerShip.playerId === this.groupShipPID && this.lives != playerShip.lives) {
+            document.getElementById('lives').innerHTML = 'Score ' + playerShip.lives;
             this.lives = playerShip.lives;
         }
 
         // update winning if necessary
         if (playerShip.playerId === this.groupShipPID && playerShip.won) {
-            document.getElementById('gamewin').classList.remove('hidden');
+            //document.getElementById('gamewin').classList.remove('hidden');
+            this.lives++;
         }
     }
 
