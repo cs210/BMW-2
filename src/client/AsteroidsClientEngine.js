@@ -36,6 +36,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
             this.controls.bindKey('right', 'right', { repeat: true } );
             this.controls.bindKey('space', 'space');
         }
+        this.gameStarted = false;
     }
 
     handleButton(action, ev) {
@@ -120,6 +121,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 this.socket.on('gameBegin', (data) => {
                     document.querySelector('#instructions').classList.add('hidden');
                     $('#waiting-room-overlay').remove();
+                    this.gameStarted = true;
                     this.gameEngine.playerReady[this.gameEngine.playerId] = true;
                     this.renderer.groupShipPID = data.ship_pid;
                 });
@@ -131,12 +133,16 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 });
 
                 this.socket.on('groupUpdate', (groupData) => {
-                    document.getElementById('controller_label').innerHTML = groupData.c_playerName;
-                    document.getElementById('viewer_label').innerHTML = groupData.v_playerName;
-                    document.getElementById('controller_ready_img').style.visibility =
-                        (groupData.c_ready ? 'visible' : 'hidden');
-                    document.getElementById('viewer_ready_img').style.visibility =
-                        (groupData.v_ready ? 'visible' : 'hidden');
+                    if (this.gameStarted) {
+                        document.getElementById('other_player_disconnect').style.display = 'block';
+                    } else {
+                        document.getElementById('controller_label').innerHTML = groupData.c_playerName;
+                        document.getElementById('viewer_label').innerHTML = groupData.v_playerName;
+                        document.getElementById('controller_ready_img').style.visibility =
+                            (groupData.c_ready ? 'visible' : 'hidden');
+                        document.getElementById('viewer_ready_img').style.visibility =
+                            (groupData.v_ready ? 'visible' : 'hidden');
+                    }
                 });
 
                 this.socket.on('worldUpdate', (worldData) => {
