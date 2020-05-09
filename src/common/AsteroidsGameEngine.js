@@ -121,7 +121,6 @@ export default class AsteroidsGameEngine extends GameEngine {
             velocity: new TwoVector(0, 0),
         });
         s.score = score;
-        console.log("score now: "+ s.score);
         s.won = false;
         s.c_name = c_name;
         s.v_name = v_name;

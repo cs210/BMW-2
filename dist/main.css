@@ -47,7 +47,7 @@ canvas {
 }
 
 .textBox {
-    margin:10px;
+    margin:30px;
     position:absolute;
 }
 .textBox.centered {

@@ -54,7 +54,7 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.scale(game.zoom, game.zoom); // original y flip doesnt allow for text
 
         // Draw all things
-        this.drawBounds();
+        //this.drawBounds();
         game.world.forEachObject((id, obj) => {
             if (obj instanceof Ship) this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID, obj.c_name, obj.v_name);
             else if (obj instanceof Bullet) this.drawBullet(obj.physicsObj);
