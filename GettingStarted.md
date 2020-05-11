@@ -8,12 +8,12 @@ The only files we should be editing are in:
 - dist/main.css
 
 
-main.js
+### main.js
 - starts express server, listens on port
 - creates and starts AsteroidsServerEngine
     - contains a AsteroidsGameEngine
 
-AsteroidsServerEngine.js
+### AsteroidsServerEngine.js
 - Starts collision tracking
 - initializes playerGroups and playerReady
 - adds walls and finish line

@@ -71,21 +71,29 @@ canvas {
     left:0;
     bottom:0;
 }
-.info-button{
+.info-button {
     color: black;
     background-color:#feb22a;
-    width:34px;
-    height:34px;
+    width: 34px;
+    height: 34px;
     border-radius:100%;
-    font-size:12px;
-    text-align:center;
+    font-size: 12px;
+    text-align: center;
     position: absolute;
     right: 1%;
     bottom: 1%;
     line-height: 34px;
     z-index: 2;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                         supported by Chrome, Edge, Opera and Firefox */
 }
-.info-button .tooltiptext{
+
+.info-button .tooltiptext {
     visibility: hidden;
     width: 310px;
     background-color: #18CAE6;
@@ -101,12 +109,15 @@ canvas {
     top: -125%;
     right: 125%;
 }
-.info-button:hover .tooltiptext{
+
+.info-button:hover .tooltiptext {
     visibility: visible;
 }
+
 .hidden {
     display: none;
 }
+
 .actionButton {
     opacity: 0;
     transition: all 0.5s ease-in;
@@ -153,7 +164,7 @@ canvas {
     right: 0;
     bottom: 0;
     left: 0;
-    <!-- background-color: rgba(49, 49, 49, 0.5); -->
+    /* background-color: rgba(49, 49, 49, 0.5); */
 }
 
 .input_container{
@@ -303,4 +314,3 @@ canvas {
 #icons-container > div {
     display: inline-block;
 }
-

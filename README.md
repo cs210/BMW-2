@@ -4,6 +4,9 @@
 
 Maestro is redesigning the driving experience for users of autonomous cars by combining micro-gestures and gaze tracking to transform what you can accomplish on your daily commute.
 
+Maestro is also working on a super fun game that you can check out here:
+[Maze Game](http://35.239.36.68:3000)
+
 # Team Members
 Member | Photograph | Email
 --- | --- | ---
