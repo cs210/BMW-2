@@ -105,22 +105,22 @@ export default class AsteroidsClientEngine extends ClientEngine {
                     this.socket.emit('playerDataUpdate', this.playerOptions);
                 });
 
-                this.socket.on('waitingForPlayer', (data) => {
+                this.socket.on('waitingForPlayer', () => {
                     document.querySelector('#instructions').classList.remove('hidden');
                     document.getElementById('waiting-room-overlay').style.display = 'block';
                     document.getElementById('waiting-room-container').style.display = 'block';
-                    this.renderer.showCanvas();
-                    this.viewer = this.renderer.viewer = data.viewer;
 
                     $('#start-submit').click(() => {
-                        this.socket.emit('playerReady', {viewer : this.viewer});
+                        this.socket.emit('playerReady');
                         document.getElementById('start-submit').style.visibility = 'hidden';
                     });
                 });
 
+                //TODO: change to new format
                 this.socket.on('gameBegin', (data) => {
                     document.querySelector('#instructions').classList.add('hidden');
                     $('#waiting-room-overlay').remove();
+                    this.renderer.showCanvas(); // Shows game to player
                     this.gameStarted = true;
                     this.gameEngine.playerReady[this.gameEngine.playerId] = true;
                     this.renderer.groupShipPID = data.ship_pid;
@@ -132,16 +132,23 @@ export default class AsteroidsClientEngine extends ClientEngine {
                     document.getElementById('name-prompt-container').style.display = 'block';
                 });
 
+                //TODO: change to new format
                 this.socket.on('groupUpdate', (groupData) => {
+                    console.log('Group Update: ');
+                    console.log(groupData);
                     if (this.gameStarted) {
                         document.getElementById('other_player_disconnect').style.display = 'block';
                     } else {
-                        document.getElementById('controller_label').innerHTML = groupData.c_playerName;
-                        document.getElementById('viewer_label').innerHTML = groupData.v_playerName;
-                        document.getElementById('controller_ready_img').style.visibility =
-                            (groupData.c_ready ? 'visible' : 'hidden');
-                        document.getElementById('viewer_ready_img').style.visibility =
-                            (groupData.v_ready ? 'visible' : 'hidden');
+                        let curr_ind = 1;
+                        for (const [socketId, playerObj] of Object.entries(groupData)) {
+                            document.getElementById('player_label' + curr_ind).innerHTML = playerObj.playerName;
+                            document.getElementById('player_ready_img' + curr_ind).style.visibility =
+                                (playerObj.ready ? 'visible' : 'hidden');
+                            curr_ind += 1;
+                        }
+                        for (let i = curr_ind; i < 11; i++) {
+                            document.getElementById('player_ready_img' + i).style.visibility = 'hidden';
+                        }
                     }
                 });
 

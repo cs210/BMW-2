@@ -34,9 +34,14 @@ canvas {
     position:absolute;
 }
 
-.column {
+.left_column {
     float: left;
-    width: 50%;
+    width: 80%;
+}
+
+.right_column {
+    float: left;
+    width: 20%;
 }
 
 /* Clear floats after the columns */
@@ -56,7 +61,7 @@ canvas {
     margin-left: -450px;
     margin-top: -50px;
     position: absolute;
-    top:20%;
+    top:10%;
     left:50%;
     vertical-align: middle;
     text-align: center;
@@ -107,6 +112,7 @@ canvas {
 .hidden {
     display: none;
 }
+
 .actionButton {
     opacity: 0;
     transition: all 0.5s ease-in;
@@ -197,16 +203,18 @@ canvas {
 #waiting-room-overlay #waiting-room-container {
     display: none;
     width: 600px;
-    height: 300px;
+    height: 530px;
+    top: 25%;
 }
 
 .name_labels_centered {
     display: block;
     text-align: center;
+    height: 24px;
 }
 
-.name_labels_centered.bottom_margin {
-    margin-bottom: 20px;
+.top_margin {
+    padding-top: 10px;
 }
 
 .obj_centered{
