@@ -109,7 +109,8 @@ export default class AsteroidsGameEngine extends GameEngine {
     }
 
     getRandInt(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
+        // Includes min and max.
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     resetAllShips() {
@@ -194,11 +195,9 @@ export default class AsteroidsGameEngine extends GameEngine {
      * 10 different levels
      */
     addBarriers(currentWorld) {
-        const NUM_WORLDS = 7;
-
         let world_choice = currentWorld;
         while (!world_choice || world_choice === currentWorld) {
-            world_choice = this.getRandInt(0, NUM_WORLDS + 1);
+            world_choice = this.getRandInt(0, 7);
         }
         switch(world_choice) {
             case 0:
