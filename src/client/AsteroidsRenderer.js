@@ -23,14 +23,8 @@ export default class AsteroidsRenderer extends Renderer {
         game.w = canvas.width;
         game.h = canvas.height;
         game.zoom = game.h / game.spaceHeight;
-        //attempt at changing ratio but it's not working. doesn't change anything currently.
-        if (game.w / game.h > (16/9)) { 
-            game.w = game.h * (16/9);
-            canvas.width = canvas.height * (16/9);
-        } else {
-            game.h = game.w / (16/9);
-            canvas.height = canvas.width / (16/9);
-        }
+        if (game.w / game.spaceWidth < game.zoom) game.zoom = game.w / game.spaceWidth;
+        game.zoom = game.h/game.spaceHeight;
         ctx = canvas.getContext('2d');
         ctx.lineWidth = 2 / game.zoom;
         ctx.strokeStyle = ctx.fillStyle = 'white';
@@ -59,7 +53,7 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.translate(game.w/2, game.h/2); // Translate to the center
         // ctx.scale(game.zoom, -game.zoom);  // Zoom in and flip y axis
         ctx.scale(game.zoom, game.zoom); // original y flip doesnt allow for text
-
+        console.log("hello");
         // Draw all things
         //this.drawBounds();
         game.world.forEachObject((id, obj) => {
