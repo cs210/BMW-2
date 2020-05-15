@@ -39,7 +39,6 @@ export default class AsteroidsGameEngine extends GameEngine {
 
     // If the body is out of space bounds, warp it to the other side
     warpAll() {
-
         this.world.forEachObject((id, obj) => {
             let p = obj.position;
             let v = obj.velocity;
@@ -72,9 +71,7 @@ export default class AsteroidsGameEngine extends GameEngine {
     }
 
     processInput(inputData, playerId) {
-
         super.processInput(inputData, playerId);
-
         if (playerId in this.playerReady && this.playerReady[playerId]) {
             // handle keyboard presses
             let playerShip = this.world.queryObject({ playerId: playerId, instanceType: Ship });
@@ -90,29 +87,13 @@ export default class AsteroidsGameEngine extends GameEngine {
                 } else if (inputData.input === 'space') {
                     this.emit('shoot', playerShip);
                 }
-
                 playerShip.refreshFromPhysics();
             }
         }
     }
 
     // create ship
-    addShip(playerId, c_name, v_name) {
-        let s = new Ship(this, {}, {
-            playerId: playerId,
-            mass: 10,
-            angularVelocity: 0,
-            position: new TwoVector(-6.4, 3.6),
-            velocity: new TwoVector(0, 0),
-        });
-        s.score = 0;
-        s.won = false;
-        s.c_name = c_name;
-        s.v_name = v_name;
-        this.addObjectToWorld(s);
-    }
-
-    addShipOnReset(playerId, c_name, v_name, score) {
+    addShip(playerId, c_name, v_name, score = 0) {
         let s = new Ship(this, {}, {
             playerId: playerId,
             mass: 10,
@@ -128,33 +109,13 @@ export default class AsteroidsGameEngine extends GameEngine {
     }
 
     getRandInt(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
-
-    // Add finishline
-    addFinishLine() {
-        let a = new FinishLine(this, {}, {
-            mass: 10000,
-            position: new TwoVector(6.5, -3.75),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(1, 1));
-        a.level = 0;
-        this.addObjectToWorld(a);
-    }
-
-    removeAllBarriers() {
-        for (let o of this.world.queryObjects({ instanceType: Asteroid })) {
-            this.removeObjectFromWorld(o.id);
-        }
-        for (let o of this.world.queryObjects({ instanceType: FinishLine })) {
-            this.removeObjectFromWorld(o.id);
-        }
+        // Includes min and max.
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     resetAllShips() {
         for (let o of this.world.queryObjects({ instanceType: Ship })) {
-            this.resetShip(o)
+            this.resetShip(o);
         }
     }
 
@@ -164,7 +125,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         let v_name = ship.v_name;
         let old_pid = ship.playerId;
         this.removeObjectFromWorld(ship.id);
-        this.addShipOnReset(old_pid, c_name, v_name, old_score);
+        this.addShip(old_pid, c_name, v_name, old_score);
     }
 
     // asteroid explosion
@@ -197,13 +158,51 @@ export default class AsteroidsGameEngine extends GameEngine {
         */
     }
 
-    // create asteroids
+    buildBarrier(posX, posY, sizeX, sizeY) {
+        let barrier = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(posX, posY),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(sizeX, sizeY));
+        barrier.level = 0;
+        this.addObjectToWorld(barrier);
+    }
+
+    // Add finishline
+    addFinishLine(posX, posY) {
+        let a = new FinishLine(this, {}, {
+            mass: 10000,
+            position: new TwoVector(posX, posY),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(1, 1));
+        a.level = 0;
+        this.addObjectToWorld(a);
+    }
+
+    removeAllBarriers() {
+        for (let o of this.world.queryObjects({ instanceType: Asteroid })) {
+            this.removeObjectFromWorld(o.id);
+        }
+        for (let o of this.world.queryObjects({ instanceType: FinishLine })) {
+            this.removeObjectFromWorld(o.id);
+        }
+    }
+
+    /*
+     * World Generation Code
+     * 10 different levels
+     */
     addBarriers(currentWorld) {
         let world_choice = currentWorld;
-        while (world_choice === currentWorld) {
-            world_choice = this.getRandInt(1, 5);
+        while (!world_choice || world_choice === currentWorld) {
+            world_choice = this.getRandInt(0, 7);
         }
         switch(world_choice) {
+            case 0:
+                this.empty_world();
+                break;
             case 1:
                 this.one_block_world();
                 break;
@@ -214,124 +213,102 @@ export default class AsteroidsGameEngine extends GameEngine {
                 this.s_world();
                 break;
             case 4:
-                this.ignore_the_room();
+                this.enter_the_room();
+                break;
+            case 5:
+                this.crossroads();
+                break;
+            case 6:
+                this.s_tunnel();
+                break;
+            case 7:
+                this.spiral();
                 break;
         }
         return world_choice;
     }
 
+    empty_world() {
+        this.addFinishLine(6.5, -3.75);
+    }
+
     one_block_world() {
-        let a = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(-5, 1.5),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(1, 3));
-        a.level = 0;
-        this.addObjectToWorld(a);
+        this.buildBarrier(-5, 1.5, 1, 3);
+        this.addFinishLine(6.5, -3.75);
     }
 
     over_middle_under_world() {
-        // add asteroids to the bottom half of the screen
-        let a = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(-5, 1.5),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(1, 7));
-        a.level = 0;
-        this.addObjectToWorld(a);
-
-        // add asteroids to the bottom half of the screen
-        let b = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(5, -1.5),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(1, 7));
-        b.level = 0;
-        this.addObjectToWorld(b);
-
-        let c = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(0, -3),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(1, 4));
-        c.level = 0;
-        this.addObjectToWorld(c);
-
-        let d = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(0, 3),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(1, 4));
-        d.level = 0;
-        this.addObjectToWorld(d);
+        this.buildBarrier(-5, 1.5, 1, 7);
+        this.buildBarrier(5, -1.5, 1, 7);
+        this.buildBarrier(0, -3, 1, 4);
+        this.buildBarrier(0, 3, 1, 4);
+        this.addFinishLine(6.5, -3.75);
     }
 
     s_world() {
-        // add asteroids to the bottom half of the screen
-        let a = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(-1.5, 2),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(13, 1));
-        a.level = 0;
-        this.addObjectToWorld(a);
-
-        // add asteroids to the bottom half of the screen
-        let b = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(1.5, -2),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(13, 1));
-        b.level = 0;
-        this.addObjectToWorld(b);
+        this.buildBarrier(-1.5, 2, 13, 1);
+        this.buildBarrier(1.5, -2, 13, 1);
+        this.addFinishLine(6.5, -3.75);
     }
 
-    ignore_the_room() {
-        // add asteroids to the bottom half of the screen
-        let a = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(-1.5, 2),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(13, 1));
-        a.level = 0;
-        this.addObjectToWorld(a);
-
-        let c = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(0, -3),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(1, 4));
-        c.level = 0;
-        this.addObjectToWorld(c);
+    enter_the_room() {
+        this.buildBarrier(-1.5, 2, 13, 1);
+        this.buildBarrier(0, -3, 1, 4);
+        this.addFinishLine(-6.5, -3.75);
     }
 
-    world_five() {
-        // add asteroids to the bottom half of the screen
-        let a = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(-1.5, 2),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(13, 1));
-        a.level = 0;
-        this.addObjectToWorld(a);
+    crossroads() {
+        this.buildBarrier(5, 3, 1, 1);
+        this.buildBarrier(5, 0, 1, 1);
+        this.addFinishLine(5, -3);
 
-        let c = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(0, -3),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(1, 4));
-        c.level = 0;
-        this.addObjectToWorld(c);
+        this.buildBarrier(2.5, 3, 1, 1);
+        this.buildBarrier(2.5, 0, 1, 1);
+        this.buildBarrier(2.5, -3, 1, 1);
+
+        this.buildBarrier(0, 3, 1, 1);
+        this.buildBarrier(0, 0, 1, 1);
+        this.buildBarrier(0, -3, 1, 1);
+
+        this.buildBarrier(-2.5, 3, 1, 1);
+        this.buildBarrier(-2.5, 0, 1, 1);
+        this.buildBarrier(-2.5, -3, 1, 1);
+
+        this.buildBarrier(-5, 3, 1, 1);
+        this.buildBarrier(-5, 0, 1, 1);
+        this.buildBarrier(-5, -3, 1, 1);
+    }
+
+    s_tunnel() {
+        // Top and Bottom
+        this.buildBarrier(0, 5, 11, 1);
+        this.buildBarrier(0, -5, 11, 1);
+
+        // Left and Right
+        this.buildBarrier(5, -1, 1, 6);
+        this.buildBarrier(-5, 1, 1, 6);
+
+        // Middle
+        this.buildBarrier(-1, -1.5, 7, 1);
+        this.buildBarrier(1, 1.5, 7, 1);
+
+        this.addFinishLine(6.5, -3.75);
+    }
+
+    spiral() {
+        // Top and Bottom
+        this.buildBarrier(0, 7, 11, 1);
+        this.buildBarrier(0, -7, 11, 1);
+
+        // Left and Right
+        this.buildBarrier(6, 0, 1, 13);
+        this.buildBarrier(-5, 1, 1, 6);
+        this.buildBarrier(2, 0.5, 1, 3);
+
+        // Middle
+        this.buildBarrier(-1, -1.5, 7, 1);
+        this.buildBarrier(0, 1.5, 5, 1);
+
+        this.addFinishLine(0, 0);
     }
 }

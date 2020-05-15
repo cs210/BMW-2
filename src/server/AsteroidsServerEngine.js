@@ -31,7 +31,6 @@ export default class AsteroidsServerEngine extends ServerEngine {
     start() {
         super.start();
         this.gameEngine.addBarriers();
-        this.gameEngine.addFinishLine();
     }
 
     // handle a collision on server only
@@ -86,15 +85,13 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
     gameWon(ship) {
         ship.won = true;
-        ship.score++; //ADDED
-        //this.lives++;
+        ship.score++;
         this.gameEngine.removeAllBarriers();
         // restart game
         if (this.gameEngine.world.queryObjects({ instanceType: Asteroid }).length === 0) {
             console.log("restarting");
             this.currentWorld = this.gameEngine.addBarriers(this.currentWorld);
             this.gameEngine.resetAllShips();
-            this.gameEngine.addFinishLine();
         } else {
             console.log("Error: not all barriers were removed.");
         }

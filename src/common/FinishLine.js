@@ -43,13 +43,14 @@ export default class FinishLine extends PhysicalObject2D {
     }
 
     addFinishLineVerts() {
-        this.physicsObj.verts = [];
         let width = this.physicsObj.shapes[0].width;
         let height = this.physicsObj.shapes[0].height;
-        this.physicsObj.verts.push([-width / 2, -height / 2]);
-        this.physicsObj.verts.push([-width / 2, height / 2]);
-        this.physicsObj.verts.push([width / 2, height / 2]);
-        this.physicsObj.verts.push([width / 2, -height / 2]);
+        this.physicsObj.verts = [
+            [-width / 2, -height / 2],
+            [-width / 2, height / 2],
+            [width / 2, height / 2],
+            [width / 2, -height / 2],
+        ];
     }
 
     // on remove-from-world, remove the physics body
