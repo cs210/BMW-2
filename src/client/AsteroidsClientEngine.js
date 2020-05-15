@@ -106,25 +106,28 @@ export default class AsteroidsClientEngine extends ClientEngine {
                     this.socket.emit('playerDataUpdate', this.playerOptions);
                 });
 
-                this.socket.on('waitingForPlayer', (data) => {
+                this.socket.on('waitingForPlayer', () => {
                     document.querySelector('#instructions').classList.remove('hidden');
                     document.getElementById('waiting-room-overlay').style.display = 'block';
                     document.getElementById('waiting-room-container').style.display = 'block';
-                    this.renderer.showCanvas();
-                    this.viewer = this.renderer.viewer = data.viewer;
 
-                    $('#start-submit').click(() => {
-                        this.socket.emit('playerReady', {viewer : this.viewer});
-                        document.getElementById('start-submit').style.visibility = 'hidden';
+                    $('#start-button').click(() => {
+                        this.socket.emit('playerReady');
+                        // document.getElementById('start-button').style.visibility = 'hidden';
+                    });
+                    $('#switch-button').click(() => {
+                        this.socket.emit('playerSwitchRole');
                     });
                 });
 
                 this.socket.on('gameBegin', (data) => {
                     document.querySelector('#instructions').classList.add('hidden');
                     $('#waiting-room-overlay').remove();
+                    this.viewer = this.renderer.viewer = data.viewer;
                     this.gameStarted = true;
                     this.gameEngine.playerReady[this.gameEngine.playerId] = true;
                     this.renderer.groupShipPID = data.ship_pid;
+                    this.renderer.showCanvas();
                 });
 
                 this.socket.on('groupFull', () => {

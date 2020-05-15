@@ -53,7 +53,7 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.translate(game.w/2, game.h/2); // Translate to the center
         // ctx.scale(game.zoom, -game.zoom);  // Zoom in and flip y axis
         ctx.scale(game.zoom, game.zoom); // original y flip doesnt allow for text
-        console.log("hello");
+
         // Draw all things
         //this.drawBounds();
         game.world.forEachObject((id, obj) => {
@@ -103,8 +103,8 @@ export default class AsteroidsRenderer extends Renderer {
         }
         ctx.save();
         ctx.translate(body.position[0], body.position[1]); // Translate to the ship center
-        ctx.fillText(v_name, 0, -0.6);
-        ctx.fillText(c_name, 0, -0.37);
+        ctx.fillText(v_name, 0, -0.63);
+        ctx.fillText(c_name, 0, -0.4);
         ctx.rotate(body.angle); // Rotate to ship orientation
         ctx.beginPath();
         for(let j = 0; j < 3; j++) {

@@ -123,18 +123,14 @@ export default class AsteroidsServerEngine extends ServerEngine {
                         that.playerGroups[data.privateCode].v_playerName = data.playerName;
                         that.playerGroups[data.privateCode].v_socketID = socket.id;
                         that.playerGroups[data.privateCode].full = true;
-                        socket.emit('waitingForPlayer', {
-                            viewer : true
-                        });
+                        socket.emit('waitingForPlayer');
                         that.sendGroupUpdate(data.privateCode);
                     } else {
                         that.playerGroups[data.privateCode].c_playerID = socket.playerId;
                         that.playerGroups[data.privateCode].c_playerName = data.playerName;
                         that.playerGroups[data.privateCode].c_socketID = socket.id;
                         that.playerGroups[data.privateCode].full = true;
-                        socket.emit('waitingForPlayer', {
-                            viewer : false
-                        });
+                        socket.emit('waitingForPlayer');
                         that.sendGroupUpdate(data.privateCode);
                     }
                 }
@@ -151,28 +147,53 @@ export default class AsteroidsServerEngine extends ServerEngine {
                     v_ready : false,
                     gameStarted: false
                 };
-                socket.emit('waitingForPlayer', {
-                    viewer : false
-                });
+                socket.emit('waitingForPlayer');
                 that.sendGroupUpdate(data.privateCode);
             }
         });
 
-        socket.on('playerReady', function(data) {
+        socket.on('playerReady', function() {
             let groupCode = that.connectedPlayers[socket.id].privateCode;
-            if (data.viewer) {
-                that.playerGroups[groupCode].v_ready = true;
+            if (that.playerGroups[groupCode].v_socketID === socket.id) {
+                that.playerGroups[groupCode].v_ready = !that.playerGroups[groupCode].v_ready;
             } else {
-                that.playerGroups[groupCode].c_ready = true;
+                that.playerGroups[groupCode].c_ready = !that.playerGroups[groupCode].c_ready;
             }
             that.sendGroupUpdate(groupCode);
+
+            // Check for start game
             let group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
             if (group.v_ready && group.c_ready) {
                 that.gameEngine.addShip(group.c_playerID, group.c_playerName, group.v_playerName);
                 that.gameEngine.playerReady[group.c_playerID] = true;
-                that.io.to(group.c_socketID).to(group.v_socketID).emit('gameBegin', {ship_pid : group.c_playerID});
+                that.io.to(group.c_socketID).emit('gameBegin', {
+                    ship_pid : group.c_playerID,
+                    viewer : false
+                });
+                that.io.to(group.v_socketID).emit('gameBegin', {
+                    ship_pid : group.c_playerID,
+                    viewer : true
+                });
                 that.playerGroups[that.connectedPlayers[socket.id].privateCode].gameStarted = true;
             }
+        });
+
+        socket.on('playerSwitchRole', function() {
+            let groupCode = that.connectedPlayers[socket.id].privateCode;
+            let switchedGroup = {
+                c_playerID : that.playerGroups[groupCode].v_playerID,
+                c_playerName : that.playerGroups[groupCode].v_playerName,
+                c_socketID : that.playerGroups[groupCode].v_socketID,
+                v_playerID : that.playerGroups[groupCode].c_playerID,
+                v_playerName : that.playerGroups[groupCode].c_playerName,
+                v_socketID : that.playerGroups[groupCode].c_socketID,
+                full : that.playerGroups[groupCode].full,
+                c_ready : that.playerGroups[groupCode].v_ready,
+                v_ready : that.playerGroups[groupCode].c_ready,
+                gameStarted: false
+            }
+            that.playerGroups[groupCode] = switchedGroup;
+            that.sendGroupUpdate(groupCode);
         });
     }
 
