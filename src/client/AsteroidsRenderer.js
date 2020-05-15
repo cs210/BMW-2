@@ -23,7 +23,14 @@ export default class AsteroidsRenderer extends Renderer {
         game.w = canvas.width;
         game.h = canvas.height;
         game.zoom = game.h / game.spaceHeight;
-        if (game.w / game.spaceWidth < game.zoom) game.zoom = game.w / game.spaceWidth;
+        //attempt at changing ratio but it's not working. doesn't change anything currently.
+        if (game.w / game.h > (16/9)) { 
+            game.w = game.h * (16/9);
+            canvas.width = canvas.height * (16/9);
+        } else {
+            game.h = game.w / (16/9);
+            canvas.height = canvas.width / (16/9);
+        }
         ctx = canvas.getContext('2d');
         ctx.lineWidth = 2 / game.zoom;
         ctx.strokeStyle = ctx.fillStyle = 'white';
@@ -41,7 +48,7 @@ export default class AsteroidsRenderer extends Renderer {
 
     draw(t, dt) {
         super.draw(t, dt);
-
+        
         // Clear the canvas
         ctx.clearRect(0, 0, game.w, game.h);
 

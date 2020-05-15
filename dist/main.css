@@ -37,6 +37,7 @@ canvas {
 .column {
     float: left;
     width: 50%;
+    height: 32%;
 }
 
 /* Clear floats after the columns */
@@ -51,13 +52,15 @@ canvas {
     position:absolute;
 }
 .textBox.centered {
-    width:800px;
-    height:100px;
-    margin-left: -450px;
-    margin-top: -50px;
-    position: absolute;
+    width:50%;
+    height:33%;
+    min-width: 800px;
+    min-height: 100px;
+    position: fixed;
     top:20%;
-    left:50%;
+    left:48%;
+    transform: translate(-50%, -20%);
+    margin-top: -50px;
     vertical-align: middle;
     text-align: center;
 }
@@ -71,29 +74,21 @@ canvas {
     left:0;
     bottom:0;
 }
-.info-button {
+.info-button{
     color: black;
     background-color:#feb22a;
-    width: 34px;
-    height: 34px;
+    width:34px;
+    height:34px;
     border-radius:100%;
-    font-size: 12px;
-    text-align: center;
+    font-size:12px;
+    text-align:center;
     position: absolute;
     right: 1%;
     bottom: 1%;
     line-height: 34px;
     z-index: 2;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                         supported by Chrome, Edge, Opera and Firefox */
 }
-
-.info-button .tooltiptext {
+.info-button .tooltiptext{
     visibility: hidden;
     width: 310px;
     background-color: #18CAE6;
@@ -109,15 +104,12 @@ canvas {
     top: -125%;
     right: 125%;
 }
-
-.info-button:hover .tooltiptext {
+.info-button:hover .tooltiptext{
     visibility: visible;
 }
-
 .hidden {
     display: none;
 }
-
 .actionButton {
     opacity: 0;
     transition: all 0.5s ease-in;
@@ -164,15 +156,14 @@ canvas {
     right: 0;
     bottom: 0;
     left: 0;
-    /* background-color: rgba(49, 49, 49, 0.5); */
 }
 
 .input_container{
-    position: absolute;
-    top: 40%;
+    position: fixed;
+    top: 60%;
     right: 0;
-    left: 0;
-    margin: -50px auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
     padding: 30px;
     z-index: 2;
     border-radius: 10px;
@@ -187,8 +178,10 @@ canvas {
 }
 #name-prompt-overlay #name-prompt-container {
     display: block;
-    width: 490px;
-    height: 220px;
+    width: 33%;
+    height: 33%;
+    min-width: 100px;
+    min-height: 100px;
 }
 #name-prompt-overlay #name-prompt-container input,
 #name-prompt-overlay #name-prompt-container input:focus {
@@ -207,8 +200,10 @@ canvas {
 }
 #waiting-room-overlay #waiting-room-container {
     display: none;
-    width: 600px;
-    height: 300px;
+    width: 33%;
+    height: 33%;
+    min-width: 100px;
+    min-height: 100px;
 }
 
 .name_labels_centered {
@@ -217,7 +212,13 @@ canvas {
 }
 
 .name_labels_centered.bottom_margin {
-    margin-bottom: 20px;
+    margin-bottom: 0px;
+}
+
+.check_mark{
+    display: block;
+    margin: 0 auto;
+    width: 30%;
 }
 
 .obj_centered{
@@ -230,7 +231,14 @@ canvas {
 }
 
 #waiting-room-overlay #waiting-room-container #start-submit {
-    margin-top: 20px;
+    font: inherit;
+    width: auto;
+    height: auto;
+    font-size: 18px;
+    padding: 5px 1px 0.5px 1px;
+    border-width: 12px;
+    background-color: rgb(216,216,216);
+    border-radius: 10px;
 }
 #waiting-room-overlay #waiting-room-container #controller_ready_img {
     visibility: hidden;
@@ -314,3 +322,4 @@ canvas {
 #icons-container > div {
     display: inline-block;
 }
+

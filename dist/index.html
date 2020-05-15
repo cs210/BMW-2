@@ -15,6 +15,7 @@
 </head>
 
 <body>
+    <div class='canvas' id='gameCanv'></div>
     <div class='overlay' id='name-prompt-overlay'>
         <div class='input_container' id='name-prompt-container'>
             <h3> Join Game </h3>
@@ -39,14 +40,14 @@
                     <br />
                     <label class='name_labels_centered bottom_margin' id='controller_label'> </label>
                     <br />
-                    <img class='obj_centered' id="controller_ready_img" src="./ready.png">
+                    <img class='check_mark' id="controller_ready_img" src="./ready.png">
                 </div>
                 <div class="column">
                     <label class='name_labels_centered' id='txt_label_r'> Viewer </label>
                     <br />
                     <label class='name_labels_centered bottom_margin' id='viewer_label'> </label>
                     <br />
-                    <img class='obj_centered' id="viewer_ready_img" src="./ready.png">
+                    <img class='check_mark' id="viewer_ready_img" src="./ready.png">
                 </div>
             </div>
             <br />
@@ -84,6 +85,7 @@
     <div class="fireButton actionButton"></div>
     <div class="boostButton actionButton"></div>
     <script src="bundle.js" type="text/javascript"></script>
+    <div id="instructions"></div>
 </body>
 
 </html>

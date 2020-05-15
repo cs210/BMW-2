@@ -29,6 +29,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
             this.gameEngine.on('client__preStep', this.preStep.bind(this));
         } else {
             document.querySelector('#instructions').classList.remove('hidden');
+            window.addEventListener('resize', this.resizeGame, false);
             this.controls = new KeyboardControls(this);
             this.controls.bindKey('up', 'up', { repeat: true } );
             this.controls.bindKey('down', 'down', { repeat: true } );
