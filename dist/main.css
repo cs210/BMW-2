@@ -201,7 +201,7 @@ canvas {
 #waiting-room-overlay #waiting-room-container {
     display: none;
     width: 33%;
-    height: 33%;
+    height: 40%;
     min-width: 100px;
     min-height: 100px;
 }
@@ -209,6 +209,7 @@ canvas {
 .name_labels_centered {
     display: block;
     text-align: center;
+    height: 24px;
 }
 
 .name_labels_centered.bottom_margin {
