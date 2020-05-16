@@ -236,6 +236,7 @@ canvas {
 .name_labels_centered {
     display: block;
     text-align: center;
+    height: 24px;
 }
 
 .name_labels_centered.bottom_margin {
