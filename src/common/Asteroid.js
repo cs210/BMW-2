@@ -13,7 +13,8 @@ export default class Asteroid extends PhysicalObject2D {
     static get netScheme() {
         return Object.assign({
             level: { type: BaseTypes.TYPES.INT16 },
-            dim: { type: BaseTypes.TYPES.CLASSINSTANCE }
+            dim: { type: BaseTypes.TYPES.CLASSINSTANCE },
+            shot: { type: BaseTypes.TYPES.INT8 }
         }, super.netScheme);
     }
 

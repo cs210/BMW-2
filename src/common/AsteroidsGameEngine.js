@@ -128,6 +128,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         this.addShip(old_pid, c_name, v_name, old_score);
     }
 
+
     // asteroid explosion
     explode(asteroid, bullet) {
         // Remove asteroid and bullet
@@ -136,8 +137,16 @@ export default class AsteroidsGameEngine extends GameEngine {
         let x = asteroidBody.position[0];
         let y = asteroidBody.position[1];
         let r = this.asteroidRadius * (this.numAsteroidLevels - level) / this.numAsteroidLevels;
-        this.removeObjectFromWorld(asteroid);
+
+        let sizeX = asteroid.physicsObj.shapes[0].width;
+        let sizeY = asteroid.physicsObj.shapes[0].height;
+        console.log(sizeX, asteroid.physicsObj);
+        let posX = asteroid.physicsObj.position[0];
+        let posY = asteroid.physicsObj.position[1];
+        this.buildBarrier(posX, posY, sizeX, sizeY, true);
+        //this.removeObjectFromWorld(asteroid);
         this.removeObjectFromWorld(bullet);
+
 
         // Add new sub-asteroids
         /*
@@ -158,7 +167,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         */
     }
 
-    buildBarrier(posX, posY, sizeX, sizeY) {
+    buildBarrier(posX, posY, sizeX, sizeY, shot) {
         let barrier = new Asteroid(this, {}, {
             mass: 100000,
             position: new TwoVector(posX, posY),
@@ -166,7 +175,12 @@ export default class AsteroidsGameEngine extends GameEngine {
             angularVelocity: 0
         }, new TwoVector(sizeX, sizeY));
         barrier.level = 0;
-        this.addObjectToWorld(barrier);
+        barrier.shot = shot;
+        if (shot){
+            let obj = this.addObjectToWorld(barrier);
+            this.timer.add(this.bulletLifeTime, this.destroyBarrier, this, [obj.id]);
+        }
+        else this.addObjectToWorld(barrier);
     }
 
     // Add finishline
@@ -187,6 +201,13 @@ export default class AsteroidsGameEngine extends GameEngine {
         }
         for (let o of this.world.queryObjects({ instanceType: FinishLine })) {
             this.removeObjectFromWorld(o.id);
+        }
+    }
+
+    destroyBarrier(barrierId) {
+        if (this.world.objects[barrierId]) {
+            this.trace.trace(() => `barrier[${barrierId}] destroyed`);
+            this.removeObjectFromWorld(barrierId);
         }
     }
 
@@ -233,81 +254,81 @@ export default class AsteroidsGameEngine extends GameEngine {
     }
 
     one_block_world() {
-        this.buildBarrier(-5, 1.5, 1, 3);
+        this.buildBarrier(-5, 1.5, 1, 3, false);
         this.addFinishLine(6.5, -3.75);
     }
 
     over_middle_under_world() {
-        this.buildBarrier(-5, 1.5, 1, 7);
-        this.buildBarrier(5, -1.5, 1, 7);
-        this.buildBarrier(0, -3, 1, 4);
-        this.buildBarrier(0, 3, 1, 4);
+        this.buildBarrier(-5, 1.5, 1, 7, false);
+        this.buildBarrier(5, -1.5, 1, 7, false);
+        this.buildBarrier(0, -3, 1, 4, false);
+        this.buildBarrier(0, 3, 1, 4, false);
         this.addFinishLine(6.5, -3.75);
     }
 
     s_world() {
-        this.buildBarrier(-1.5, 2, 13, 1);
-        this.buildBarrier(1.5, -2, 13, 1);
+        this.buildBarrier(-1.5, 2, 13, 1, false);
+        this.buildBarrier(1.5, -2, 13, 1, false);
         this.addFinishLine(6.5, -3.75);
     }
 
     enter_the_room() {
-        this.buildBarrier(-1.5, 2, 13, 1);
-        this.buildBarrier(0, -3, 1, 4);
+        this.buildBarrier(-1.5, 2, 13, 1, false);
+        this.buildBarrier(0, -3, 1, 4, false);
         this.addFinishLine(-6.5, -3.75);
     }
 
     crossroads() {
-        this.buildBarrier(5, 3, 1, 1);
-        this.buildBarrier(5, 0, 1, 1);
+        this.buildBarrier(5, 3, 1, 1, false);
+        this.buildBarrier(5, 0, 1, 1, false);
         this.addFinishLine(5, -3);
 
-        this.buildBarrier(2.5, 3, 1, 1);
-        this.buildBarrier(2.5, 0, 1, 1);
-        this.buildBarrier(2.5, -3, 1, 1);
+        this.buildBarrier(2.5, 3, 1, 1, false);
+        this.buildBarrier(2.5, 0, 1, 1, false);
+        this.buildBarrier(2.5, -3, 1, 1, false);
 
-        this.buildBarrier(0, 3, 1, 1);
-        this.buildBarrier(0, 0, 1, 1);
-        this.buildBarrier(0, -3, 1, 1);
+        this.buildBarrier(0, 3, 1, 1, false);
+        this.buildBarrier(0, 0, 1, 1, false);
+        this.buildBarrier(0, -3, 1, 1, false);
 
-        this.buildBarrier(-2.5, 3, 1, 1);
-        this.buildBarrier(-2.5, 0, 1, 1);
-        this.buildBarrier(-2.5, -3, 1, 1);
+        this.buildBarrier(-2.5, 3, 1, 1, false);
+        this.buildBarrier(-2.5, 0, 1, 1, false);
+        this.buildBarrier(-2.5, -3, 1, 1, false);
 
-        this.buildBarrier(-5, 3, 1, 1);
-        this.buildBarrier(-5, 0, 1, 1);
-        this.buildBarrier(-5, -3, 1, 1);
+        this.buildBarrier(-5, 3, 1, 1, false);
+        this.buildBarrier(-5, 0, 1, 1, false);
+        this.buildBarrier(-5, -3, 1, 1, false);
     }
 
     s_tunnel() {
         // Top and Bottom
-        this.buildBarrier(0, 5, 11, 1);
-        this.buildBarrier(0, -5, 11, 1);
+        this.buildBarrier(0, 5, 11, 1, false);
+        this.buildBarrier(0, -5, 11, 1, false);
 
         // Left and Right
-        this.buildBarrier(5, -1, 1, 6);
-        this.buildBarrier(-5, 1, 1, 6);
+        this.buildBarrier(5, -1, 1, 6, false);
+        this.buildBarrier(-5, 1, 1, 6, false);
 
         // Middle
-        this.buildBarrier(-1, -1.5, 7, 1);
-        this.buildBarrier(1, 1.5, 7, 1);
+        this.buildBarrier(-1, -1.5, 7, 1, false);
+        this.buildBarrier(1, 1.5, 7, 1, false);
 
         this.addFinishLine(6.5, -3.75);
     }
 
     spiral() {
         // Top and Bottom
-        this.buildBarrier(0, 7, 11, 1);
-        this.buildBarrier(0, -7, 11, 1);
+        this.buildBarrier(0, 7, 11, 1, false);
+        this.buildBarrier(0, -7, 11, 1, false);
 
         // Left and Right
-        this.buildBarrier(6, 0, 1, 13);
-        this.buildBarrier(-5, 1, 1, 6);
-        this.buildBarrier(2, 0.5, 1, 3);
+        this.buildBarrier(6, 0, 1, 13, false);
+        this.buildBarrier(-5, 1, 1, 6, false);
+        this.buildBarrier(2, 0.5, 1, 3, false);
 
         // Middle
-        this.buildBarrier(-1, -1.5, 7, 1);
-        this.buildBarrier(0, 1.5, 5, 1);
+        this.buildBarrier(-1, -1.5, 7, 1, false);
+        this.buildBarrier(0, 1.5, 5, 1, false);
 
         this.addFinishLine(0, 0);
     }

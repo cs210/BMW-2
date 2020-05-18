@@ -60,7 +60,13 @@ export default class AsteroidsRenderer extends Renderer {
             if (obj instanceof Ship) this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID, obj.c_name, obj.v_name);
             else if (obj instanceof Bullet) this.drawBullet(obj.physicsObj);
             else if (obj instanceof FinishLine) this.drawFinishLine(obj.physicsObj);
-            else if (obj instanceof Asteroid && this.viewer) this.drawAsteroid(obj.physicsObj);
+            else if (obj instanceof Asteroid && obj.shot == true) { // && !viewer if we don't want viewer to have highlighted boxes
+                console.log(this.viewer);
+                this.drawAsteroid(obj.physicsObj);
+            }
+            else if (obj instanceof Asteroid && this.viewer) {
+                this.drawAsteroid(obj.physicsObj);
+            }
         });
 
         // update status and restore
@@ -96,7 +102,7 @@ export default class AsteroidsRenderer extends Renderer {
     }
 
     drawShip(body, special, c_name, v_name) {
-        let radius = body.shapes[0].radius;
+        //let radius = body.shapes[0].radius;
         if (special) {
             ctx.strokeStyle = ctx.fillStyle = "#18CAE6";
             ctx.shadowColor = "#18CAE6";
@@ -157,6 +163,7 @@ export default class AsteroidsRenderer extends Renderer {
     }
 
     drawBullet(body) {
+        console.log("SORRRY FOR PAAARTY ROCKINN")
         ctx.beginPath();
         ctx.arc(body.position[0], body.position[1], game.bulletRadius, 0, 2 * Math.PI);
         ctx.fill();
