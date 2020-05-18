@@ -22,6 +22,7 @@ export default class AsteroidsGameEngine extends GameEngine {
             shipSpeed: 4,
             bulletRadius: 0.03,
             bulletLifeTime: 60,
+            shootingSpeed: 0.5,
             asteroidRadius: 1.125,
             numAsteroidLevels: 4,
             numAsteroidVerts: 4,
@@ -93,7 +94,7 @@ export default class AsteroidsGameEngine extends GameEngine {
     }
 
     // create ship
-    addShip(playerId, c_name, v_name, score = 0) {
+    addShip(playerId, c_name, v_name, score = 0, lastShot = 0) {
         let s = new Ship(this, {}, {
             playerId: playerId,
             mass: 10,
@@ -105,6 +106,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         s.won = false;
         s.c_name = c_name;
         s.v_name = v_name;
+        s.lastShot = lastShot;
         this.addObjectToWorld(s);
     }
 
