@@ -57,22 +57,32 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
     // shooting creates a bullet
     shoot(player) {
-        let radius = this.gameEngine.shipSize;
-        let angle = -player.physicsObj.angle + Math.PI / 2;
-        let bullet = new Bullet(this.gameEngine, {}, {
-            mass: 0.05,
-            position: new TwoVector(
-                radius * Math.cos(angle) + player.physicsObj.position[0],
-                -radius * Math.sin(angle) + player.physicsObj.position[1]
-            ),
-            velocity: new TwoVector(
-                2 * Math.cos(angle) + player.physicsObj.velocity[0],
-                -2 * Math.sin(angle) + player.physicsObj.velocity[1]
-            ),
-            angularVelocity: 0
-        });
-        let obj = this.gameEngine.addObjectToWorld(bullet);
-        this.gameEngine.timer.add(this.gameEngine.bulletLifeTime, this.destroyBullet, this, [obj.id]);
+        const RATE_OF_FIRE = 30;
+        const currentTime = this.gameEngine.timer.currentTime;
+        if (player.lastShot === 0 || currentTime >= player.lastShot + RATE_OF_FIRE) {
+            player.lastShot = currentTime;
+            let radius = this.gameEngine.shipSize;
+            let angle = -player.physicsObj.angle + Math.PI / 2;
+            let bullet = new Bullet(this.gameEngine, {}, {
+                mass: 0.05,
+                position: new TwoVector(
+                    radius * Math.cos(angle) + player.physicsObj.position[0],
+                    -radius * Math.sin(angle) + player.physicsObj.position[1]
+                ),
+                velocity: new TwoVector(
+                    2 * Math.cos(angle) + player.physicsObj.velocity[0],
+                    -2 * Math.sin(angle) + player.physicsObj.velocity[1]
+                ),
+                angularVelocity: 0
+            });
+            let obj = this.gameEngine.addObjectToWorld(bullet);
+            this.gameEngine.timer.add(
+                this.gameEngine.bulletLifeTime,
+                this.destroyBullet,
+                this,
+                [obj.id]
+            );
+        }
     }
 
     // destroy the missile if it still exists
@@ -221,9 +231,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
                 }
             }
 
-            //console.log(this.playerGroups[group_code]);
             if (this.playerGroups[group_code] && this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
-                //console.log(group_code + ' has been deleted.');
                 delete this.playerGroups[group_code];
             }
 
