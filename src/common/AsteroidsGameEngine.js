@@ -28,6 +28,7 @@ export default class AsteroidsGameEngine extends GameEngine {
             maxAsteroidSpeed: 0,
             spaceWidth: 16,
             spaceHeight: 9,
+            wallWidth: 0.01,
             SHIP: Math.pow(2, 1),
             BULLET: Math.pow(2, 2),
             ASTEROID: Math.pow(2, 3),
@@ -225,7 +226,46 @@ export default class AsteroidsGameEngine extends GameEngine {
                 this.spiral();
                 break;
         }
+        this.addWalls();
         return world_choice;
+    }
+
+    addWalls() {
+        let topWall = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(0, -this.spaceHeight / 2),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(this.spaceWidth, this.wallWidth));
+        topWall.level = 0;
+        this.addObjectToWorld(topWall);
+
+        let bottomWall = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(0, this.spaceHeight / 2),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(this.spaceWidth, this.wallWidth));
+        bottomWall.level = 0;
+        this.addObjectToWorld(bottomWall);
+
+        let leftWall = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(-this.spaceWidth / 2, 0),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(this.wallWidth, this.spaceHeight));
+        leftWall.level = 0;
+        this.addObjectToWorld(leftWall);
+
+        let rightWall = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(this.spaceWidth / 2, 0),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(this.wallWidth, this.spaceHeight));
+        rightWall.level = 0;
+        this.addObjectToWorld(rightWall);
     }
 
     empty_world() {
