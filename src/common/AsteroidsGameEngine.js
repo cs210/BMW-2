@@ -23,6 +23,7 @@ export default class AsteroidsGameEngine extends GameEngine {
             shipSpeed: 4,
             bulletRadius: 0.03,
             bulletLifeTime: 60,
+            shootingSpeed: 0.5,
             asteroidRadius: 1.125,
             numAsteroidLevels: 4,
             numAsteroidVerts: 4,
@@ -96,7 +97,7 @@ export default class AsteroidsGameEngine extends GameEngine {
     }
 
     // create ship
-    addShip(playerId, c_name, v_name, score = 0) {
+    addShip(playerId, c_name, v_name, score = 0, lastShot = 0) {
         let s = new Ship(this, {}, {
             playerId: playerId,
             mass: 10,
@@ -108,6 +109,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         s.won = false;
         s.c_name = c_name;
         s.v_name = v_name;
+        s.lastShot = lastShot;
         this.addObjectToWorld(s);
     }
 
@@ -131,6 +133,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         this.addShip(old_pid, c_name, v_name, old_score);
     }
 
+
     // asteroid explosion
     explode(asteroid, bullet) {
         // Remove asteroid and bullet
@@ -139,8 +142,15 @@ export default class AsteroidsGameEngine extends GameEngine {
         let x = asteroidBody.position[0];
         let y = asteroidBody.position[1];
         let r = this.asteroidRadius * (this.numAsteroidLevels - level) / this.numAsteroidLevels;
-        this.removeObjectFromWorld(asteroid);
+
+        let sizeX = asteroid.physicsObj.shapes[0].width;
+        let sizeY = asteroid.physicsObj.shapes[0].height;
+        let posX = asteroid.physicsObj.position[0];
+        let posY = asteroid.physicsObj.position[1];
+        this.buildBarrier(posX, posY, sizeX, sizeY, true);
+        //this.removeObjectFromWorld(asteroid);
         this.removeObjectFromWorld(bullet);
+
 
         // Add new sub-asteroids
         /*
@@ -161,7 +171,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         */
     }
 
-    buildBarrier(posX, posY, sizeX, sizeY) {
+    buildBarrier(posX, posY, sizeX, sizeY, shot = false) {
         let barrier = new Asteroid(this, {}, {
             mass: 100000,
             position: new TwoVector(posX, posY),
@@ -169,7 +179,11 @@ export default class AsteroidsGameEngine extends GameEngine {
             angularVelocity: 0
         }, new TwoVector(sizeX, sizeY));
         barrier.level = 0;
-        this.addObjectToWorld(barrier);
+        barrier.shot = shot;
+        let obj = this.addObjectToWorld(barrier);
+        if (shot) {
+            this.timer.add(this.bulletLifeTime, this.destroyBarrier, this, [obj.id]);
+        }
     }
 
     // Add finishline
@@ -190,6 +204,13 @@ export default class AsteroidsGameEngine extends GameEngine {
         }
         for (let o of this.world.queryObjects({ instanceType: FinishLine })) {
             this.removeObjectFromWorld(o.id);
+        }
+    }
+
+    destroyBarrier(barrierId) {
+        if (this.world.objects[barrierId]) {
+            this.trace.trace(() => `barrier[${barrierId}] destroyed`);
+            this.removeObjectFromWorld(barrierId);
         }
     }
 

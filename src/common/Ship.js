@@ -10,7 +10,8 @@ export default class Ship extends PhysicalObject2D {
             score: { type: BaseTypes.TYPES.INT8 },
             won: { type: BaseTypes.TYPES.INT8 },
             c_name: { type: BaseTypes.TYPES.STRING },
-            v_name: { type: BaseTypes.TYPES.STRING }
+            v_name: { type: BaseTypes.TYPES.STRING },
+            lastShot: { type: BaseTypes.TYPES.INT16 },
         }, super.netScheme);
     }
 
@@ -60,5 +61,6 @@ export default class Ship extends PhysicalObject2D {
         this.won = other.won;
         this.c_name = other.c_name;
         this.v_name = other.v_name;
+        this.lastShot = other.lastShot;
     }
 }
