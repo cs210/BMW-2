@@ -3,6 +3,7 @@ import Asteroid from './Asteroid';
 import Bullet from './Bullet';
 import Ship from './Ship';
 import FinishLine from "./FinishLine";
+import Maze from "./Maze";
 
 export default class AsteroidsGameEngine extends GameEngine {
 
@@ -36,6 +37,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         });
 
         this.playerReady = {};
+        this.spawnCoor = new TwoVector(-6.5, 3.75);
     }
 
     // If the body is out of space bounds, warp it to the other side
@@ -99,7 +101,7 @@ export default class AsteroidsGameEngine extends GameEngine {
             playerId: playerId,
             mass: 10,
             angularVelocity: 0,
-            position: new TwoVector(-6.4, 3.6),
+            position: this.spawnCoor,
             velocity: new TwoVector(0, 0),
         });
         s.score = score;
@@ -198,7 +200,7 @@ export default class AsteroidsGameEngine extends GameEngine {
     addBarriers(currentWorld) {
         let world_choice = currentWorld;
         while (!world_choice || world_choice === currentWorld) {
-            world_choice = this.getRandInt(0, 7);
+            world_choice = this.getRandInt(0, 15);
         }
         switch(world_choice) {
             case 0:
@@ -225,9 +227,60 @@ export default class AsteroidsGameEngine extends GameEngine {
             case 7:
                 this.spiral();
                 break;
+            default:
+                this.generated_world();
+                break;
         }
         this.addWalls();
         return world_choice;
+    }
+
+    /*
+        Some math to explain for the generation:
+        1. The maze generated is a matrix of size (2 * maze.width + 1, 2 * maze.height + 1),
+            where 1's represent walls and 0's represent space.
+            The whole outer border of the matrix is 1's, so we can ignore that since we already add our own walls.
+            This means we just need to fill in the maps with the grid size of (2 * maze.width - 1, 2 * maze.height - 1)
+            that represents the maze generated without the outer border.
+
+        2. The rest of the code is just adapting this grid to our game space.
+            blockWidth and blockHeight are used to figure out how big a block of wall should be.
+
+        TODO:
+         1. We should make the walls skinnier so we can fit more maze into the game. Probably require some check for
+            consecutive blocks of walls.
+         2. I haven't messed with the start and finish points (Currently I'm using the 'diagonal' setting,
+            so start is bottom left and end is top right). We can potentially add more interesting variations
+
+        Checkout https://keesiemeijer.github.io/maze-generator/#generate and its github repo.
+     */
+    generated_world() {
+        const maze = new Maze();
+        maze.generate();
+        let blockWidth = this.spaceWidth / (2 * maze.width - 1);
+        let blockHeight = this.spaceHeight / (2 * maze.height - 1);
+        console.log(maze.matrix);
+        console.log(maze.entryNodes);
+        for (let x = 1; x < 2 * maze.width; x++) {
+            for (let y = 1; y < 2 * maze.height; y++) {
+                if (maze.matrix[y].charAt(x) === '1') {
+                    let xcoor = blockWidth * (x - maze.width);
+                    let ycoor = -blockHeight * (y - maze.height);
+
+                    let mazeBlock = new Asteroid(this, {}, {
+                        mass: 100000,
+                        position: new TwoVector(xcoor, ycoor),
+                        velocity: new TwoVector(0, 0),
+                        angularVelocity: 0
+                    }, new TwoVector(blockWidth, blockHeight));
+                    mazeBlock.level = 0;
+                    this.addObjectToWorld(mazeBlock);
+                }
+
+            }
+        }
+        this.spawnCoor = new TwoVector(blockWidth * (1 - maze.width), blockHeight * (maze.height - 1));
+        this.addFinishLine(blockWidth * (maze.width - 1), -blockHeight * (maze.height - 1));
     }
 
     addWalls() {
