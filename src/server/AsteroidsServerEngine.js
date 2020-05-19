@@ -12,6 +12,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
         gameEngine.on('shoot', this.shoot.bind(this));
         this.playerReady = {};
         this.playerGroups = {};
+        this.VtoC = {};
         this.currentWorld = 0;
         // maps groupCode -> {
         // c_playerID : int,
@@ -57,7 +58,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
     // shooting creates a bullet
     shoot(player) {
-        const RATE_OF_FIRE = 30;
+        const RATE_OF_FIRE = 180;
         const currentTime = this.gameEngine.timer.currentTime;
         if (player.lastShot === 0 || currentTime >= player.lastShot + RATE_OF_FIRE) {
             player.lastShot = currentTime;
@@ -174,15 +175,18 @@ export default class AsteroidsServerEngine extends ServerEngine {
             // Check for start game
             let group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
             if (group.v_ready && group.c_ready) {
-                that.gameEngine.addShip(group.c_playerID, group.c_playerName, group.v_playerName);
+                that.gameEngine.VtoC[group.v_playerID] = group.c_playerID;
+                that.gameEngine.addShip(group.c_playerID, group.c_playerName, group.v_playerName, group.v_playerID);
                 that.gameEngine.playerReady[group.c_playerID] = true;
                 that.io.to(group.c_socketID).emit('gameBegin', {
                     ship_pid : group.c_playerID,
-                    viewer : false
+                    viewer : false,
+                    v_id : group.v_playerID
                 });
                 that.io.to(group.v_socketID).emit('gameBegin', {
                     ship_pid : group.c_playerID,
-                    viewer : true
+                    viewer : true,
+                    v_id : group.v_playerID
                 });
                 that.playerGroups[that.connectedPlayers[socket.id].privateCode].gameStarted = true;
             }

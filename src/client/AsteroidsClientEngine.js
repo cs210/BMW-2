@@ -126,6 +126,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
                     this.viewer = this.renderer.viewer = data.viewer;
                     this.gameStarted = true;
                     this.gameEngine.playerReady[this.gameEngine.playerId] = true;
+                    this.gameEngine.VtoC[data.v_id] = data.ship_pid;
                     this.renderer.groupShipPID = data.ship_pid;
                     this.renderer.showCanvas();
                 });

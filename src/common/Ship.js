@@ -12,6 +12,9 @@ export default class Ship extends PhysicalObject2D {
             c_name: { type: BaseTypes.TYPES.STRING },
             v_name: { type: BaseTypes.TYPES.STRING },
             lastShot: { type: BaseTypes.TYPES.INT16 },
+            boostTime: { type: BaseTypes.TYPES.INT16 },
+            //viewerId: { type: BaseTypes.TYPES.STRING },
+            speedConst: { type: BaseTypes.TYPES.INT16 },
         }, super.netScheme);
     }
 
@@ -62,5 +65,8 @@ export default class Ship extends PhysicalObject2D {
         this.c_name = other.c_name;
         this.v_name = other.v_name;
         this.lastShot = other.lastShot;
+        this.boostTime = other.boostTime;
+        //this.viewerId = other.viewerId;
+        this.speedConst = other.speedConst;
     }
 }

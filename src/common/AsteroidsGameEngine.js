@@ -36,6 +36,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         });
 
         this.playerReady = {};
+        this.VtoC = {};
     }
 
     // If the body is out of space bounds, warp it to the other side
@@ -75,26 +76,59 @@ export default class AsteroidsGameEngine extends GameEngine {
         super.processInput(inputData, playerId);
         if (playerId in this.playerReady && this.playerReady[playerId]) {
             // handle keyboard presses
+            //Maybe we should query inside of the input checks, so th at we aren't needlessly querying every time a random input is provided.
             let playerShip = this.world.queryObject({ playerId: playerId, instanceType: Ship });
+            //console.log(playerShip.v_name, playerShip.c_)
             if (playerShip) {
+                const currentTime = this.timer.currentTime;
+                console.log(currentTime)
+                if (currentTime >= playerShip.boostTime + 60) {
+                    playerShip.speedConst = 1;
+                }
                 if (inputData.input === 'up') {
-                    playerShip.physicsObj.applyForceLocal([0, -this.shipSpeed]);
+                    console.log("in Controller: ", playerShip.speedConst)
+                    playerShip.physicsObj.applyForceLocal([0, -this.shipSpeed * playerShip.speedConst]);
                 } else if (inputData.input === 'right') {
                     playerShip.physicsObj.angle += this.shipTurnSpeed;
                 } else if (inputData.input === 'left') {
                     playerShip.physicsObj.angle -= this.shipTurnSpeed;
                 } else if (inputData.input === 'down') {
-                    playerShip.physicsObj.applyForceLocal([0, this.shipSpeed]);
+                    playerShip.physicsObj.applyForceLocal([0, this.shipSpeed * playerShip.speedConst]);
                 } else if (inputData.input === 'space') {
                     this.emit('shoot', playerShip);
                 }
                 playerShip.refreshFromPhysics();
             }
         }
+        console.log("HERE")
+        console.log(this.playerReady)
+        console.log(this.VtoC)
+        if (playerId in this.VtoC){
+            if (inputData.input === 'up') {
+                let playerShip = this.world.queryObject({ playerId: this.VtoC[playerId], instanceType: Ship });
+                if (playerShip) {
+                    const currentTime1 = this.timer.currentTime;
+                    console.log(currentTime1)
+                    if (currentTime1 > playerShip.boostTime + 500) {
+                        playerShip.speedConst = 5;
+                        console.log("in Viewer: ", playerShip.speedConst)
+                        const currentTime2 = this.timer.currentTime;
+                        playerShip.boostTime = currentTime2;
+                    }
+                }
+            }
+            //for debugging
+            if (inputData.input === 'down') {
+                let playerShip = this.world.queryObject({ playerId: this.VtoC[playerId], instanceType: Ship });
+                if (playerShip) {
+                    playerShip.speedConst = 1;
+                }
+            }
+        }
     }
 
     // create ship
-    addShip(playerId, c_name, v_name, score = 0, lastShot = 0) {
+    addShip(playerId, c_name, v_name, v_id, speedConst = 1, score = 0, lastShot = 0){
         let s = new Ship(this, {}, {
             playerId: playerId,
             mass: 10,
@@ -107,6 +141,11 @@ export default class AsteroidsGameEngine extends GameEngine {
         s.c_name = c_name;
         s.v_name = v_name;
         s.lastShot = lastShot;
+        this.VtoC[v_id] = playerId
+        console.log("TESTING, ", v_id, playerId, this.VtoC)
+        s.boostTime = this.timer.currentTime;
+        //s.viewerId = viewerId;
+        s.speedConst = 1;
         this.addObjectToWorld(s);
     }
 
@@ -125,9 +164,10 @@ export default class AsteroidsGameEngine extends GameEngine {
         let old_score = ship.score;
         let c_name = ship.c_name;
         let v_name = ship.v_name;
+        let v_id = ship.viewerId;
         let old_pid = ship.playerId;
         this.removeObjectFromWorld(ship.id);
-        this.addShip(old_pid, c_name, v_name, old_score);
+        this.addShip(old_pid, v_id, c_name, v_name, old_score);
     }
 
 
