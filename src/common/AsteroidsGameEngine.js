@@ -81,8 +81,10 @@ export default class AsteroidsGameEngine extends GameEngine {
             //console.log(playerShip.v_name, playerShip.c_)
             if (playerShip) {
                 const currentTime = this.timer.currentTime;
-                console.log(currentTime)
-                if (currentTime >= playerShip.boostTime + 60) {
+                console.log("controller loop", playerShip.boostTime, currentTime);
+                //console.log(currentTime)
+                if (currentTime >= playerShip.boostTime + 120) {
+                    console.log("RESET")
                     playerShip.speedConst = 1;
                 }
                 if (inputData.input === 'up') {
@@ -108,9 +110,9 @@ export default class AsteroidsGameEngine extends GameEngine {
                 let playerShip = this.world.queryObject({ playerId: this.VtoC[playerId], instanceType: Ship });
                 if (playerShip) {
                     const currentTime1 = this.timer.currentTime;
-                    console.log(currentTime1)
+                    console.log("viewer loop", playerShip.boostTime, currentTime1);
                     if (currentTime1 > playerShip.boostTime + 500) {
-                        playerShip.speedConst = 5;
+                        playerShip.speedConst = 2.5;
                         console.log("in Viewer: ", playerShip.speedConst)
                         const currentTime2 = this.timer.currentTime;
                         playerShip.boostTime = currentTime2;
@@ -128,7 +130,7 @@ export default class AsteroidsGameEngine extends GameEngine {
     }
 
     // create ship
-    addShip(playerId, c_name, v_name, v_id, speedConst = 1, score = 0, lastShot = 0){
+    addShip(playerId, c_name, v_name, speedConst = 1, score = 0, lastShot = 0){
         let s = new Ship(this, {}, {
             playerId: playerId,
             mass: 10,
@@ -141,9 +143,8 @@ export default class AsteroidsGameEngine extends GameEngine {
         s.c_name = c_name;
         s.v_name = v_name;
         s.lastShot = lastShot;
-        this.VtoC[v_id] = playerId
-        console.log("TESTING, ", v_id, playerId, this.VtoC)
-        s.boostTime = this.timer.currentTime;
+        //maybe set boostTime to current time, having bugs with it rn tho
+        s.boostTime = 0;
         //s.viewerId = viewerId;
         s.speedConst = 1;
         this.addObjectToWorld(s);
@@ -164,10 +165,9 @@ export default class AsteroidsGameEngine extends GameEngine {
         let old_score = ship.score;
         let c_name = ship.c_name;
         let v_name = ship.v_name;
-        let v_id = ship.viewerId;
         let old_pid = ship.playerId;
         this.removeObjectFromWorld(ship.id);
-        this.addShip(old_pid, v_id, c_name, v_name, old_score);
+        this.addShip(old_pid, c_name, v_name, 1, old_score);
     }
 
 
