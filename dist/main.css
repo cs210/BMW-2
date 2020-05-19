@@ -195,7 +195,7 @@ canvas {
 #name-prompt-overlay #name-prompt-container button {
     font-family: 'ONEDAY';
     font-size: 1.5vmax;
-    width: 6vmax;
+    width: 10vmax;
     line-height: 0.5vmax;
     margin-top: 4vh;
     height: 2vmax;
@@ -204,6 +204,9 @@ canvas {
     border-radius: 10px;
 }
 #name-prompt-overlay #name-prompt-container #name-submit:hover {
+    cursor: pointer;
+}
+#name-prompt-overlay #name-prompt-container #feedback-submit:hover {
     cursor: pointer;
 }
 
