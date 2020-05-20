@@ -2,15 +2,15 @@
 export default class Maze {
     constructor(args) {
         const defaults = {
-            width: 4,
-            height: 3,
+            width: 6,
+            height: 4,
             wallSize: 10,
             entryType: 'diagonal',
             bias: '',
             color: '#000000',
             backgroundColor: '#FFFFFF',
             solveColor: '#cc3737',
-            removeWalls: 0,
+            removeWalls: 2,
 
             // Maximum 300 walls can be removed
             maxWallsRemove: 300,

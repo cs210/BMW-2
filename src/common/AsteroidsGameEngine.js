@@ -256,6 +256,17 @@ export default class AsteroidsGameEngine extends GameEngine {
         return world_choice;
     }
 
+    addWallBlock(xcoor, ycoor, blockWidth, blockHeight) {
+        let mazeBlock = new Asteroid(this, {}, {
+            mass: 100000,
+            position: new TwoVector(xcoor, ycoor),
+            velocity: new TwoVector(0, 0),
+            angularVelocity: 0
+        }, new TwoVector(blockWidth, blockHeight));
+        mazeBlock.level = 0;
+        this.addObjectToWorld(mazeBlock);
+    }
+
     /*
         Some math to explain for the generation:
         1. The maze generated is a matrix of size (2 * maze.width + 1, 2 * maze.height + 1),
@@ -276,32 +287,91 @@ export default class AsteroidsGameEngine extends GameEngine {
         Checkout https://keesiemeijer.github.io/maze-generator/#generate and its github repo.
      */
     generated_world() {
-        const maze = new Maze();
-        maze.generate();
-        let blockWidth = this.spaceWidth / (2 * maze.width - 1);
-        let blockHeight = this.spaceHeight / (2 * maze.height - 1);
-        console.log(maze.matrix);
-        console.log(maze.entryNodes);
-        for (let x = 1; x < 2 * maze.width; x++) {
-            for (let y = 1; y < 2 * maze.height; y++) {
-                if (maze.matrix[y].charAt(x) === '1') {
-                    let xcoor = blockWidth * (x - maze.width);
-                    let ycoor = -blockHeight * (y - maze.height);
+        console.log('generating new world...')
+        const maze_gen = new Maze();
+        maze_gen.generate();
+        const undersizeConstant = 2; // How much smaller to make the walls compared to the actual size
+        let blockWidth = this.spaceWidth / (2 * maze_gen.width - 1);
+        let blockHeight = this.spaceHeight / (2 * maze_gen.height - 1);
+        console.log(maze_gen.matrix);
+        console.log(maze_gen.entryNodes);
+        for (let x = 1; x < 2 * maze_gen.width; x++) {
+            for (let y = 1; y < 2 * maze_gen.height; y++) {
+                if (maze_gen.matrix[y].charAt(x) === '1') {
+                    let xcoor = blockWidth * (x - maze_gen.width);
+                    let ycoor = -blockHeight * (y - maze_gen.height);
+                    this.addWallBlock(
+                        xcoor,
+                        ycoor,
+                        blockWidth / undersizeConstant,
+                        blockHeight / undersizeConstant
+                    );
 
-                    let mazeBlock = new Asteroid(this, {}, {
-                        mass: 100000,
-                        position: new TwoVector(xcoor, ycoor),
-                        velocity: new TwoVector(0, 0),
-                        angularVelocity: 0
-                    }, new TwoVector(blockWidth, blockHeight));
-                    mazeBlock.level = 0;
-                    this.addObjectToWorld(mazeBlock);
+
+                    // If next horizontal block is also a wall, add a connector
+                    if ((x !== 2 * maze_gen.width - 1) && (maze_gen.matrix[y].charAt(x + 1) === '1')) {
+                        this.addWallBlock(
+                            xcoor + blockWidth / 2,
+                            ycoor,
+                            blockWidth / undersizeConstant,
+                            blockHeight / undersizeConstant
+                        );
+                    }
+
+                    // If next vertical block is also a wall, add a connector
+                    if ((y !== 2 * maze_gen.height - 1) && (maze_gen.matrix[y + 1].charAt(x) === '1')) {
+                        this.addWallBlock(
+                            xcoor,
+                            ycoor - blockHeight / 2,
+                            blockWidth / undersizeConstant,
+                            blockHeight / undersizeConstant
+                        );
+                    }
+
+                    // If this is a wall block on the first column
+                    if (x === 1) {
+                        this.addWallBlock(
+                            xcoor - blockWidth / 2 + blockWidth / undersizeConstant / 4,
+                            ycoor,
+                            blockWidth / undersizeConstant / 2,
+                            blockHeight / undersizeConstant
+                        );
+                    }
+
+                    // If this is a wall block on the last column
+                    if (x === 2 * maze_gen.width - 1) {
+                        this.addWallBlock(
+                            xcoor + blockWidth / 2 - blockWidth / undersizeConstant / 4,
+                            ycoor,
+                            blockWidth / undersizeConstant / 2,
+                            blockHeight / undersizeConstant
+                        );
+                    }
+
+                    // If this is a wall block on the first row
+                    if (y === 1) {
+                        this.addWallBlock(
+                            xcoor,
+                            ycoor + blockHeight / 2 - blockHeight / undersizeConstant / 4,
+                            blockWidth / undersizeConstant,
+                            blockHeight / undersizeConstant / 2
+                        );
+                    }
+
+                    // If this is a wall block on the last row
+                    if (y === 2 * maze_gen.height - 1) {
+                        this.addWallBlock(
+                            xcoor,
+                            ycoor - blockHeight / 2 + blockHeight / undersizeConstant / 4,
+                            blockWidth / undersizeConstant,
+                            blockHeight / undersizeConstant / 2
+                        );
+                    }
                 }
-
             }
         }
-        this.spawnCoor = new TwoVector(blockWidth * (1 - maze.width), blockHeight * (maze.height - 1));
-        this.addFinishLine(blockWidth * (maze.width - 1), -blockHeight * (maze.height - 1));
+        this.spawnCoor = new TwoVector(blockWidth * (1 - maze_gen.width), blockHeight * (maze_gen.height - 1));
+        this.addFinishLine(blockWidth * (maze_gen.width - 1), -blockHeight * (maze_gen.height - 1));
     }
 
     addWalls() {
