@@ -121,11 +121,11 @@ export default class AsteroidsRenderer extends Renderer {
     }
 
     drawFinishLine(body) {
-        ctx.strokeStyle = ctx.fillStyle = "#FAF602";
-        ctx.shadowColor = "#FAF602";
+        ctx.strokeStyle = ctx.fillStyle = "#18CAE6";
+        ctx.shadowColor = "#18CAE6";
         ctx.save();
         ctx.translate(body.position[0], body.position[1]);  // Translate to the center
-        ctx.fillText("Finish", 0, 0);
+        //ctx.fillStyle = '#18CAE6';
         //ctx.rotate(.785);
         ctx.beginPath();
         for(let j = 0; j < game.numAsteroidVerts; j++) {
@@ -136,6 +136,12 @@ export default class AsteroidsRenderer extends Renderer {
         }
         ctx.closePath();
         ctx.stroke();
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = "0.3px ONEDAY";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("Finish", 0, 0);
         ctx.restore();
         ctx.strokeStyle = ctx.fillStyle = 'white';
         ctx.shadowColor = "white";
@@ -152,7 +158,13 @@ export default class AsteroidsRenderer extends Renderer {
             else ctx.lineTo(xv, yv);
         }
         ctx.closePath();
+        ctx.shadowColor = 'rgba(0,0,0,0)';
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = 'white';
         ctx.stroke();
+        ctx.globalAlpha = 0.7;
+        ctx.fillStyle = 'white'; //'#3447a2';
+        ctx.fill();
         ctx.restore();
     }
 

@@ -31,7 +31,9 @@ a {
 canvas {
     width:100%;
     height:100%;
-    position:absolute;
+    position:fixed;
+    background-image: url("stars4.jpg");
+    background-size: cover;
 }
 
 .text {
@@ -53,6 +55,7 @@ canvas {
 
 .textBox {
     margin:30px;
+    z-index: 1;
     position:absolute;
 }
 .textBox.centered {
@@ -195,7 +198,6 @@ canvas {
 #name-prompt-overlay #name-prompt-container button {
     font-family: 'ONEDAY';
     font-size: 1.5vmax;
-    width: 6vmax;
     line-height: 0.5vmax;
     margin-top: 4vh;
     height: 2vmax;
@@ -257,9 +259,10 @@ canvas {
 #waiting-room-overlay #waiting-room-container #waiting-room-header {
     text-align: center;
     font-size: 2vmax;
+    margin-top: auto;
 }
 
-#waiting-room-overlay #waiting-room-container #start-submit {
+#waiting-room-overlay #waiting-room-container #start-button {
     font-family: 'ONEDAY';
     font-size: 1.5vmax;
     line-height: 0.5vmax;
@@ -268,6 +271,17 @@ canvas {
     background-color: rgb(216,216,216);
     border-radius: 10px;
 }
+
+#waiting-room-overlay #waiting-room-container #switch-button {
+    font-family: 'ONEDAY';
+    font-size: 1.5vmax;
+    line-height: 0.5vmax;
+    height: 2vmax;
+    border-width: 1vmax;
+    background-color: rgb(216,216,216);
+    border-radius: 10px;
+}
+
 #waiting-room-overlay #waiting-room-container #controller_ready_img {
     visibility: hidden;
 }
