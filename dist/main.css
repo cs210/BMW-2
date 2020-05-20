@@ -208,6 +208,9 @@ canvas {
 #name-prompt-overlay #name-prompt-container #name-submit:hover {
     cursor: pointer;
 }
+#name-prompt-overlay #name-prompt-container #feedback-submit:hover {
+    cursor: pointer;
+}
 
 #name-prompt-overlay #name-prompt-container #name-header {
     font-size: 2vmax;
