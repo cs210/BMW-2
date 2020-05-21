@@ -145,6 +145,9 @@ export default class AsteroidsClientEngine extends ClientEngine {
                         + `<br >`
                         + `${data.winningPlayers[1]}`;
                     $('#winning_banner').show().delay(5000).fadeOut();
+                    if (data.isSelf) {
+                        $('#winning_soundclip').trigger("play");
+                    }
                 });
 
                 this.socket.on('groupFull', () => {

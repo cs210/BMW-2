@@ -29,7 +29,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
         this.roundStarted = false;
         this.stagingStarted = false;
-        this.winningScore = 5;
+        this.winningScore = 1;
         this.gameStagingTime = 5; // in seconds
     }
 
@@ -260,7 +260,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
                 if (that.roundStarted) {
                     that.enterRound(groupCode);
-                } else {
+                } else if (!that.stagingStarted){
                     that.staging();
                 }
             } else {
