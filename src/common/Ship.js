@@ -12,6 +12,7 @@ export default class Ship extends PhysicalObject2D {
             c_name: { type: BaseTypes.TYPES.STRING },
             v_name: { type: BaseTypes.TYPES.STRING },
             lastShot: { type: BaseTypes.TYPES.INT16 },
+            groupCode: { type: BaseTypes.TYPES.STRING },
         }, super.netScheme);
     }
 
@@ -62,5 +63,6 @@ export default class Ship extends PhysicalObject2D {
         this.c_name = other.c_name;
         this.v_name = other.v_name;
         this.lastShot = other.lastShot;
+        this.groupCode = other.groupCode;
     }
 }

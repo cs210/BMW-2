@@ -71,6 +71,19 @@ canvas {
     vertical-align: middle;
     text-align: center;
 }
+.textBox.centeredBottom {
+    width:50%;
+    height:33%;
+    min-width: 800px;
+    min-height: 100px;
+    position: fixed;
+    top:100%;
+    left:48%;
+    transform: translate(-50%, -20%);
+    margin-top: -50px;
+    vertical-align: middle;
+    text-align: center;
+}
 .textBox.bottomRight {
     position:absolute;
     right:0;
