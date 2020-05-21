@@ -97,7 +97,7 @@ export default class AsteroidsGameEngine extends GameEngine {
     }
 
     // create ship
-    addShip(playerId, c_name, v_name, score = 0, lastShot = 0) {
+    addShip(playerId, c_name, v_name, groupCode, score = 0, lastShot = 0) {
         let s = new Ship(this, {}, {
             playerId: playerId,
             mass: 10,
@@ -110,6 +110,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         s.c_name = c_name;
         s.v_name = v_name;
         s.lastShot = lastShot;
+        s.groupCode = groupCode;
         this.addObjectToWorld(s);
     }
 
@@ -129,8 +130,9 @@ export default class AsteroidsGameEngine extends GameEngine {
         let c_name = ship.c_name;
         let v_name = ship.v_name;
         let old_pid = ship.playerId;
+        let old_gcode = ship.groupCode;
         this.removeObjectFromWorld(ship.id);
-        this.addShip(old_pid, c_name, v_name, old_score);
+        this.addShip(old_pid, c_name, v_name, old_gcode, old_score);
     }
 
 
@@ -203,6 +205,15 @@ export default class AsteroidsGameEngine extends GameEngine {
             this.removeObjectFromWorld(o.id);
         }
         for (let o of this.world.queryObjects({ instanceType: FinishLine })) {
+            this.removeObjectFromWorld(o.id);
+        }
+    }
+
+    removeAllShips() {
+        for (let o of this.world.queryObjects({ instanceType: Ship })) {
+            this.removeObjectFromWorld(o.id);
+        }
+        for (let o of this.world.queryObjects({ instanceType: Bullet })) {
             this.removeObjectFromWorld(o.id);
         }
     }

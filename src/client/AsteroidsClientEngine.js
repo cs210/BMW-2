@@ -90,6 +90,14 @@ export default class AsteroidsClientEngine extends ClientEngine {
 
                 this.networkMonitor.registerClient(this);
 
+                $('#start-button').click(() => {
+                    this.socket.emit('playerReady');
+                    // document.getElementById('start-button').style.visibility = 'hidden';
+                });
+                $('#switch-button').click(() => {
+                    this.socket.emit('playerSwitchRole');
+                });
+
                 this.socket.on('connect', () => {
                     if (this.options.verbose)
                         console.log('connection made');
@@ -107,27 +115,39 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 });
 
                 this.socket.on('waitingForPlayer', () => {
+                    this.renderer.hideCanvas();
                     document.querySelector('#instructions').classList.remove('hidden');
                     document.getElementById('waiting-room-overlay').style.display = 'block';
                     document.getElementById('waiting-room-container').style.display = 'block';
+                });
 
-                    $('#start-button').click(() => {
-                        this.socket.emit('playerReady');
-                        // document.getElementById('start-button').style.visibility = 'hidden';
-                    });
-                    $('#switch-button').click(() => {
-                        this.socket.emit('playerSwitchRole');
-                    });
+                this.socket.on('gameStaging', (data) => {
+                    console.log('gameStaging received');
+                    $('#staging_alert').html(`GAME STARTS IN ${data.gameStagingTime} SECONDS!`);
+                    $('#staging_alert').show().delay(data.gameStagingTime * 1000).fadeOut();
                 });
 
                 this.socket.on('gameBegin', (data) => {
                     document.querySelector('#instructions').classList.add('hidden');
-                    $('#waiting-room-overlay').remove();
+                    $('#waiting-room-overlay').css("display", "none");
+                    $('#game_start_banner').html(`GAME START, FIRST TO ${data.winningScore} WINS!`);
+                    $('#game_start_banner').show().delay(5000).fadeOut();
                     this.viewer = this.renderer.viewer = data.viewer;
                     this.gameStarted = true;
                     this.gameEngine.playerReady[this.gameEngine.playerId] = true;
                     this.renderer.groupShipPID = data.ship_pid;
                     this.renderer.showCanvas();
+                });
+
+                this.socket.on('gameWon', (data) => {
+                    this.gameStarted = false;
+                    document.getElementById('winning_banner').innerHTML = `Winners: ${data.winningPlayers[0]}`
+                        + `<br >`
+                        + `${data.winningPlayers[1]}`;
+                    $('#winning_banner').show().delay(5000).fadeOut();
+                    if (data.isSelf) {
+                        $('#winning_soundclip').trigger("play");
+                    }
                 });
 
                 this.socket.on('groupFull', () => {

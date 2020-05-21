@@ -40,6 +40,10 @@ export default class AsteroidsRenderer extends Renderer {
         canvas.style.visibility = 'visible';
     }
 
+    hideCanvas() {
+        canvas.style.visibility = 'hidden';
+    }
+
     draw(t, dt) {
         super.draw(t, dt);
         

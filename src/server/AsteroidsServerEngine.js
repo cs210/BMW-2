@@ -10,7 +10,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
         super(io, gameEngine, inputOptions);
         gameEngine.physicsEngine.world.on('beginContact', this.handleCollision.bind(this));
         gameEngine.on('shoot', this.shoot.bind(this));
-        this.playerReady = {};
+        this.groupsReady = [];
         this.playerGroups = {};
         this.currentWorld = 0;
         // maps groupCode -> {
@@ -26,11 +26,11 @@ export default class AsteroidsServerEngine extends ServerEngine {
         // gameStarted: bool
         // };
         this.io = io;
-    }
 
-    start() {
-        super.start();
-        this.gameEngine.addBarriers();
+        this.roundStarted = false;
+        this.stagingStarted = false;
+        this.winningScore = 1;
+        this.gameStagingTime = 5; // in seconds
     }
 
     // handle a collision on server only
@@ -96,14 +96,18 @@ export default class AsteroidsServerEngine extends ServerEngine {
     gameWon(ship) {
         ship.won = true;
         ship.score++;
-        this.gameEngine.removeAllBarriers();
-        // restart game
-        if (this.gameEngine.world.queryObjects({ instanceType: Asteroid }).length === 0) {
-            console.log("restarting");
-            this.currentWorld = this.gameEngine.addBarriers(this.currentWorld);
-            this.gameEngine.resetAllShips();
+        if (ship.score === this.winningScore) {
+            this.finishRound(ship.groupCode);
         } else {
-            console.log("Error: not all barriers were removed.");
+            this.gameEngine.removeAllBarriers();
+            // restart game
+            if (this.gameEngine.world.queryObjects({instanceType: Asteroid}).length === 0) {
+                console.log("restarting");
+                this.currentWorld = this.gameEngine.addBarriers(this.currentWorld);
+                this.gameEngine.resetAllShips();
+            } else {
+                console.log("Error: not all barriers were removed.");
+            }
         }
     }
 
@@ -116,6 +120,81 @@ export default class AsteroidsServerEngine extends ServerEngine {
                 this.io.to(this.playerGroups[groupCode].v_socketID).emit('groupUpdate', this.playerGroups[groupCode]);
             }
         }
+    }
+
+    // Getting ready to start round
+    staging() {
+        console.log('Staging started');
+        this.stagingStarted = true;
+        for (let socketId of Object.keys(this.connectedPlayers)) {
+            this.io.to(socketId).emit('gameStaging', {
+                gameStagingTime : this.gameStagingTime
+            });
+        }
+
+        // Delay game start by 15 seconds
+        setTimeout(() => {
+            console.log('timeoutfn called');
+            this.startRound();
+        }, this.gameStagingTime * 1000);
+    }
+
+    // Start round for all players who are ready
+    startRound() {
+        console.log('Round started');
+        this.stagingStarted = false;
+        this.roundStarted = true;
+        this.gameEngine.addBarriers();
+        for (let groupCode of this.groupsReady) {
+            this.enterRound(groupCode);
+        }
+    }
+
+    // Start game for group who joins a started round
+    enterRound(groupCode) {
+        let group = this.playerGroups[groupCode];
+        this.gameEngine.addShip(group.c_playerID, group.c_playerName, group.v_playerName, groupCode);
+        this.gameEngine.playerReady[group.c_playerID] = true;
+
+        this.io.to(group.c_socketID).emit('gameBegin', {
+            ship_pid : group.c_playerID,
+            viewer : false,
+            winningScore : this.winningScore
+        });
+        this.io.to(group.v_socketID).emit('gameBegin', {
+            ship_pid : group.c_playerID,
+            viewer : true,
+            winningScore : this.winningScore
+        });
+        this.playerGroups[groupCode].gameStarted = true;
+    }
+
+    finishRound(winningGroupCode) {
+        this.roundStarted = false;
+        this.gameEngine.removeAllBarriers();
+        this.gameEngine.removeAllShips();
+        let winningPlayers = [
+            this.playerGroups[winningGroupCode].c_playerName,
+            this.playerGroups[winningGroupCode].v_playerName
+        ];
+        for (let groupCode of this.groupsReady) {
+            let group = this.playerGroups[groupCode];
+            this.io.to(group.c_socketID).emit('gameWon', {
+                winningPlayers : winningPlayers,
+                isSelf : groupCode === winningGroupCode
+            });
+            this.io.to(group.v_socketID).emit('gameWon', {
+                winningPlayers : winningPlayers,
+                isSelf : groupCode === winningGroupCode
+            });
+            this.playerGroups[groupCode].c_ready = false;
+            this.playerGroups[groupCode].v_ready = false;
+            this.io.to(group.c_socketID).emit('waitingForPlayer');
+            this.io.to(group.v_socketID).emit('waitingForPlayer');
+            this.sendGroupUpdate(groupCode);
+        }
+        this.groupsReady = [];
+
     }
 
     onPlayerConnected(socket) {
@@ -164,28 +243,30 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
         socket.on('playerReady', function() {
             let groupCode = that.connectedPlayers[socket.id].privateCode;
+            console.log(groupCode);
+            console.log(that.playerGroups[groupCode]);
             if (that.playerGroups[groupCode].v_socketID === socket.id) {
                 that.playerGroups[groupCode].v_ready = !that.playerGroups[groupCode].v_ready;
             } else {
                 that.playerGroups[groupCode].c_ready = !that.playerGroups[groupCode].c_ready;
             }
+            console.log(that.playerGroups[groupCode]);
             that.sendGroupUpdate(groupCode);
 
             // Check for start game
-            let group = that.playerGroups[that.connectedPlayers[socket.id].privateCode];
+            let group = that.playerGroups[groupCode];
             if (group.v_ready && group.c_ready) {
-                that.gameEngine.addShip(group.c_playerID, group.c_playerName, group.v_playerName);
-                that.gameEngine.playerReady[group.c_playerID] = true;
-                that.io.to(group.c_socketID).emit('gameBegin', {
-                    ship_pid : group.c_playerID,
-                    viewer : false
-                });
-                that.io.to(group.v_socketID).emit('gameBegin', {
-                    ship_pid : group.c_playerID,
-                    viewer : true
-                });
-                that.playerGroups[that.connectedPlayers[socket.id].privateCode].gameStarted = true;
+                that.groupsReady.push(groupCode);
+
+                if (that.roundStarted) {
+                    that.enterRound(groupCode);
+                } else if (!that.stagingStarted){
+                    that.staging();
+                }
+            } else {
+                that.groupsReady = that.groupsReady.filter(gc => (gc !== groupCode));
             }
+            console.log(`Groups ready: ${that.groupsReady}`);
         });
 
         socket.on('playerSwitchRole', function() {
@@ -230,6 +311,9 @@ export default class AsteroidsServerEngine extends ServerEngine {
                     this.io.to(this.playerGroups[group_code].c_socketID).emit('groupUpdate', this.playerGroups[group_code]);
                 }
             }
+
+            // Remove the group of the player that left from groupsReady.
+            this.groupsReady = this.groupsReady.filter(gc => (gc !== group_code));
 
             if (this.playerGroups[group_code] && this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
                 delete this.playerGroups[group_code];
