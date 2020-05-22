@@ -88,10 +88,12 @@ export default class AsteroidsRenderer extends Renderer {
         }
 
         // update score if necessary
+        /*
         if (playerShip.playerId === this.groupShipPID && this.score != playerShip.score) {
             document.getElementById('score').innerHTML = 'Score: ' + playerShip.score;
             this.score = playerShip.score;
         }
+         */
 
         // update winning if necessary
         if (playerShip.playerId === this.groupShipPID && playerShip.won) {
