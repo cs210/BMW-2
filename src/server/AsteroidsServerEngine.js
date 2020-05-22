@@ -12,6 +12,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
         gameEngine.on('shoot', this.shoot.bind(this));
         this.groupsReady = [];
         this.playerGroups = {};
+        this.scoreboard = {};
         this.currentWorld = 0;
         // maps groupCode -> {
         // c_playerID : int,
@@ -29,7 +30,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
         this.roundStarted = false;
         this.stagingStarted = false;
-        this.winningScore = 1;
+        this.winningScore = 3;
         this.gameStagingTime = 5; // in seconds
     }
 
@@ -96,6 +97,8 @@ export default class AsteroidsServerEngine extends ServerEngine {
     gameWon(ship) {
         ship.won = true;
         ship.score++;
+        this.scoreboard[ship.groupCode]++;
+        this.sendScoreboardUpdate();
         if (ship.score === this.winningScore) {
             this.finishRound(ship.groupCode);
         } else {
@@ -122,6 +125,27 @@ export default class AsteroidsServerEngine extends ServerEngine {
         }
     }
 
+    sendScoreboardUpdate() {
+        let scoreboard_converted = [];
+        for (let groupCode of Object.keys(this.scoreboard)) {
+            scoreboard_converted.push({
+                score : this.scoreboard[groupCode],
+                name : `${this.playerGroups[groupCode].c_playerName} and ${this.playerGroups[groupCode].v_playerName}`
+            });
+        }
+        for (let groupCode of this.groupsReady) {
+            let group = this.playerGroups[groupCode];
+            this.io.to(group.c_socketID).emit('scoreboardUpdate', {
+                scoreboard: scoreboard_converted,
+                own_name: `${this.playerGroups[groupCode].c_playerName} and ${this.playerGroups[groupCode].v_playerName}`,
+            });
+            this.io.to(group.v_socketID).emit('scoreboardUpdate', {
+                scoreboard: scoreboard_converted,
+                own_name: `${this.playerGroups[groupCode].c_playerName} and ${this.playerGroups[groupCode].v_playerName}`,
+            });
+        }
+    }
+
     // Getting ready to start round
     staging() {
         console.log('Staging started');
@@ -142,16 +166,19 @@ export default class AsteroidsServerEngine extends ServerEngine {
     // Start round for all players who are ready
     startRound() {
         console.log('Round started');
+        this.scoreboard = {};
         this.stagingStarted = false;
         this.roundStarted = true;
         this.gameEngine.addBarriers();
         for (let groupCode of this.groupsReady) {
             this.enterRound(groupCode);
         }
+        this.sendScoreboardUpdate();
     }
 
     // Start game for group who joins a started round
     enterRound(groupCode) {
+        this.scoreboard[groupCode] = 0;
         let group = this.playerGroups[groupCode];
         this.gameEngine.addShip(group.c_playerID, group.c_playerName, group.v_playerName, groupCode);
         this.gameEngine.playerReady[group.c_playerID] = true;
@@ -205,6 +232,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
             that.connectedPlayers[socket.id].privateCode = data.privateCode;
             if (data.privateCode in that.playerGroups) {
                 if (that.playerGroups[data.privateCode].full) {
+                    that.connectedPlayers[socket.id].privateCode = null;
                     socket.emit('groupFull');
                 } else {
                     if (that.playerGroups[data.privateCode].v_playerID === null) {
@@ -243,14 +271,11 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
         socket.on('playerReady', function() {
             let groupCode = that.connectedPlayers[socket.id].privateCode;
-            console.log(groupCode);
-            console.log(that.playerGroups[groupCode]);
             if (that.playerGroups[groupCode].v_socketID === socket.id) {
                 that.playerGroups[groupCode].v_ready = !that.playerGroups[groupCode].v_ready;
             } else {
                 that.playerGroups[groupCode].c_ready = !that.playerGroups[groupCode].c_ready;
             }
-            console.log(that.playerGroups[groupCode]);
             that.sendGroupUpdate(groupCode);
 
             // Check for start game
@@ -260,6 +285,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
                 if (that.roundStarted) {
                     that.enterRound(groupCode);
+                    that.sendScoreboardUpdate();
                 } else if (!that.stagingStarted){
                     that.staging();
                 }
@@ -314,6 +340,10 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
             // Remove the group of the player that left from groupsReady.
             this.groupsReady = this.groupsReady.filter(gc => (gc !== group_code));
+
+            //Removes player from scoreboard and send update
+            delete this.scoreboard[group_code];
+            this.sendScoreboardUpdate();
 
             if (this.playerGroups[group_code] && this.playerGroups[group_code].c_socketID === null && this.playerGroups[group_code].v_socketID === null) {
                 delete this.playerGroups[group_code];

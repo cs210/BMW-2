@@ -141,12 +141,22 @@ export default class AsteroidsClientEngine extends ClientEngine {
 
                 this.socket.on('gameWon', (data) => {
                     this.gameStarted = false;
-                    document.getElementById('winning_banner').innerHTML = `Winners: ${data.winningPlayers[0]}`
+                    document.getElementById('winning_banner').innerHTML = `Winners:`
                         + `<br >`
-                        + `${data.winningPlayers[1]}`;
+                        + `${data.winningPlayers[0]} and ${data.winningPlayers[1]}`;
                     $('#winning_banner').show().delay(5000).fadeOut();
                     if (data.isSelf) {
                         $('#winning_soundclip').trigger("play");
+                    }
+                });
+
+                this.socket.on('scoreboardUpdate', (data) => {
+                    data.scoreboard.sort((a, b) => (a.score < b.score) ? 1: -1);
+                    $('#scoreboard').empty()
+                    for (let obj of data.scoreboard) {
+                        $(`<div>${obj.name}: ${obj.score}</div>`)
+                            .addClass( (obj.name === data.own_name) ? 'blueFont' : 'whiteFont' )
+                            .appendTo('#scoreboard');
                     }
                 });
 
@@ -154,6 +164,10 @@ export default class AsteroidsClientEngine extends ClientEngine {
                     window.alert('Group is full, please join/create another group.');
                     document.getElementById('name-prompt-overlay').style.display = 'block';
                     document.getElementById('name-prompt-container').style.display = 'block';
+
+                    // Unbind from current socket, otherwise the next click will send two ready msgs to server.
+                    $('#start-button').off('click');
+                    $('#switch-button').off('click');
                 });
 
                 this.socket.on('groupUpdate', (groupData) => {

@@ -28,12 +28,21 @@ a {
     text-decoration: none;
     font-weight: bold;
 }
+
 canvas {
     width:100%;
     height:100%;
     position:fixed;
     background-image: url("stars4.jpg");
     background-size: cover;
+}
+
+.whiteFont {
+    color: white;
+}
+
+.blueFont {
+    color: #18CAE6;
 }
 
 .text {
