@@ -14,29 +14,29 @@ export default class AsteroidsClientEngine extends ClientEngine {
         super(gameEngine, options, AsteroidsRenderer);
         this.playerOptions = options.playerOptions;
         //  Game input
-        if (isTouchDevice()) {
-            document.querySelector('#instructionsMobile').classList.remove('hidden');
+        // if (isTouchDevice()) {
+        //     document.querySelector('#instructionsMobile').classList.remove('hidden');
 
-            this.actions = new Set();
+        //     this.actions = new Set();
 
-            this.fireButton = document.querySelector('.fireButton');
-            this.fireButton.style.opacity = 1;
-            this.boostButton = document.querySelector('.boostButton');
-            this.boostButton.style.opacity = 1;
-            window.addEventListener('deviceorientation', this.handleOrientation.bind(this));
-            this.fireButton.addEventListener('touchstart', this.handleButton.bind(this, 'space'), false);
-            this.boostButton.addEventListener('touchstart', this.handleButton.bind(this, 'up'), false);
-            this.gameEngine.on('client__preStep', this.preStep.bind(this));
-        } else {
-            document.querySelector('#instructions').classList.remove('hidden');
-            window.addEventListener('resize', this.resizeGame, false);
-            this.controls = new KeyboardControls(this);
-            this.controls.bindKey('up', 'up', { repeat: true } );
-            this.controls.bindKey('down', 'down', { repeat: true } );
-            this.controls.bindKey('left', 'left', { repeat: true } );
-            this.controls.bindKey('right', 'right', { repeat: true } );
-            this.controls.bindKey('space', 'space');
-        }
+        //     this.fireButton = document.querySelector('.fireButton');
+        //     this.fireButton.style.opacity = 1;
+        //     this.boostButton = document.querySelector('.boostButton');
+        //     this.boostButton.style.opacity = 1;
+        //     window.addEventListener('deviceorientation', this.handleOrientation.bind(this));
+        //     this.fireButton.addEventListener('touchstart', this.handleButton.bind(this, 'space'), false);
+        //     this.boostButton.addEventListener('touchstart', this.handleButton.bind(this, 'up'), false);
+        //     this.gameEngine.on('client__preStep', this.preStep.bind(this));
+        // } else {
+        document.querySelector('#instructions').classList.remove('hidden');
+        window.addEventListener('resize', this.resizeGame, false);
+        this.controls = new KeyboardControls(this);
+        this.controls.bindKey('up', 'up', { repeat: true } );
+        this.controls.bindKey('down', 'down', { repeat: true } );
+        this.controls.bindKey('left', 'left', { repeat: true } );
+        this.controls.bindKey('right', 'right', { repeat: true } );
+        this.controls.bindKey('space', 'space');
+        // }
         this.gameStarted = false;
     }
 

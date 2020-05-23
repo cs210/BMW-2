@@ -298,7 +298,6 @@ export default class AsteroidsGameEngine extends GameEngine {
         Checkout https://keesiemeijer.github.io/maze-generator/#generate and its github repo.
      */
     generated_world() {
-        console.log('generating new world...')
         const maze_gen = new Maze();
         maze_gen.generate();
         const undersizeConstant = 2; // How much smaller to make the walls compared to the actual size
