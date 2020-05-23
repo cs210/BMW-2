@@ -4,9 +4,6 @@ import Utils from "lance-gg/src/lib/Utils";
 import io from 'socket.io-client';
 const $ = require('jquery');
 
-const betaTiltThreshold = 40;
-const gammaTiltThreshold = 40;
-const steerThreshold = 0.4;
 
 export default class AsteroidsClientEngine extends ClientEngine {
 
@@ -14,20 +11,6 @@ export default class AsteroidsClientEngine extends ClientEngine {
         super(gameEngine, options, AsteroidsRenderer);
         this.playerOptions = options.playerOptions;
         //  Game input
-        // if (isTouchDevice()) {
-        //     document.querySelector('#instructionsMobile').classList.remove('hidden');
-
-        //     this.actions = new Set();
-
-        //     this.fireButton = document.querySelector('.fireButton');
-        //     this.fireButton.style.opacity = 1;
-        //     this.boostButton = document.querySelector('.boostButton');
-        //     this.boostButton.style.opacity = 1;
-        //     window.addEventListener('deviceorientation', this.handleOrientation.bind(this));
-        //     this.fireButton.addEventListener('touchstart', this.handleButton.bind(this, 'space'), false);
-        //     this.boostButton.addEventListener('touchstart', this.handleButton.bind(this, 'up'), false);
-        //     this.gameEngine.on('client__preStep', this.preStep.bind(this));
-        // } else {
         document.querySelector('#instructions').classList.remove('hidden');
         window.addEventListener('resize', this.resizeGame, false);
         this.controls = new KeyboardControls(this);
@@ -36,36 +19,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
         this.controls.bindKey('left', 'left', { repeat: true } );
         this.controls.bindKey('right', 'right', { repeat: true } );
         this.controls.bindKey('space', 'space');
-        // }
         this.gameStarted = false;
-    }
-
-    handleButton(action, ev) {
-        this.actions.add(action);
-        ev.preventDefault();
-    }
-
-    handleOrientation(event) {
-        let isPortrait = window.innerHeight > window.innerWidth;
-        let beta = event.beta;  // In degree in the range [-180,180]
-        let gamma = event.gamma; // In degree in the range [-90,90]
-        let flip = gamma > 0;
-        let steerValue = Math.max(-1, Math.min(1, beta / betaTiltThreshold)) * (flip?-1:1);
-        if (isPortrait) {
-            flip = beta < 0;
-            steerValue = Math.max(-1, Math.min(1, gamma / gammaTiltThreshold)) * (flip?-1:1);
-        }
-
-        this.actions.delete('left');
-        this.actions.delete('right');
-        if (steerValue < -steerThreshold) this.actions.add('left');
-        else if (steerValue > steerThreshold) this.actions.add('right');
-    }
-
-    // our pre-step is to process inputs that are "currently pressed" during the game step
-    preStep() {
-        this.actions.forEach((action) => this.sendInput(action, { movement: true }));
-        this.actions = new Set();
     }
 
     /**
@@ -123,15 +77,23 @@ export default class AsteroidsClientEngine extends ClientEngine {
 
                 this.socket.on('gameStaging', (data) => {
                     console.log('gameStaging received');
-                    $('#staging_alert').html(`GAME STARTS IN ${data.gameStagingTime} SECONDS!`);
-                    $('#staging_alert').show().delay(data.gameStagingTime * 1000).fadeOut();
+                    $('#staging_alert').show();
+                    let counter = data.gameStagingTime;
+                    let interval = setInterval(function() {
+                        counter--;
+                        $('#staging_alert').html(`GAME STARTS IN ${counter} SECONDS!`);
+                        if (counter === 0) {
+                            $('#staging_alert').fadeOut();
+                            clearInterval(interval);
+                        }
+                    }, 1000);
                 });
 
                 this.socket.on('gameBegin', (data) => {
                     document.querySelector('#instructions').classList.add('hidden');
                     $('#waiting-room-overlay').css("display", "none");
                     $('#game_start_banner').html(`GAME START, FIRST TO ${data.winningScore} WINS!`);
-                    $('#game_start_banner').show().delay(5000).fadeOut();
+                    $('#game_start_banner').show().delay(data.gameStagingTime).fadeOut();
                     this.viewer = this.renderer.viewer = data.viewer;
                     this.gameStarted = true;
                     this.gameEngine.playerReady[this.gameEngine.playerId] = true;
@@ -151,7 +113,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 });
 
                 this.socket.on('scoreboardUpdate', (data) => {
-                    data.scoreboard.sort((a, b) => (a.score < b.score) ? 1: -1);
+                    data.scoreboard.sort((a, b) => (a.score < b.score) ? 1 : -1);
                     $('#scoreboard').empty()
                     for (let obj of data.scoreboard) {
                         $(`<div>${obj.name}: ${obj.score}</div>`)
@@ -206,8 +168,4 @@ export default class AsteroidsClientEngine extends ClientEngine {
 
         return matchmaker.then(connectSocket);
     }
-}
-
-function isTouchDevice() {
-    return 'ontouchstart' in window || navigator.maxTouchPoints;
 }
