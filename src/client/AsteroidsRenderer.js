@@ -24,7 +24,6 @@ export default class AsteroidsRenderer extends Renderer {
         game.h = canvas.height;
         game.zoom = game.h / game.spaceHeight;
         if (game.w / game.spaceWidth < game.zoom) game.zoom = game.w / game.spaceWidth;
-        game.zoom = game.h/game.spaceHeight;
         ctx = canvas.getContext('2d');
         ctx.lineWidth = 2 / game.zoom;
         ctx.strokeStyle = ctx.fillStyle = 'white';
@@ -48,7 +47,17 @@ export default class AsteroidsRenderer extends Renderer {
         super.draw(t, dt);
         
         // Clear the canvas
-        ctx.clearRect(0, 0, game.w, game.h);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Resize the canvas
+        canvas.width = window.innerWidth * window.devicePixelRatio;
+        canvas.height = window.innerHeight * window.devicePixelRatio;
+        game.w = window.innerWidth * window.devicePixelRatio;
+        game.h = window.innerHeight * window.devicePixelRatio;
+        game.zoom = game.h / game.spaceHeight;
+        if (game.w / game.spaceWidth < game.zoom) game.zoom = game.w / game.spaceWidth;
+        ctx.lineWidth = 2 / game.zoom;
+
 
         // Transform the canvas
         // Note that we need to flip the y axis since Canvas pixel coordinates
@@ -115,6 +124,9 @@ export default class AsteroidsRenderer extends Renderer {
         }
         ctx.save();
         ctx.translate(body.position[0], body.position[1]); // Translate to the ship center
+        ctx.font = "0.2px ONEDAY";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
         ctx.fillText(v_name, 0, -0.63);
         ctx.fillText(c_name, 0, -0.4);
         ctx.rotate(body.angle); // Rotate to ship orientation
