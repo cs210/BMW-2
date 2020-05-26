@@ -149,8 +149,12 @@ export default class AsteroidsGameEngine extends GameEngine {
         let sizeY = asteroid.physicsObj.shapes[0].height;
         let posX = asteroid.physicsObj.position[0];
         let posY = asteroid.physicsObj.position[1];
-        this.buildBarrier(posX, posY, sizeX, sizeY, true);
-        //this.removeObjectFromWorld(asteroid);
+        if (asteroid.breakable) {
+            this.removeObjectFromWorld(asteroid);
+        } else {
+            this.buildBarrier(posX, posY, sizeX, sizeY, true);
+        }
+
         this.removeObjectFromWorld(bullet);
 
 
@@ -181,6 +185,7 @@ export default class AsteroidsGameEngine extends GameEngine {
             angularVelocity: 0
         }, new TwoVector(sizeX, sizeY));
         barrier.level = 0;
+        barrier.color = "white";
         barrier.shot = shot;
         let obj = this.addObjectToWorld(barrier);
         if (shot) {
@@ -267,14 +272,15 @@ export default class AsteroidsGameEngine extends GameEngine {
         return world_choice;
     }
 
-    addWallBlock(xcoor, ycoor, blockWidth, blockHeight) {
+    addWallBlock(xcoor, ycoor, blockWidth, blockHeight, breakable = false) {
         let mazeBlock = new Asteroid(this, {}, {
             mass: 100000,
             position: new TwoVector(xcoor, ycoor),
             velocity: new TwoVector(0, 0),
             angularVelocity: 0
-        }, new TwoVector(blockWidth, blockHeight));
+        }, new TwoVector(blockWidth, blockHeight), breakable);
         mazeBlock.level = 0;
+        mazeBlock.color = breakable ? "blue" : "white";
         this.addObjectToWorld(mazeBlock);
     }
 
@@ -307,16 +313,17 @@ export default class AsteroidsGameEngine extends GameEngine {
         console.log(maze_gen.entryNodes);
         for (let x = 1; x < 2 * maze_gen.width; x++) {
             for (let y = 1; y < 2 * maze_gen.height; y++) {
-                if (maze_gen.matrix[y].charAt(x) === '1') {
+                const breakable = maze_gen.matrix[y].charAt(x) === '2';
+                if (maze_gen.matrix[y].charAt(x) === '1' || breakable) {
                     let xcoor = blockWidth * (x - maze_gen.width);
                     let ycoor = -blockHeight * (y - maze_gen.height);
                     this.addWallBlock(
                         xcoor,
                         ycoor,
                         blockWidth / undersizeConstant,
-                        blockHeight / undersizeConstant
+                        blockHeight / undersizeConstant,
+                        breakable,
                     );
-
 
                     // If next horizontal block is also a wall, add a connector
                     if ((x !== 2 * maze_gen.width - 1) && (maze_gen.matrix[y].charAt(x + 1) === '1')) {
@@ -324,7 +331,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                             xcoor + blockWidth / 2,
                             ycoor,
                             blockWidth / undersizeConstant,
-                            blockHeight / undersizeConstant
+                            blockHeight / undersizeConstant,
                         );
                     }
 
@@ -334,7 +341,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                             xcoor,
                             ycoor - blockHeight / 2,
                             blockWidth / undersizeConstant,
-                            blockHeight / undersizeConstant
+                            blockHeight / undersizeConstant,
                         );
                     }
 
@@ -344,7 +351,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                             xcoor - blockWidth / 2 + blockWidth / undersizeConstant / 4,
                             ycoor,
                             blockWidth / undersizeConstant / 2,
-                            blockHeight / undersizeConstant
+                            blockHeight / undersizeConstant,
                         );
                     }
 
@@ -354,7 +361,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                             xcoor + blockWidth / 2 - blockWidth / undersizeConstant / 4,
                             ycoor,
                             blockWidth / undersizeConstant / 2,
-                            blockHeight / undersizeConstant
+                            blockHeight / undersizeConstant,
                         );
                     }
 
@@ -364,7 +371,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                             xcoor,
                             ycoor + blockHeight / 2 - blockHeight / undersizeConstant / 4,
                             blockWidth / undersizeConstant,
-                            blockHeight / undersizeConstant / 2
+                            blockHeight / undersizeConstant / 2,
                         );
                     }
 
@@ -374,7 +381,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                             xcoor,
                             ycoor - blockHeight / 2 + blockHeight / undersizeConstant / 4,
                             blockWidth / undersizeConstant,
-                            blockHeight / undersizeConstant / 2
+                            blockHeight / undersizeConstant / 2,
                         );
                     }
                 }
@@ -384,42 +391,12 @@ export default class AsteroidsGameEngine extends GameEngine {
         this.addFinishLine(blockWidth * (maze_gen.width - 1), -blockHeight * (maze_gen.height - 1));
     }
 
+
     addWalls() {
-        let topWall = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(0, -this.spaceHeight / 2),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(this.spaceWidth, this.wallWidth));
-        topWall.level = 0;
-        this.addObjectToWorld(topWall);
-
-        let bottomWall = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(0, this.spaceHeight / 2),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(this.spaceWidth, this.wallWidth));
-        bottomWall.level = 0;
-        this.addObjectToWorld(bottomWall);
-
-        let leftWall = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(-this.spaceWidth / 2, 0),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(this.wallWidth, this.spaceHeight));
-        leftWall.level = 0;
-        this.addObjectToWorld(leftWall);
-
-        let rightWall = new Asteroid(this, {}, {
-            mass: 100000,
-            position: new TwoVector(this.spaceWidth / 2, 0),
-            velocity: new TwoVector(0, 0),
-            angularVelocity: 0
-        }, new TwoVector(this.wallWidth, this.spaceHeight));
-        rightWall.level = 0;
-        this.addObjectToWorld(rightWall);
+        this.addWallBlock(0, -this.spaceHeight / 2, this.spaceWidth, this.wallWidth);
+        this.addWallBlock(0, this.spaceHeight / 2, this.spaceWidth, this.wallWidth);
+        this.addWallBlock(-this.spaceWidth, 0, this.wallWidth, this.spaceHeight);
+        this.addWallBlock(this.spaceWidth, 0, this.wallWidth, this.spaceHeight);
     }
 
     empty_world() {

@@ -51,6 +51,11 @@ export default class Maze {
         nodes = this.parseMaze(nodes);
         this.getMatrix(nodes);
         this.removeMazeWalls();
+
+        this.matrix[1] = this.replaceAt(this.matrix[1], 2, "2");
+        this.matrix[1] = this.replaceAt(this.matrix[1], 5, "2");
+        this.matrix[3] = this.replaceAt(this.matrix[3], 4, "2");
+
     }
 
     isValidSize() {
