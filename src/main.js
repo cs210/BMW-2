@@ -5,7 +5,7 @@ import { Lib } from 'lance-gg';
 import AsteroidsGameEngine from './common/AsteroidsGameEngine';
 import AsteroidsServerEngine from './server/AsteroidsServerEngine';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 80;
 const INDEX = path.join(__dirname, '../dist/index.html');
 
 // define routes and socket
