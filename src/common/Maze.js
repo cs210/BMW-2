@@ -58,11 +58,13 @@ export default class Maze {
         this.removeMazeWalls();
 
         // Randomly place breakable obstacles
-        for (let i = 0; i < 7; i++) {
+        let placed = 0;
+        while (placed < 7) {
             const randomRow = this.getRandInt(1, this.matrix.length - 2);
             const randomCol = this.getRandInt(1, this.matrix[0].length - 2);
             if (randomRow == 1 && randomCol == 1) continue;
             this.matrix[randomRow] = this.replaceAt(this.matrix[randomRow], randomCol, "2");
+            placed++;
         }
     }
 
