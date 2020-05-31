@@ -5,16 +5,18 @@ let p2 = null;
 
 export default class Asteroid extends PhysicalObject2D {
 
-    constructor(gameEngine, options, props, dim) {
+    constructor(gameEngine, options, props, dim, breakable = false) {
         super(gameEngine, options, props);
         this.dim = dim;
+        this.breakable = breakable;
     }
 
     static get netScheme() {
         return Object.assign({
             level: { type: BaseTypes.TYPES.INT16 },
             dim: { type: BaseTypes.TYPES.CLASSINSTANCE },
-            shot: { type: BaseTypes.TYPES.INT8 }
+            shot: { type: BaseTypes.TYPES.INT8 },
+            color: {type: BaseTypes.TYPES.STRING },
         }, super.netScheme);
     }
 
@@ -29,9 +31,11 @@ export default class Asteroid extends PhysicalObject2D {
         game = this.gameEngine;
         p2 = game.physicsEngine.p2;
         this.physicsObj = new p2.Body({
-            mass: this.mass, damping: 0, angularDamping: 0,
+            mass: this.mass,
+            damping: 0,
+            angularDamping: 0,
             position: [this.position.x, this.position.y],
-            velocity: [this.velocity.x, this.velocity.y]
+            velocity: [this.velocity.x, this.velocity.y],
         });
         this.physicsObj.addShape(new p2.Box({
             width: this.dim.x,

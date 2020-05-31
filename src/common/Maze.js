@@ -40,6 +40,11 @@ export default class Maze {
         this.maxWallsRemove = parseInt(settings['maxWallsRemove'], 10);
     }
 
+    getRandInt(min, max) {
+        // Includes min and max.
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     generate() {
         if (!this.isValidSize()) {
             this.matrix = [];
@@ -51,6 +56,16 @@ export default class Maze {
         nodes = this.parseMaze(nodes);
         this.getMatrix(nodes);
         this.removeMazeWalls();
+
+        // Randomly place breakable obstacles
+        let placed = 0;
+        while (placed < 7) {
+            const randomRow = this.getRandInt(1, this.matrix.length - 2);
+            const randomCol = this.getRandInt(1, this.matrix[0].length - 2);
+            if (randomRow == 1 && randomCol == 1) continue;
+            this.matrix[randomRow] = this.replaceAt(this.matrix[randomRow], randomCol, "2");
+            placed++;
+        }
     }
 
     isValidSize() {

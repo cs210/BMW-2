@@ -45,7 +45,7 @@ export default class AsteroidsRenderer extends Renderer {
 
     draw(t, dt) {
         super.draw(t, dt);
-        
+
         // Clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -73,12 +73,11 @@ export default class AsteroidsRenderer extends Renderer {
             if (obj instanceof Ship) this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID, obj.c_name, obj.v_name);
             else if (obj instanceof Bullet) this.drawBullet(obj.physicsObj);
             else if (obj instanceof FinishLine) this.drawFinishLine(obj.physicsObj);
-            else if (obj instanceof Asteroid && obj.shot == true) { // && !viewer if we don't want viewer to have highlighted boxes
-                console.log(this.viewer);
+            else if (obj instanceof Asteroid && obj.shot) {
+                // && !viewer if we don't want viewer to have highlighted boxes
                 this.drawAsteroid(obj.physicsObj);
-            }
-            else if (obj instanceof Asteroid && this.viewer) {
-                this.drawAsteroid(obj.physicsObj);
+            } else if (obj instanceof Asteroid && this.viewer) {
+                this.drawAsteroid(obj.physicsObj, obj.color);
             }
         });
 
@@ -171,7 +170,7 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.shadowColor = "white";
     }
 
-    drawAsteroid(body) {
+    drawAsteroid(body, color = "white") {
         ctx.save();
         ctx.translate(body.position[0], body.position[1]);  // Translate to the center
         ctx.beginPath();
@@ -187,7 +186,7 @@ export default class AsteroidsRenderer extends Renderer {
         ctx.strokeStyle = 'white';
         ctx.stroke();
         ctx.globalAlpha = 0.7;
-        ctx.fillStyle = 'white'; //'#3447a2';
+        ctx.fillStyle = color; //'#3447a2';
         ctx.fill();
         ctx.restore();
     }
