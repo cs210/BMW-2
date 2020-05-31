@@ -332,6 +332,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                             ycoor,
                             blockWidth / undersizeConstant,
                             blockHeight / undersizeConstant,
+                            breakable,
                         );
                     }
 
@@ -342,6 +343,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                             ycoor - blockHeight / 2,
                             blockWidth / undersizeConstant,
                             blockHeight / undersizeConstant,
+                            breakable,
                         );
                     }
 
@@ -352,6 +354,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                             ycoor,
                             blockWidth / undersizeConstant / 2,
                             blockHeight / undersizeConstant,
+                            breakable,
                         );
                     }
 
@@ -362,6 +365,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                             ycoor,
                             blockWidth / undersizeConstant / 2,
                             blockHeight / undersizeConstant,
+                            breakable,
                         );
                     }
 
@@ -372,6 +376,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                             ycoor + blockHeight / 2 - blockHeight / undersizeConstant / 4,
                             blockWidth / undersizeConstant,
                             blockHeight / undersizeConstant / 2,
+                            breakable,
                         );
                     }
 
@@ -382,6 +387,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                             ycoor - blockHeight / 2 + blockHeight / undersizeConstant / 4,
                             blockWidth / undersizeConstant,
                             blockHeight / undersizeConstant / 2,
+                            breakable,
                         );
                     }
                 }
@@ -393,10 +399,10 @@ export default class AsteroidsGameEngine extends GameEngine {
 
 
     addWalls() {
-        this.addWallBlock(0, -this.spaceHeight / 2, this.spaceWidth, this.wallWidth);
-        this.addWallBlock(0, this.spaceHeight / 2, this.spaceWidth, this.wallWidth);
-        this.addWallBlock(-this.spaceWidth, 0, this.wallWidth, this.spaceHeight);
-        this.addWallBlock(this.spaceWidth, 0, this.wallWidth, this.spaceHeight);
+        // this.addWallBlock(0, -this.spaceHeight / 2, this.spaceWidth, this.wallWidth);
+        // this.addWallBlock(0, this.spaceHeight / 2, this.spaceWidth, this.wallWidth);
+        // this.addWallBlock(-this.spaceWidth, 0, this.wallWidth, this.spaceHeight);
+        // this.addWallBlock(this.spaceWidth, 0, this.wallWidth, this.spaceHeight);
     }
 
     empty_world() {
