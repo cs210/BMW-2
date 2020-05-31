@@ -76,10 +76,8 @@ export default class AsteroidsRenderer extends Renderer {
             else if (obj instanceof Asteroid && obj.shot) {
                 // && !viewer if we don't want viewer to have highlighted boxes
                 this.drawAsteroid(obj.physicsObj);
-            } else if (obj instanceof Asteroid && obj.color) {
-                this.drawAsteroid(obj.physicsObj, obj.color);
             } else if (obj instanceof Asteroid && this.viewer) {
-                this.drawAsteroid(obj.physicsObj);
+                this.drawAsteroid(obj.physicsObj, obj.color);
             }
         });
 

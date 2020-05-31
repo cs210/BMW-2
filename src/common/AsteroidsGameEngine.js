@@ -314,7 +314,7 @@ export default class AsteroidsGameEngine extends GameEngine {
         for (let x = 1; x < 2 * maze_gen.width; x++) {
             for (let y = 1; y < 2 * maze_gen.height; y++) {
                 const breakable = maze_gen.matrix[y].charAt(x) === '2';
-                if (maze_gen.matrix[y].charAt(x) === '1' || breakable) {
+                if (maze_gen.matrix[y].charAt(x) !== '0') {
                     let xcoor = blockWidth * (x - maze_gen.width);
                     let ycoor = -blockHeight * (y - maze_gen.height);
                     this.addWallBlock(
@@ -326,7 +326,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                     );
 
                     // If next horizontal block is also a wall, add a connector
-                    if ((x !== 2 * maze_gen.width - 1) && (maze_gen.matrix[y].charAt(x + 1) === '1')) {
+                    if ((x !== 2 * maze_gen.width - 1) && (maze_gen.matrix[y].charAt(x + 1) !== '0')) {
                         this.addWallBlock(
                             xcoor + blockWidth / 2,
                             ycoor,
@@ -337,7 +337,7 @@ export default class AsteroidsGameEngine extends GameEngine {
                     }
 
                     // If next vertical block is also a wall, add a connector
-                    if ((y !== 2 * maze_gen.height - 1) && (maze_gen.matrix[y + 1].charAt(x) === '1')) {
+                    if ((y !== 2 * maze_gen.height - 1) && (maze_gen.matrix[y + 1].charAt(x) !== '0')) {
                         this.addWallBlock(
                             xcoor,
                             ycoor - blockHeight / 2,
