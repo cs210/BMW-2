@@ -30,7 +30,7 @@ export default class AsteroidsServerEngine extends ServerEngine {
 
         this.roundStarted = false;
         this.stagingStarted = false;
-        this.winningScore = 3;
+        this.winningScore = 5;
         this.gameStagingTime = 5; // in seconds
     }
 
