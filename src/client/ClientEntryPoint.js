@@ -20,8 +20,28 @@ const defaults = {
 };
 let options = Object.assign(defaults, qsOptions);
 
+function getUrlParams() {
+
+    let paramMap = {};
+    if (location.search.length == 0) {
+        return paramMap;
+    }
+    let parts = location.search.substring(1).split("&");
+
+    for (let i = 0; i < parts.length; i ++) {
+        let component = parts[i].split("=");
+        paramMap [decodeURIComponent(component[0])] = decodeURIComponent(component[1]);
+    }
+    return paramMap;
+}
+
 $(document).ready(() => {
     $('#name-input').focus();
+    let params = getUrlParams();
+    if ('id' in params) {
+        $('#gamecode-input').val(params['id']);
+    }
+
     const sendName = () => {
         const name = $('#name-input').val();
         let gamecode = $('#gamecode-input').val();
@@ -41,6 +61,8 @@ $(document).ready(() => {
             document.getElementById('name-prompt-overlay').style.display = 'none';
             document.getElementById('name-prompt-container').style.display = 'none';
             document.getElementById('title').style.display = 'none';
+            $('#instruct_friend').hide();
+            $('#share_link').html(`Share this link with your friend: <br /> www.stargrid.io/?id=${gamecode}`);
             clientEngine.start();
         } else {
             window.alert('Your name cannot be blank or over 20 characters.');

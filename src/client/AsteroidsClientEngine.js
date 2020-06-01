@@ -69,6 +69,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 });
 
                 this.socket.on('waitingForPlayer', () => {
+                    $('#share_link').show()
                     this.renderer.hideCanvas();
                     document.querySelector('#instructions').classList.remove('hidden');
                     document.getElementById('waiting-room-overlay').style.display = 'block';
@@ -77,6 +78,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
 
                 this.socket.on('gameStaging', (data) => {
                     console.log('gameStaging received');
+                    $('#share_link').hide();
                     $('#staging_alert').show();
                     let counter = data.gameStagingTime;
                     let interval = setInterval(function() {

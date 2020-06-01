@@ -211,6 +211,10 @@ canvas {
     font-size: 140px;
 }
 
+#instruct_friend {
+    top: 95%;
+}
+
 #name-prompt-overlay {
     display: block;
     z-index: 1;
