@@ -69,14 +69,14 @@ export default class AsteroidsRenderer extends Renderer {
 
         // Draw all things
         //this.drawBounds();
-        game.world.forEachObject((id, obj) => {
-            if (obj instanceof Ship) this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID, obj.c_name, obj.v_name);
-            else if (obj instanceof Bullet) this.drawBullet(obj.physicsObj);
-            else if (obj instanceof FinishLine) this.drawFinishLine(obj.physicsObj);
-            else if (obj instanceof Asteroid && obj.shot) {
-                // && !viewer if we don't want viewer to have highlighted boxes
-                this.drawAsteroid(obj.physicsObj);
-            } else if (obj instanceof Asteroid && this.viewer) {
+        game.world.forEachObject((_, obj) => {
+            if (obj instanceof Ship) {
+                this.drawShip(obj.physicsObj, obj.playerId === this.groupShipPID, obj.c_name, obj.v_name);
+            } else if (obj instanceof Bullet) {
+                this.drawBullet(obj.physicsObj);
+            } else if (obj instanceof FinishLine) {
+                this.drawFinishLine(obj.physicsObj);
+            } else if (obj instanceof Asteroid && (obj.shot || obj.color == "blue" || this.viewer)) {
                 this.drawAsteroid(obj.physicsObj, obj.color);
             }
         });
