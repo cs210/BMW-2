@@ -47,8 +47,9 @@ $(document).ready(() => {
         let gamecode = $('#gamecode-input').val();
 
         if (gamecode.length === 0) {
-            gamecode = '/lobby';
+            gamecode = Math.random().toString(36).substring(7);
         }
+        
         if (name && name.length < 20) {
             options.playerOptions = {
                 playerName: name,
