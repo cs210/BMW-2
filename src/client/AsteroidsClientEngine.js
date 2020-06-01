@@ -92,6 +92,7 @@ export default class AsteroidsClientEngine extends ClientEngine {
                 });
 
                 this.socket.on('gameBegin', (data) => {
+                    $('#share_link').hide();
                     document.querySelector('#instructions').classList.add('hidden');
                     $('#waiting-room-overlay').css("display", "none");
                     $('#game_start_banner').html(`GAME START, FIRST TO ${data.winningScore} WINS!`);
