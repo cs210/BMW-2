@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Maze Game</title>
+    <title>Stargrid.io</title>
     <meta charset="utf-8">
     <link rel='stylesheet' type='text/css' href='./main.css' />
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -62,9 +62,9 @@
     <div id="gamewin" class="textBox centered hidden">YOU WON</div>
     <div class = "info-button"> Help
         <div class="tooltiptext">
-            CONTROLLER: MAZE NOT VISIBLE AND CAN CONTROL SHIP
+            CONTROLLER: CONTROLS SHIP, CANNOT SEE MAZE
             <br />
-            VIEWER: MAZE VISIBLE AND CANNOT CONTROL SHIP
+            VIEWER: NAVIGATES CONTROLLER TO THE FINISH
         </div>
     </div>
     <div id="instructions" class="textBox centered hidden">
@@ -75,9 +75,9 @@
         <br />
         MISSION: REACH THE FINISH FIRST
         <br />
-        CONTROLLER: MAZE NOT VISIBLE AND CAN CONTROL SHIP
+        CONTROLLER: CONTROLS SHIP, CANNOT SEE MAZE
         <br />
-        VIEWER: MAZE VISIBLE AND CANNOT CONTROL SHIP
+        VIEWER: NAVIGATES CONTROLLER TO THE FINISH
     </div>
     <div id="other_player_disconnect" class="textBox centered hidden">
         OTHER PLAYER DISCONNECTED
@@ -95,13 +95,13 @@
     <script src="bundle.js" type="text/javascript"></script>
     <script type="text/javascript" src="AsteroidsRenderer.js"></script>
     <script>
-        function rsz(){
+        function rsz() {
             game.w = window.innerWidth;
             draw();
         }
         window.addEventListener("resize", rsz);
     </script>
-    <div class="canvas' id='gameCanv'></div>
+    <div class="canvas" id='gameCanv'></div>
 </body>
 
 </html>
