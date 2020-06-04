@@ -201,18 +201,24 @@ canvas {
 }
 
 #title {
-    width: 800px;
-    height: 300px;
+    min-width: 800px;
+    min-height: 300px;
     position: absolute;
     left: 50%;
-    top: 30%;
+    top: 40%;
     transform: translate(-50%, -50%);
     text-align: center;
-    font-size: 140px;
+    font-size: 8vmax;
 }
 
 #instruct_friend {
-    top: 95%;
+    font-size: 4vmin;
+    width: fit-content;
+}
+
+#share_link {
+    font-size: 4vmin;
+    width: fit-content;
 }
 
 #name-prompt-overlay {
@@ -234,13 +240,13 @@ canvas {
 }
 #name-prompt-overlay #name-prompt-container button {
     font-family: 'ONEDAY';
-    font-size: 1.5vmax;
-    line-height: 0.5vmax;
+    font-size: 1.3vmax;
     margin-top: 4vh;
-    height: 2vmax;
-    border-width: 1vmax;
+    height: auto;
+    border-width: 0.6vmax;
     background-color: rgb(216,216,216);
-    border-radius: 10px;
+    border-radius: 7px;
+    border-color: lightgrey;
 }
 #name-prompt-overlay #name-prompt-container #name-submit:hover {
     cursor: pointer;
@@ -262,7 +268,7 @@ canvas {
 #waiting-room-overlay #waiting-room-container {
     display: none;
     width: 30vw;
-    height: 27vmin;
+    height: 30vmin;
     min-width: 100px;
     min-height: 100px;
     background-color: black;
@@ -304,22 +310,20 @@ canvas {
 
 #waiting-room-overlay #waiting-room-container #start-button {
     font-family: 'ONEDAY';
-    font-size: 1.5vmax;
-    line-height: 0.5vmax;
-    height: 2vmax;
-    border-width: 1vmax;
+    font-size: 1.3vmax;
+    border-width: 0.6vmax;
     background-color: rgb(216,216,216);
-    border-radius: 10px;
+    border-radius: 7px;
+    border-color: lightgrey;
 }
 
 #waiting-room-overlay #waiting-room-container #switch-button {
     font-family: 'ONEDAY';
-    font-size: 1.5vmax;
-    line-height: 0.5vmax;
-    height: 2vmax;
-    border-width: 1vmax;
+    font-size: 1.3vmax;
+    border-width: 0.6vmax;
     background-color: rgb(216,216,216);
-    border-radius: 10px;
+    border-radius: 7px;
+    border-color: lightgrey;
 }
 
 #waiting-room-overlay #waiting-room-container #controller_ready_img {
