@@ -21,16 +21,14 @@ const defaults = {
 let options = Object.assign(defaults, qsOptions);
 
 function getUrlParams() {
-
     let paramMap = {};
     if (location.search.length == 0) {
         return paramMap;
     }
     let parts = location.search.substring(1).split("&");
-
     for (let i = 0; i < parts.length; i ++) {
         let component = parts[i].split("=");
-        paramMap [decodeURIComponent(component[0])] = decodeURIComponent(component[1]);
+        paramMap[decodeURIComponent(component[0])] = decodeURIComponent(component[1]);
     }
     return paramMap;
 }
@@ -43,14 +41,15 @@ $(document).ready(() => {
     }
 
     const sendName = () => {
-        const name = $('#name-input').val();
-        let gamecode = $('#gamecode-input').val();
+        const MAX_STR_LENGTH = 12;
+        const name = $('#name-input').val().toUpperCase();
+        let gamecode = $('#gamecode-input').val().toUpperCase();
 
-        if (gamecode.length === 0) {
-            gamecode = Math.random().toString(36).substring(7);
+        if (gamecode.length === 0 || gamecode.length > MAX_STR_LENGTH) {
+            gamecode = Math.random().toString(36).substring(7).toUpperCase();
         }
-        
-        if (name && name.length < 20) {
+
+        if (name && name.length < MAX_STR_LENGTH) {
             options.playerOptions = {
                 playerName: name,
                 privateCode: gamecode,
@@ -63,10 +62,12 @@ $(document).ready(() => {
             document.getElementById('name-prompt-container').style.display = 'none';
             document.getElementById('title').style.display = 'none';
             $('#instruct_friend').hide();
-            $('#share_link').html(`Share this link with your friend: <br /> www.stargrid.io/?id=${gamecode}`);
+            $('#share_link').html(
+                `Share this link with your friend: <br /> www.stargrid.io/?id=${gamecode}`
+            );
             clientEngine.start();
         } else {
-            window.alert('Your name cannot be blank or over 20 characters.');
+            window.alert('Your name cannot be blank or over 10 characters.');
         }
         return false;
     };
